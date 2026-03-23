@@ -1,6 +1,9 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
+import { ThemeContext } from '../Context/ThemeContext'
 
-function Contact({ istDunkel }) {
+function Contact() {
+  const { istDunkel } = useContext(ThemeContext)
+
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [nachricht, setNachricht] = useState('')
@@ -10,7 +13,7 @@ function Contact({ istDunkel }) {
   const validiere = () => {
     const neueFehler = {}
 
-    if (name.length < 3) {
+    if (name.trim().length < 3) {
       neueFehler.name = 'Name muss mindestens 3 Zeichen lang sein.'
     }
 
@@ -18,7 +21,7 @@ function Contact({ istDunkel }) {
       neueFehler.email = 'Bitte eine gueltige E-Mail-Adresse eingeben.'
     }
 
-    if (nachricht.length < 10) {
+    if (nachricht.trim().length < 10) {
       neueFehler.nachricht = 'Nachricht muss mindestens 10 Zeichen lang sein.'
     }
 
@@ -46,14 +49,19 @@ function Contact({ istDunkel }) {
   return (
     <section id="contact" className="py-16 px-4">
       <div className="max-w-2xl mx-auto">
-        <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-white' : 'text-gray-900'
-        }`}>
+        <h2
+          className={`text-3xl font-bold mb-2 text-center ${
+            istDunkel ? 'text-white' : 'text-gray-900'
+          }`}
+        >
           Kontakt
         </h2>
-        <p className={`text-center mb-8 ${
-          istDunkel ? 'text-gray-400' : 'text-gray-600'
-        }`}>
+
+        <p
+          className={`text-center mb-8 ${
+            istDunkel ? 'text-gray-400' : 'text-gray-600'
+          }`}
+        >
           Schreib mir eine Nachricht
         </p>
 
@@ -64,7 +72,6 @@ function Contact({ istDunkel }) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-          {/* Name Field */}
           <div>
             <label
               htmlFor="name"
@@ -91,7 +98,6 @@ function Contact({ istDunkel }) {
             )}
           </div>
 
-          {/* Email Field */}
           <div>
             <label
               htmlFor="email"
@@ -118,7 +124,6 @@ function Contact({ istDunkel }) {
             )}
           </div>
 
-          {/* Message Field */}
           <div>
             <label
               htmlFor="nachricht"
@@ -145,7 +150,6 @@ function Contact({ istDunkel }) {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
             className="w-full py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"

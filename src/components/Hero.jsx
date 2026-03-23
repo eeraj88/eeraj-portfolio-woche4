@@ -1,27 +1,38 @@
-function Hero({ istDunkel }) {
+import { useContext } from 'react'
+import { ThemeContext } from '../Context/ThemeContext'
+
+function Hero() {
+  const { istDunkel } = useContext(ThemeContext)
+
   return (
     <section className="pt-24 pb-16 px-4">
       <div className="max-w-4xl mx-auto text-center pt-12">
-        <p className={`text-sm font-medium uppercase tracking-widest mb-4 ${
-          istDunkel ? 'text-blue-400' : 'text-blue-600'
-        }`}>
+        <p
+          className={`text-sm font-medium uppercase tracking-widest mb-4 ${
+            istDunkel ? 'text-blue-400' : 'text-blue-600'
+          }`}
+        >
           Willkommen auf meinem Portfolio
         </p>
 
-        <h1 className={`text-4xl md:text-6xl font-bold mb-6 ${
-          istDunkel ? 'text-white' : 'text-gray-900'
-        }`}>
+        <h1
+          className={`text-4xl md:text-6xl font-bold mb-6 ${
+            istDunkel ? 'text-white' : 'text-gray-900'
+          }`}
+        >
           Hi, ich bin{' '}
           <span className={istDunkel ? 'text-blue-400' : 'text-blue-600'}>
-            Max Mustermann
+            Eeraj
           </span>
         </h1>
 
-        <p className={`text-lg md:text-xl mb-8 max-w-2xl mx-auto ${
-          istDunkel ? 'text-gray-400' : 'text-gray-600'
-        }`}>
+        <p
+          className={`text-lg md:text-xl mb-8 max-w-2xl mx-auto ${
+            istDunkel ? 'text-gray-400' : 'text-gray-600'
+          }`}
+        >
           Junior Frontend-Entwickler in Ausbildung. Ich lerne React, baue Projekte
-          und suche ein Praktikum im Webentwicklungs-Bereich.
+          und entwickle Schritt für Schritt mein eigenes Portfolio.
         </p>
 
         <div className="flex gap-4 justify-center flex-wrap">
@@ -31,6 +42,7 @@ function Hero({ istDunkel }) {
           >
             Meine Projekte
           </a>
+
           <a
             href="#contact"
             className={`px-6 py-3 rounded-lg font-medium border-2 transition-colors ${
