@@ -110,18 +110,36 @@ function Projects() {
                     Details
                   </button>
 
-                  <a
-                    href={projekt.link}
-                    target="_blank"
-                    rel="noreferrer"
-                    className={`text-sm font-medium flex items-center gap-1 transition-colors ${
-                      istDunkel
-                        ? 'text-gray-400 hover:text-orange-400'
-                        : 'text-gray-600 hover:text-orange-600'
-                    }`}
-                  >
-                    Live Demo →
-                  </a>
+                  <div className="flex items-center gap-3">
+                    {projekt.github && (
+                      <a
+                        href={projekt.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`text-sm font-medium transition-colors ${
+                          istDunkel
+                            ? 'text-gray-400 hover:text-orange-400'
+                            : 'text-gray-600 hover:text-orange-600'
+                        }`}
+                      >
+                        GitHub
+                      </a>
+                    )}
+                    {projekt.link && projekt.link !== '#' && (
+                      <a
+                        href={projekt.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={`text-sm font-medium flex items-center gap-1 transition-colors ${
+                          istDunkel
+                            ? 'text-orange-400 hover:text-orange-300'
+                            : 'text-orange-600 hover:text-orange-700'
+                        }`}
+                      >
+                        Live Demo →
+                      </a>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
@@ -180,14 +198,32 @@ function Projects() {
               Kategorie: {aktivesProjekt.kategorie}
             </p>
 
-            <a
-              href={aktivesProjekt.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold hover:from-orange-600 hover:to-red-600 transition-all"
-            >
-              Projekt oeffnen
-            </a>
+            <div className="flex flex-wrap gap-4">
+              {aktivesProjekt.link && aktivesProjekt.link !== '#' && (
+                <a
+                  href={aktivesProjekt.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-block px-6 py-3 rounded-lg bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold hover:from-orange-600 hover:to-red-600 transition-all"
+                >
+                  Live Demo
+                </a>
+              )}
+              {aktivesProjekt.github && (
+                <a
+                  href={aktivesProjekt.github}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={`inline-block px-6 py-3 rounded-lg font-semibold transition-all ${
+                    istDunkel
+                      ? 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-600'
+                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200 border border-gray-300'
+                  }`}
+                >
+                  GitHub Code
+                </a>
+              )}
+            </div>
           </div>
         </div>
       )}
