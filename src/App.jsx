@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero'
-import VideoIntro from './components/VideoIntro'
 import About from './components/About'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
@@ -71,8 +70,6 @@ function App() {
           />
 
           <Hero />
-
-          <VideoIntro />
 
           <div ref={aboutRef}>
             <About />
