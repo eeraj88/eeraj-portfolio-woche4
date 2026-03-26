@@ -46,27 +46,35 @@ function VideoIntro() {
             <h3 className={`text-2xl font-bold ${
               istDunkel ? 'text-white' : 'text-gray-900'
             }`}>
-              Ein kreativer Nerd
+              Multi-Talent mit Leidenschaft
             </h3>
 
             <p className={`leading-relaxed ${
               istDunkel ? 'text-gray-300' : 'text-gray-600'
             }`}>
-              Ich bin ein vielseitiger Kreativer mit einer Leidenschaft fuer Technologie und Design. 
-              Mein Hintergrund in Marketing und digitaler Content-Erstellung gibt mir einen 
-              einzigartigen Blickwinkel auf Webentwicklung.
+              Ich bin ein vielseitiger Kreativer, der Technologie, Design und Business vereint. 
+              Mit mehrjaehriger Erfahrung im <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>B2B-Vertrieb und Account Management</strong> weiss 
+              ich, wie man Kundenbeziehungen aufbaut und nachhaltig pflegt.
             </p>
 
             <p className={`leading-relaxed ${
               istDunkel ? 'text-gray-300' : 'text-gray-600'
             }`}>
-              Von Social Media Strategien bis hin zu React-Anwendungen — ich bringe 
-              Kreativitaet und technisches Know-how zusammen, um Projekte zu schaffen, 
-              die nicht nur funktionieren, sondern auch begeistern.
+              Mein Hintergrund in <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>Sales und Kundenkommunikation</strong> kombiniert 
+              mit meinen kreativen Faehigkeiten in Marketing und Webentwicklung macht mich zu einem 
+              Allrounder, der sowohl strategisch denkt als auch hands-on umsetzt.
+            </p>
+
+            <p className={`leading-relaxed ${
+              istDunkel ? 'text-gray-300' : 'text-gray-600'
+            }`}>
+              Von Social Media Strategien ueber Performance Marketing bis hin zu React-Anwendungen — 
+              ich bringe alles zusammen, um Projekte zu schaffen, die nicht nur funktionieren, 
+              sondern auch begeistern.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-4">
-              {['Kreativ', 'Technisch', 'Strategisch', 'Lernbereit'].map(tag => (
+              {['Kreativ', 'Sales-Erfahrung', 'Kundenorientiert', 'Technisch', 'Strategisch'].map(tag => (
                 <span
                   key={tag}
                   className={`px-4 py-2 rounded-full text-sm font-medium ${

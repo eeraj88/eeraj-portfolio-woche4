@@ -133,7 +133,7 @@ const skills = [
     kategorie: "Business"
   },
 
-  // TOOLS
+  // TOOLS & AUTOMATION
   {
     id: 22,
     name: "KI Tools & Prompting",
@@ -142,14 +142,38 @@ const skills = [
   },
   {
     id: 23,
+    name: "HubSpot",
+    level: 75,
+    kategorie: "Tools"
+  },
+  {
+    id: 24,
+    name: "Zapier",
+    level: 70,
+    kategorie: "Tools"
+  },
+  {
+    id: 25,
+    name: "Ableton Live",
+    level: 70,
+    kategorie: "Tools"
+  },
+  {
+    id: 26,
     name: "Microsoft Office",
     level: 85,
     kategorie: "Tools"
   },
   {
-    id: 24,
-    name: "CRM Systeme",
-    level: 75,
+    id: 27,
+    name: "Notion",
+    level: 80,
+    kategorie: "Tools"
+  },
+  {
+    id: 28,
+    name: "Slack & Teams",
+    level: 85,
     kategorie: "Tools"
   }
 ]

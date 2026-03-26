@@ -36,7 +36,7 @@ const projects = [
     technologien: ["Social Media", "Marketing Strategie", "Canva", "Content Planning"],
     link: "https://www.canva.com/design/DAHA0QYi_qM/K-so9fFSZp113HYVZO9hvQ/view",
     kategorie: "Marketing",
-    bild: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80"
+    bild: "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=600&q=80"
   },
   {
     id: 5,
