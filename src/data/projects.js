@@ -24,7 +24,7 @@ const projects = [
     titel: "Morphos Kaffee Landing Page",
     beschreibung: "Responsive Landing Page fuer ein fiktives Cafe. Schoenes Design mit Bootstrap 5, Kontaktformular mit EmailJS Integration.",
     technologien: ["HTML5", "CSS3", "Bootstrap 5", "EmailJS"],
-    link: "#", // Wird nach Deployment aktualisiert
+    link: "https://morphos-kaffee.vercel.app",
     github: "https://github.com/eeraj88/Morphos-Kaffee",
     kategorie: "Frontend",
     bild: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80"
