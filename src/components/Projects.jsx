@@ -61,11 +61,21 @@ function Projects() {
               }`}
             >
               {/* Project Header */}
-              <div className="h-36 flex items-center justify-center bg-gradient-to-br from-orange-500 via-red-500 to-orange-600 relative overflow-hidden">
-                <span className="text-white text-5xl font-bold opacity-20 group-hover:scale-110 transition-transform duration-500">
-                  {projekt.id.toString().padStart(2, '0')}
-                </span>
-                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-300" />
+              <div className="h-44 relative overflow-hidden">
+                {projekt.bild ? (
+                  <img 
+                    src={projekt.bild} 
+                    alt={projekt.titel}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-orange-500 via-red-500 to-orange-600">
+                    <span className="text-white text-5xl font-bold opacity-20">
+                      {projekt.id.toString().padStart(2, '0')}
+                    </span>
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
               <div className="p-6">
@@ -161,13 +171,24 @@ function Projects() {
           >
             <button
               onClick={() => setAktivesProjekt(null)}
-              className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors ${
+              className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors z-10 ${
                 istDunkel ? 'bg-gray-800 hover:bg-gray-700 text-white' : 'bg-gray-100 hover:bg-gray-200'
               }`}
               aria-label="Modal schliessen"
             >
               ✕
             </button>
+
+            {/* Modal Bild */}
+            {aktivesProjekt.bild && (
+              <div className="h-48 -mx-8 -mt-8 mb-6 overflow-hidden rounded-t-2xl">
+                <img 
+                  src={aktivesProjekt.bild} 
+                  alt={aktivesProjekt.titel}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )}
 
             <h3 className={`text-2xl font-bold mb-4 ${
               istDunkel ? 'text-white' : 'text-gray-900'
