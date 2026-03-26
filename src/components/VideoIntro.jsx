@@ -1,21 +1,11 @@
-import { useContext, useRef, useState } from 'react'
+import { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
 
 function VideoIntro() {
   const { istDunkel } = useContext(ThemeContext)
-  const videoRef = useRef(null)
-  const [isPlaying, setIsPlaying] = useState(false)
 
-  function handlePlayPause() {
-    if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-      setIsPlaying(!isPlaying)
-    }
-  }
+  // YouTube Video ID hier einfuegen (z.B. "dQw4w9WgXcQ")
+  const youtubeVideoId = "DEIN_VIDEO_ID_HIER"
 
   return (
     <section id="about-me" className={`py-20 px-4 ${
@@ -35,21 +25,18 @@ function VideoIntro() {
         </p>
 
         <div className="flex flex-col lg:flex-row items-center gap-10">
-          {/* Video */}
+          {/* YouTube Video Embed */}
           <div className="w-full lg:w-1/2">
-            <div className={`relative rounded-2xl overflow-hidden shadow-2xl ${
+            <div className={`relative rounded-2xl overflow-hidden shadow-2xl aspect-video ${
               istDunkel ? 'ring-2 ring-orange-500/30' : 'ring-1 ring-gray-200'
             }`}>
-              <video
-                ref={videoRef}
-                src="/intro-video.mp4"
-                className="w-full aspect-video object-cover"
-                onClick={handlePlayPause}
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                onEnded={() => setIsPlaying(false)}
-                controls
-                poster="/foto.jpg"
+              <iframe
+                src={`https://www.youtube.com/embed/${youtubeVideoId}`}
+                title="Ein kreativer Nerd - Eeraj"
+                className="w-full h-full"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
               />
             </div>
           </div>
