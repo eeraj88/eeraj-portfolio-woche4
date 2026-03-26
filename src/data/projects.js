@@ -24,7 +24,7 @@ const projects = [
     titel: "Bookmark Manager",
     beschreibung: "Eine praktische App zum Speichern und Verwalten von Lesezeichen. Mit Suche, Filter und Kategorien. Daten werden lokal gespeichert.",
     technologien: ["React", "useState", "localStorage"],
-    link: "#",
+    link: "https://bookmark-manager-nine-chi.vercel.app",
     github: "https://github.com/eeraj88/bookmark-manager",
     kategorie: "React",
     bild: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&q=80"
