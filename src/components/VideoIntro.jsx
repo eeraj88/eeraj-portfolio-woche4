@@ -46,35 +46,34 @@ function VideoIntro() {
             <h3 className={`text-2xl font-bold ${
               istDunkel ? 'text-white' : 'text-gray-900'
             }`}>
-              Multi-Talent mit Leidenschaft
+              Code. Marketing. Strategie.
             </h3>
 
             <p className={`leading-relaxed ${
               istDunkel ? 'text-gray-300' : 'text-gray-600'
             }`}>
-              Ich bin ein vielseitiger Kreativer, der Technologie, Design und Business vereint. 
-              Mit mehrjaehriger Erfahrung im <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>B2B-Vertrieb und Account Management</strong> weiss 
-              ich, wie man Kundenbeziehungen aufbaut und nachhaltig pflegt.
+              Mein Fokus liegt auf <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>moderner Webentwicklung mit React</strong> und 
+              der Gestaltung von intuitiven User Interfaces. Clean Code, responsive Design und 
+              durchdachte <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>UI/UX-Konzepte</strong> sind mein Antrieb.
             </p>
 
             <p className={`leading-relaxed ${
               istDunkel ? 'text-gray-300' : 'text-gray-600'
             }`}>
-              Mein Hintergrund in <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>Sales und Kundenkommunikation</strong> kombiniert 
-              mit meinen kreativen Faehigkeiten in Marketing und Webentwicklung macht mich zu einem 
-              Allrounder, der sowohl strategisch denkt als auch hands-on umsetzt.
+              Dazu bringe ich fundiertes Know-how in <strong className={istDunkel ? 'text-orange-400' : 'text-orange-600'}>Digital Marketing</strong> mit — 
+              von Social Media Strategien ueber Performance Marketing bis hin zu Content Creation. 
+              Ich verstehe, wie man Produkte nicht nur baut, sondern auch vermarktet.
             </p>
 
             <p className={`leading-relaxed ${
               istDunkel ? 'text-gray-300' : 'text-gray-600'
             }`}>
-              Von Social Media Strategien ueber Performance Marketing bis hin zu React-Anwendungen — 
-              ich bringe alles zusammen, um Projekte zu schaffen, die nicht nur funktionieren, 
-              sondern auch begeistern.
+              Meine Erfahrung im B2B-Vertrieb und Account Management rundet mein Profil ab: 
+              Ich kommuniziere klar, denke kundenorientiert und liefere Ergebnisse.
             </p>
 
             <div className="flex flex-wrap gap-3 pt-4">
-              {['Kreativ', 'Sales-Erfahrung', 'Kundenorientiert', 'Technisch', 'Strategisch'].map(tag => (
+              {['Frontend Development', 'UI/UX', 'Digital Marketing', 'Sales', 'Strategisch'].map(tag => (
                 <span
                   key={tag}
                   className={`px-4 py-2 rounded-full text-sm font-medium ${
