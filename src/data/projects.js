@@ -13,7 +13,7 @@ const projects = [
     titel: "Portfolio Website",
     beschreibung: "Mein persoenliches Portfolio mit animiertem Partikel-Hintergrund, Gradient-Effekten und modernem Design. Vollstaendig responsive.",
     technologien: ["React", "Tailwind CSS", "Vite", "CSS Animations"],
-    link: "#", // Wird nach Deployment aktualisiert
+    link: "https://eeraj-portfolio-woche4.vercel.app",
     github: "https://github.com/eeraj88/eeraj-portfolio-woche4",
     kategorie: "React"
   },
