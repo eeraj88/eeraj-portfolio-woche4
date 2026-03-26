@@ -1,16 +1,73 @@
-# React + Vite
+# Portfolio - Eeraj
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mein persoenliches Portfolio als Junior Frontend Developer, gebaut mit React und Tailwind CSS.
 
-Currently, two official plugins are available:
+**Live Demo:** [https://eeraj-portfolio.vercel.app](https://eeraj-portfolio.vercel.app)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- Modernes Design mit Anthrazit + Orange/Rot Farbschema
+- Animierter Hintergrund mit Partikel-Effekten
+- Dark Mode / Light Mode Toggle
+- Smooth Scroll Navigation
+- Interaktive Skills-Sektion mit Filtern
+- Projekt-Galerie mit Modal-Ansicht
+- Kontaktformular mit Validierung
+- Scroll-Fortschritts-Indikator
+- Responsive Design (Mobile-First)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech Stack
 
-## Expanding the ESLint configuration
+- React 19
+- Vite
+- Tailwind CSS
+- CSS Animations
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Sektionen
+
+- **Hero** - Vorstellung mit Profilbild
+- **About** - Ueber mich mit Stats
+- **Skills** - Technologien sortiert nach Kategorie
+- **Projects** - Portfolio-Projekte mit Details
+- **Contact** - Kontaktformular
+
+## Lokale Installation
+
+```bash
+# Repository klonen
+git clone https://github.com/eeraj88/eeraj-portfolio-woche4.git
+cd eeraj-portfolio-woche4
+
+# Abhaengigkeiten installieren
+npm install
+
+# Entwicklungsserver starten
+npm run dev
+```
+
+## Projektstruktur
+
+```
+src/
+├── components/
+│   ├── Header.jsx
+│   ├── Hero.jsx
+│   ├── About.jsx
+│   ├── Skills.jsx
+│   ├── Projects.jsx
+│   ├── Contact.jsx
+│   ├── Footer.jsx
+│   └── ScrollIndikator.jsx
+├── Context/
+│   └── ThemeContext.jsx
+├── data/
+│   ├── skills.js
+│   └── projects.js
+├── App.jsx
+├── main.jsx
+└── index.css
+```
+
+## Autor
+
+Eeraj - Frontend Development Kurs 2026

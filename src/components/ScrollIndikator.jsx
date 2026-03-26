@@ -1,16 +1,14 @@
-import { useEffect, useState, useContext } from 'react'
-import { ThemeContext } from '../Context/ThemeContext'
+import { useEffect, useState } from 'react'
 
 function ScrollIndikator() {
-  const { istDunkel } = useContext(ThemeContext)
   const [scrollFortschritt, setScrollFortschritt] = useState(0)
 
   useEffect(() => {
-    function handleScroll() {
+    const handleScroll = () => {
       const scrollTop = window.scrollY
-      const documentHeight = document.documentElement.scrollHeight - window.innerHeight
-      const fortschritt = documentHeight > 0 ? (scrollTop / documentHeight) * 100 : 0
-      setScrollFortschritt(fortschritt)
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
+      setScrollFortschritt(progress)
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -20,15 +18,11 @@ function ScrollIndikator() {
   }, [])
 
   return (
-    <div
-      className={`fixed top-0 left-0 w-full h-1 z-[60] ${
-        istDunkel ? 'bg-gray-800' : 'bg-gray-200'
-      }`}
-    >
+    <div className="fixed top-0 left-0 w-full h-1 z-[60] bg-gray-800/50">
       <div
-        className="h-full bg-blue-600 transition-all duration-150"
+        className="h-full bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-150"
         style={{ width: `${scrollFortschritt}%` }}
-      ></div>
+      />
     </div>
   )
 }
