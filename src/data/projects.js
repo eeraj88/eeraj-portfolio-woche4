@@ -29,6 +29,24 @@ const projects = [
     kategorie: "React",
     bild: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&q=80"
   },
+  {
+    id: 4,
+    titel: "Wu-Wear Social Media Strategie",
+    beschreibung: "Komplette Social Media Marketing Strategie fuer die Streetwear-Marke Wu-Wear. Inklusive Zielgruppenanalyse, Content-Planung und Kampagnen-Konzept.",
+    technologien: ["Social Media", "Marketing Strategie", "Canva", "Content Planning"],
+    link: "https://www.canva.com/design/DAHA0QYi_qM/K-so9fFSZp113HYVZO9hvQ/view",
+    kategorie: "Marketing",
+    bild: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=600&q=80"
+  },
+  {
+    id: 5,
+    titel: "Performance Marketing Kampagne",
+    beschreibung: "Strategische Performance Marketing Analyse mit Fokus auf ROI-Optimierung, Zielgruppen-Targeting und datengetriebene Entscheidungsfindung.",
+    technologien: ["Performance Marketing", "Analytics", "Canva", "KPI Tracking"],
+    link: "https://www.canva.com/design/DAGwISguOLQ/ZdTzFgYE5JA5HnyVtVyrGQ/view",
+    kategorie: "Marketing",
+    bild: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80"
+  },
 ]
 
 export default projects

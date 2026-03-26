@@ -5,8 +5,15 @@ function Hero() {
   const { istDunkel } = useContext(ThemeContext)
 
   return (
-    <section className="pt-28 pb-20 px-4">
-      <div className="max-w-5xl mx-auto">
+    <section className="pt-28 pb-20 px-4 relative overflow-hidden">
+      {/* Animierter Hintergrund */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-orange-500/20 rounded-full blur-3xl animate-blob"></div>
+        <div className="absolute top-40 right-10 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-blob animation-delay-2000"></div>
+        <div className="absolute bottom-10 left-1/3 w-80 h-80 bg-orange-400/15 rounded-full blur-3xl animate-blob animation-delay-4000"></div>
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
           
           {/* Foto */}
@@ -14,8 +21,8 @@ function Hero() {
             <div className={`relative ${istDunkel ? 'glow-orange' : ''}`}>
               <img
                 src="/foto.jpg"
-                alt="Eeraj - Frontend Developer"
-                className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-4 border-orange-500 float-animation"
+                alt="Eeraj - Digital Creative & Developer"
+                className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-4 border-orange-500 shadow-2xl"
               />
               {/* Dekorativer Ring */}
               <div className="absolute inset-0 rounded-full border-2 border-orange-400 opacity-50 scale-110"></div>
@@ -40,8 +47,8 @@ function Hero() {
             <p className={`text-lg md:text-xl mb-8 max-w-xl ${
               istDunkel ? 'text-gray-400' : 'text-gray-600'
             }`}>
-              Junior Frontend-Entwickler in Ausbildung. Ich baue moderne Web-Apps 
-              mit React, erstelle ansprechende Designs und lerne jeden Tag dazu.
+              Digital Creative & Frontend-Entwickler. Ich verbinde kreatives Marketing 
+              mit moderner Webentwicklung — von Social Media Strategien bis React Apps.
             </p>
 
             <div className="flex gap-4 justify-center md:justify-start flex-wrap">

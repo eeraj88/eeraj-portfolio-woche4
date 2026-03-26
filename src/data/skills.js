@@ -46,98 +46,110 @@ const skills = [
   // MARKETING
   {
     id: 8,
+    name: "Social Media Marketing",
+    level: 80,
+    kategorie: "Marketing"
+  },
+  {
+    id: 9,
+    name: "Performance Marketing",
+    level: 70,
+    kategorie: "Marketing"
+  },
+  {
+    id: 10,
+    name: "Content Strategie",
+    level: 75,
+    kategorie: "Marketing"
+  },
+  {
+    id: 11,
     name: "SEO",
     level: 70,
     kategorie: "Marketing"
   },
   {
-    id: 9,
+    id: 12,
     name: "Google Analytics",
     level: 65,
     kategorie: "Marketing"
   },
-  {
-    id: 10,
-    name: "Conversion Optimierung",
-    level: 65,
-    kategorie: "Marketing"
-  },
-  {
-    id: 11,
-    name: "Content Strategie",
-    level: 70,
-    kategorie: "Marketing"
-  },
 
-  // DESIGN
-  {
-    id: 12,
-    name: "Canva",
-    level: 80,
-    kategorie: "Design"
-  },
+  // DESIGN & CREATIVE
   {
     id: 13,
-    name: "Procreate",
-    level: 85,
+    name: "Adobe Photoshop",
+    level: 70,
     kategorie: "Design"
   },
   {
     id: 14,
-    name: "CapCut",
-    level: 75,
+    name: "Adobe Premiere Pro",
+    level: 65,
     kategorie: "Design"
   },
   {
     id: 15,
-    name: "Visuelle Gestaltung",
+    name: "Adobe After Effects",
+    level: 55,
+    kategorie: "Design"
+  },
+  {
+    id: 16,
+    name: "Canva",
+    level: 85,
+    kategorie: "Design"
+  },
+  {
+    id: 17,
+    name: "CapCut",
     level: 80,
+    kategorie: "Design"
+  },
+  {
+    id: 18,
+    name: "Procreate",
+    level: 85,
     kategorie: "Design"
   },
 
   // BUSINESS
   {
-    id: 16,
+    id: 19,
     name: "B2B Vertrieb",
     level: 85,
     kategorie: "Business"
   },
   {
-    id: 17,
+    id: 20,
     name: "Key Account Management",
     level: 85,
     kategorie: "Business"
   },
   {
-    id: 18,
-    name: "Verhandlungsführung",
+    id: 21,
+    name: "Verhandlungsfuehrung",
     level: 80,
-    kategorie: "Business"
-  },
-  {
-    id: 19,
-    name: "Kundenbeziehungsaufbau",
-    level: 85,
     kategorie: "Business"
   },
 
   // TOOLS
   {
-    id: 20,
-    name: "CRM Systeme",
-    level: 75,
+    id: 22,
+    name: "KI Tools & Prompting",
+    level: 85,
     kategorie: "Tools"
   },
   {
-    id: 21,
+    id: 23,
     name: "Microsoft Office",
     level: 85,
     kategorie: "Tools"
   },
   {
-    id: 22,
-    name: "KI Tools & Prompting",
-    level: 80,
+    id: 24,
+    name: "CRM Systeme",
+    level: 75,
     kategorie: "Tools"
   }
 ]

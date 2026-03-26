@@ -124,3 +124,31 @@ html {
 .particle:nth-child(8) { left: 80%; animation-delay: 7s; }
 .particle:nth-child(9) { left: 90%; animation-delay: 0.5s; }
 .particle:nth-child(10) { left: 15%; animation-delay: 2.5s; }
+
+/* Blob Animation fuer Hero Hintergrund */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  75% {
+    transform: translate(30px, 10px) scale(1.05);
+  }
+}
+
+.animate-blob {
+  animation: blob 8s ease-in-out infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
