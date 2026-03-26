@@ -4,8 +4,8 @@ import { ThemeContext } from '../Context/ThemeContext'
 function VideoIntro() {
   const { istDunkel } = useContext(ThemeContext)
 
-  // YouTube Video ID hier einfuegen (z.B. "dQw4w9WgXcQ")
-  const youtubeVideoId = "DEIN_VIDEO_ID_HIER"
+  // YouTube Video ID
+  const youtubeVideoId = "fRWuzTOYDXY"
 
   return (
     <section id="about-me" className={`py-20 px-4 ${
@@ -25,9 +25,9 @@ function VideoIntro() {
         </p>
 
         <div className="flex flex-col lg:flex-row items-center gap-10">
-          {/* YouTube Video Embed */}
-          <div className="w-full lg:w-1/2">
-            <div className={`relative rounded-2xl overflow-hidden shadow-2xl aspect-video ${
+          {/* YouTube Short Embed (vertikal) */}
+          <div className="w-full lg:w-2/5 flex justify-center">
+            <div className={`relative rounded-2xl overflow-hidden shadow-2xl w-72 aspect-[9/16] ${
               istDunkel ? 'ring-2 ring-orange-500/30' : 'ring-1 ring-gray-200'
             }`}>
               <iframe
@@ -42,7 +42,7 @@ function VideoIntro() {
           </div>
 
           {/* Text */}
-          <div className="w-full lg:w-1/2 space-y-4">
+          <div className="w-full lg:w-3/5 space-y-4">
             <h3 className={`text-2xl font-bold ${
               istDunkel ? 'text-white' : 'text-gray-900'
             }`}>
