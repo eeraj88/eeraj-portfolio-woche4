@@ -7,7 +7,7 @@ const projects = [
     link: "https://wetter-app-router.vercel.app",
     github: "https://github.com/eeraj88/wetter-app-router",
     kategorie: "React",
-    bild: "https://images.unsplash.com/photo-1592210454359-9043f067919b?w=600&q=80"
+    bild: "/wetter-app.png"
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const projects = [
     link: "https://morphos-kaffee.vercel.app",
     github: "https://github.com/eeraj88/Morphos-Kaffee",
     kategorie: "Frontend",
-    bild: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80"
+    bild: "/morphos-kaffee.png"
   },
   {
     id: 3,
@@ -27,7 +27,7 @@ const projects = [
     link: "https://bookmark-manager-nine-chi.vercel.app",
     github: "https://github.com/eeraj88/bookmark-manager",
     kategorie: "React",
-    bild: "https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&q=80"
+    bild: "/bookmark-manager.png"
   },
   {
     id: 4,
@@ -36,7 +36,7 @@ const projects = [
     technologien: ["Social Media", "Marketing Strategie", "Canva", "Content Planning"],
     link: "https://www.canva.com/design/DAHA0QYi_qM/K-so9fFSZp113HYVZO9hvQ/view",
     kategorie: "Marketing",
-    bild: "https://images.unsplash.com/photo-1562577309-4932fdd64cd1?w=600&q=80"
+    bild: "/wu-wear.png"
   },
   {
     id: 5,
@@ -45,7 +45,7 @@ const projects = [
     technologien: ["Performance Marketing", "Analytics", "Canva", "KPI Tracking"],
     link: "https://www.canva.com/design/DAGwISguOLQ/ZdTzFgYE5JA5HnyVtVyrGQ/view",
     kategorie: "Marketing",
-    bild: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80"
+    bild: "/performance-marketing.png"
   },
 ]
 
