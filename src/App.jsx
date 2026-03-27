@@ -4,6 +4,7 @@ import Hero from './components/Hero'
 import About from './components/About'
 import Skills from './components/Skills'
 import Projects from './components/Projects'
+import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
@@ -82,6 +83,8 @@ function App() {
           <div ref={projectsRef}>
             <Projects />
           </div>
+
+          <Testimonials />
 
           <div ref={contactsRef}>
             <Contact />
