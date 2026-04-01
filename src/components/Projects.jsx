@@ -1,17 +1,29 @@
 import { useState, useContext } from 'react'
 import projects from '../data/projects'
 import { ThemeContext } from '../Context/ThemeContext'
+import { giveXP } from './PokemonBuddy'
 
 function Projects() {
   const { istDunkel } = useContext(ThemeContext)
   const [aktiverFilter, setAktiverFilter] = useState('Alle')
   const [aktivesProjekt, setAktivesProjekt] = useState(null)
+  const [viewedProjects, setViewedProjects] = useState(new Set())
 
   const kategorien = ['Alle', ...new Set(projects.map(p => p.kategorie))]
 
   const gefilterteProjekte = aktiverFilter === 'Alle'
     ? projects
     : projects.filter(p => p.kategorie === aktiverFilter)
+
+  // Projekt öffnen und XP geben (nur beim ersten Mal)
+  const openProject = (projekt) => {
+    setAktivesProjekt(projekt)
+    
+    if (!viewedProjects.has(projekt.id)) {
+      setViewedProjects(prev => new Set([...prev, projekt.id]))
+      giveXP(10, 'Projekt angeschaut')
+    }
+  }
 
   return (
     <section id="projects" className={`py-20 px-4 ${
@@ -110,7 +122,7 @@ function Projects() {
                 {/* Actions */}
                 <div className="flex items-center justify-between pt-4 border-t border-gray-700/30">
                   <button
-                    onClick={() => setAktivesProjekt(projekt)}
+                    onClick={() => openProject(projekt)}
                     className={`text-sm font-medium transition-colors ${
                       istDunkel
                         ? 'text-orange-400 hover:text-orange-300'
