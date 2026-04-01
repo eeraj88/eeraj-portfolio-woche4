@@ -2,19 +2,39 @@
 // POKEMON GAME CONSTANTS - UPDATED
 // ============================================
 
-// Starter Pokemon
+// Starter Pokemon - Alle Gen 1-3 Starter + beliebte Pokemon
 export const STARTER_POKEMON = [
+  // Gen 1
   { id: 1, name: 'Bisasam' },
   { id: 4, name: 'Glumanda' },
   { id: 7, name: 'Schiggy' },
   { id: 25, name: 'Pikachu' },
   { id: 133, name: 'Evoli' },
+  { id: 39, name: 'Pummeluff' },
+  { id: 35, name: 'Piepi' },
+  { id: 37, name: 'Vulpix' },
+  { id: 58, name: 'Fukano' },
+  { id: 63, name: 'Abra' },
+  { id: 66, name: 'Machollo' },
+  { id: 74, name: 'Kleinstein' },
+  { id: 92, name: 'Nebulak' },
+  { id: 129, name: 'Karpador' },
+  // Gen 2
   { id: 152, name: 'Endivie' },
   { id: 155, name: 'Feurigel' },
   { id: 158, name: 'Karnimani' },
+  { id: 175, name: 'Togepi' },
+  { id: 179, name: 'Voltilamm' },
+  { id: 196, name: 'Psiana' },
+  { id: 197, name: 'Nachtara' },
+  // Gen 3
   { id: 252, name: 'Geckarbor' },
   { id: 255, name: 'Flemmli' },
   { id: 258, name: 'Hydropi' },
+  { id: 280, name: 'Trasla' },
+  { id: 304, name: 'Stollunior' },
+  { id: 363, name: 'Seemops' },
+  { id: 374, name: 'Tanhel' },
 ]
 
 // Wilde Pokemon (Gen 1 IDs)
