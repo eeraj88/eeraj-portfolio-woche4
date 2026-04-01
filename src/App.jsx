@@ -8,6 +8,8 @@ import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
+import Tamagotchi from './components/Tamagotchi'
+import SpotifyWidget from './components/SpotifyWidget'
 import { ThemeContext } from './Context/ThemeContext'
 
 function App() {
@@ -92,6 +94,10 @@ function App() {
 
           <Footer />
         </div>
+
+        {/* Floating Widgets */}
+        <Tamagotchi />
+        <SpotifyWidget />
       </div>
     </ThemeContext.Provider>
   )
