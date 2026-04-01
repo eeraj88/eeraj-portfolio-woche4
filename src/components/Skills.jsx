@@ -113,28 +113,17 @@ function Skills() {
                 `} />
 
                 {/* Header */}
-                <div className="relative z-10 flex items-center gap-3 mb-3">
-                  <span className="text-2xl">{config.icon}</span>
-                  <div>
-                    <h3 className={`text-lg font-bold ${
-                      istDunkel ? 'text-white' : 'text-gray-900'
-                    }`}>
-                      {kategorie}
-                    </h3>
-                    <p className={`text-[10px] ${
-                      istDunkel ? 'text-gray-500' : 'text-gray-400'
-                    }`}>
-                      {config.description}
-                    </p>
-                  </div>
-                  
-                  {/* Skill Count Badge */}
-                  <span className={`
-                    ml-auto px-2 py-0.5 rounded-full text-xs font-medium
-                    bg-gradient-to-r ${config.gradient} text-white
-                  `}>
-                    {katSkills.length}
-                  </span>
+                <div className="relative z-10 mb-3">
+                  <h3 className={`text-lg font-bold ${
+                    istDunkel ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    {kategorie}
+                  </h3>
+                  <p className={`text-[10px] ${
+                    istDunkel ? 'text-gray-500' : 'text-gray-400'
+                  }`}>
+                    {config.description}
+                  </p>
                 </div>
 
                 {/* Skills as Pills */}
