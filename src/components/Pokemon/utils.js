@@ -2,7 +2,47 @@
 // POKEMON GAME UTILITIES
 // ============================================
 
-import { TYPE_EFFECTIVENESS, EVOLUTION_CHAINS, EVOLUTION_LEVELS } from './constants'
+import { TYPE_EFFECTIVENESS, EVOLUTION_CHAINS, EVOLUTION_LEVELS, IV_RANGE, NATURES, PERSONALITIES } from './constants'
+
+// ============================================
+// IV, NATURE & PERSONALITY GENERATION
+// ============================================
+
+/**
+ * Generate random IVs for a Pokemon (0-31 for each stat)
+ */
+export const generateIVs = () => {
+  const stats = ['hp', 'attack', 'defense', 'spAttack', 'spDefense', 'speed']
+  const ivs = {}
+  let total = 0
+  
+  stats.forEach(stat => {
+    const iv = Math.floor(Math.random() * (IV_RANGE.max - IV_RANGE.min + 1)) + IV_RANGE.min
+    ivs[stat] = iv
+    total += iv
+  })
+  
+  ivs.total = total
+  ivs.potential = total >= 150 ? 'Outstanding' : total >= 120 ? 'Great' : total >= 90 ? 'Good' : 'Decent'
+  
+  return ivs
+}
+
+/**
+ * Get a random Nature
+ */
+export const getRandomNature = () => {
+  const natureKeys = Object.keys(NATURES)
+  const randomKey = natureKeys[Math.floor(Math.random() * natureKeys.length)]
+  return { key: randomKey, ...NATURES[randomKey] }
+}
+
+/**
+ * Get a random Personality
+ */
+export const getRandomPersonality = () => {
+  return PERSONALITIES[Math.floor(Math.random() * PERSONALITIES.length)]
+}
 
 /**
  * Berechne Typ-Effektivität zwischen Attacke und Verteidiger
@@ -32,14 +72,18 @@ export const getEffectivenessText = (multiplier) => {
 }
 
 /**
- * Berechne effektive Stats basierend auf Level, Moves und Shiny-Status
+ * Berechne effektive Stats basierend auf Level, Moves, IVs, Nature, Personality und Shiny-Status
+ * This also calculates POWER SCORE used in auto-battles
  */
-export const calculateEffectiveStats = (baseStats, level, moves = [], isShiny = false) => {
-  if (!baseStats) return { hp: 50, attack: 50, defense: 50, spAttack: 50, spDefense: 50, speed: 50, total: 300 }
+export const calculateEffectiveStats = (baseStats, level, pokemon = {}) => {
+  const { moves = [], isShiny = false, ivs = null, nature = null, personality = null } = pokemon
+  
+  if (!baseStats) return { hp: 50, attack: 50, defense: 50, spAttack: 50, spDefense: 50, speed: 50, total: 300, powerScore: 100 }
   
   // Level-Multiplikator (wie im echten Pokemon)
   const levelMultiplier = 1 + (level * 0.02)
   
+  // Base stats with level scaling
   const stats = {
     hp: Math.floor(baseStats.hp * levelMultiplier),
     attack: Math.floor(baseStats.attack * levelMultiplier),
@@ -49,7 +93,33 @@ export const calculateEffectiveStats = (baseStats, level, moves = [], isShiny = 
     speed: Math.floor(baseStats.speed * levelMultiplier),
   }
   
+  // Apply IVs (0-31 bonus per stat, scaled)
+  if (ivs) {
+    stats.hp += Math.floor(ivs.hp * 0.5)
+    stats.attack += Math.floor(ivs.attack * 0.5)
+    stats.defense += Math.floor(ivs.defense * 0.5)
+    stats.spAttack += Math.floor(ivs.spAttack * 0.5)
+    stats.spDefense += Math.floor(ivs.spDefense * 0.5)
+    stats.speed += Math.floor(ivs.speed * 0.5)
+  }
+  
+  // Apply Nature (+10% one stat, -10% another)
+  if (nature) {
+    if (nature.up && stats[nature.up]) {
+      stats[nature.up] = Math.floor(stats[nature.up] * 1.1)
+    }
+    if (nature.down && stats[nature.down]) {
+      stats[nature.down] = Math.floor(stats[nature.down] * 0.9)
+    }
+  }
+  
+  // Apply Personality bonus
+  if (personality && personality.bonusStat && stats[personality.bonusStat]) {
+    stats[personality.bonusStat] += personality.bonus
+  }
+  
   // Move-Boosts anwenden
+  let movePowerBonus = 0
   moves.forEach(move => {
     if (move.statBoost) {
       Object.entries(move.statBoost).forEach(([stat, boost]) => {
@@ -61,12 +131,13 @@ export const calculateEffectiveStats = (baseStats, level, moves = [], isShiny = 
         }
       })
     }
-    // Damage Moves addieren ihre Power
+    // Each move adds to the Power Score
     if (move.power > 0) {
+      movePowerBonus += Math.floor(move.power * 0.3)
       if (move.damageClass === 'physical') {
-        stats.attack += Math.floor(move.power * 0.2)
+        stats.attack += Math.floor(move.power * 0.15)
       } else if (move.damageClass === 'special') {
-        stats.spAttack += Math.floor(move.power * 0.2)
+        stats.spAttack += Math.floor(move.power * 0.15)
       }
     }
   })
@@ -79,7 +150,56 @@ export const calculateEffectiveStats = (baseStats, level, moves = [], isShiny = 
   }
   
   stats.total = stats.hp + stats.attack + stats.defense + stats.spAttack + stats.spDefense + stats.speed
+  
+  // ============================================
+  // POWER SCORE CALCULATION (für Auto-Battle)
+  // ============================================
+  // Power Score = Base Stats + Level Bonus + IV Bonus + Move Bonus + Shiny Bonus
+  const baseScore = stats.total
+  const levelBonus = level * 5
+  const ivBonus = ivs ? Math.floor(ivs.total * 0.5) : 0
+  const shinyBonus = isShiny ? 50 : 0
+  
+  stats.powerScore = baseScore + levelBonus + ivBonus + movePowerBonus + shinyBonus
+  
   return stats
+}
+
+/**
+ * Schnelle Power-Score Berechnung für Auto-Battle
+ */
+export const calculatePowerScore = (pokemon, baseStats) => {
+  const level = pokemon.level || 1
+  const moves = pokemon.moves || []
+  const ivs = pokemon.ivs || null
+  const isShiny = pokemon.isShiny || false
+  
+  // Base power from level
+  let power = level * 10
+  
+  // Add base stats contribution
+  if (baseStats) {
+    power += Math.floor(baseStats.total * 0.5)
+  }
+  
+  // IV contribution
+  if (ivs && ivs.total) {
+    power += Math.floor(ivs.total * 0.3)
+  }
+  
+  // Move power contribution
+  moves.forEach(move => {
+    if (move.power > 0) {
+      power += Math.floor(move.power * 0.4)
+    }
+  })
+  
+  // Shiny bonus
+  if (isShiny) {
+    power = Math.floor(power * 1.15)
+  }
+  
+  return power
 }
 
 /**

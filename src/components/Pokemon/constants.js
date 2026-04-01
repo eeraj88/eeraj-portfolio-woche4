@@ -1,8 +1,8 @@
 // ============================================
-// POKEMON GAME CONSTANTS
+// POKEMON GAME CONSTANTS - UPDATED
 // ============================================
 
-// Starter Pokemon mit Evolutionsketten
+// Starter Pokemon
 export const STARTER_POKEMON = [
   { id: 1, name: 'Bisasam' },
   { id: 4, name: 'Glumanda' },
@@ -24,13 +24,17 @@ export const WILD_POKEMON_IDS = [
   102, 104, 109, 111, 114, 116, 118, 120, 123, 127, 128, 129, 131, 133, 137, 147
 ]
 
+// Seltene/Legendäre Pokemon für besondere Events
+export const RARE_POKEMON_IDS = [144, 145, 146, 150, 151, 243, 244, 245, 249, 250]
+export const LEGENDARY_POKEMON_IDS = [150, 151, 249, 250, 384, 483, 484]
+
 // Evolution Chains
 export const EVOLUTION_CHAINS = {
-  1: [1, 2, 3],       // Bisasam -> Bisaknosp -> Bisaflor
-  4: [4, 5, 6],       // Glumanda -> Glutexo -> Glurak
-  7: [7, 8, 9],       // Schiggy -> Schillok -> Turtok
-  25: [25, 26],       // Pikachu -> Raichu
-  133: [133, 134, 135, 136, 196, 197, 470, 471, 700], // Evoli -> alle Eeveelutions
+  1: [1, 2, 3],
+  4: [4, 5, 6],
+  7: [7, 8, 9],
+  25: [25, 26],
+  133: [133, 134, 135, 136, 196, 197, 470, 471, 700],
   152: [152, 153, 154],
   155: [155, 156, 157],
   158: [158, 159, 160],
@@ -41,33 +45,80 @@ export const EVOLUTION_CHAINS = {
 
 export const EVOLUTION_LEVELS = { stage2: 16, stage3: 36 }
 
-// Cooldowns in Millisekunden
-export const COOLDOWNS = {
-  PET: 10000,           // 10 Sekunden
-  BATTLE: 60000,        // 60 Sekunden
-  TIME_XP: 30000,       // 30 Sekunden
-  WILD_ENCOUNTER: 45000, // 45 Sekunden
+// ============================================
+// INDIVIDUAL VALUES (IVs) - Macht jedes Pokemon einzigartig
+// ============================================
+export const IV_RANGE = { min: 0, max: 31 } // Wie im echten Spiel
+
+// Naturen - beeinflussen Stats (+10% / -10%)
+export const NATURES = {
+  robust: { name: 'Robust', up: 'hp', down: null, emoji: '💪' },
+  hart: { name: 'Hart', up: 'attack', down: 'spAttack', emoji: '⚔️' },
+  kühn: { name: 'Kühn', up: 'defense', down: 'attack', emoji: '🛡️' },
+  mäßig: { name: 'Mäßig', up: 'spAttack', down: 'attack', emoji: '✨' },
+  still: { name: 'Still', up: 'spDefense', down: 'speed', emoji: '🔮' },
+  scheu: { name: 'Scheu', up: 'speed', down: 'attack', emoji: '💨' },
+  froh: { name: 'Froh', up: 'speed', down: 'spAttack', emoji: '😊' },
+  sanft: { name: 'Sanft', up: 'spDefense', down: 'defense', emoji: '🌸' },
+  locker: { name: 'Locker', up: 'defense', down: 'speed', emoji: '😌' },
+  hitzig: { name: 'Hitzig', up: 'spAttack', down: 'spDefense', emoji: '🔥' },
+  ernst: { name: 'Ernst', up: null, down: null, emoji: '😐' }, // Neutral
 }
 
-// XP Rewards
+// Persönlichkeiten - Flavor + kleine Boni
+export const PERSONALITIES = [
+  { name: 'Kämpferisch', trait: 'Liebt es zu kämpfen', bonusStat: 'attack', bonus: 5 },
+  { name: 'Neugierig', trait: 'Erkundet gerne', bonusStat: 'speed', bonus: 5 },
+  { name: 'Schüchtern', trait: 'Versteckt sich oft', bonusStat: 'defense', bonus: 5 },
+  { name: 'Stolz', trait: 'Sehr selbstbewusst', bonusStat: 'spAttack', bonus: 5 },
+  { name: 'Verspielt', trait: 'Immer gut drauf', bonusStat: 'hp', bonus: 5 },
+  { name: 'Klug', trait: 'Lernt schnell', bonusStat: 'spDefense', bonus: 5 },
+  { name: 'Mutig', trait: 'Fürchtet nichts', bonusStat: 'attack', bonus: 8 },
+  { name: 'Mysteriös', trait: 'Wirkt geheimnisvoll', bonusStat: 'spAttack', bonus: 8 },
+]
+
+// ============================================
+// SELTENE EVENTS
+// ============================================
+export const RARE_EVENTS = {
+  SHINY_ENCOUNTER: { chance: 0.02, name: 'Shiny-Begegnung', emoji: '✨' },
+  LEGENDARY_GLIMPSE: { chance: 0.005, name: 'Legendäre Sichtung', emoji: '🌟' },
+  STAT_BOOST: { chance: 0.08, name: 'Trainings-Durchbruch', emoji: '💪' },
+  RARE_CANDY: { chance: 0.05, name: 'Sonderbonbon gefunden', emoji: '🍬' },
+  PERFECT_IV: { chance: 0.03, name: 'Perfekte Gene', emoji: '🧬' },
+  CRITICAL_TRAINING: { chance: 0.10, name: 'Intensives Training', emoji: '🔥' },
+  FRIENDSHIP_BOOST: { chance: 0.15, name: 'Freundschaftsmoment', emoji: '❤️' },
+  MOVE_MASTERY: { chance: 0.07, name: 'Attacken-Meisterschaft', emoji: '⚡' },
+}
+
+// ============================================
+// COOLDOWNS & XP
+// ============================================
+export const COOLDOWNS = {
+  PET: 10000,
+  BATTLE: 3000,        // Viel kürzer! Auto-Battle ist schnell
+  WILD_ENCOUNTER: 5000,
+  TIME_XP: 30000,
+}
+
 export const XP_REWARDS = {
   PET: 5,
   SCROLL_50: 2,
   SCROLL_100: 2,
   PROJECT_VIEW: 10,
   TIME_ON_PAGE: 3,
-  BATTLE_WIN_BASE: 15,
-  BATTLE_WIN_LEVEL_MULT: 1.5,
+  BATTLE_WIN_BASE: 20,
+  BATTLE_WIN_LEVEL_MULT: 2,
   ARENA_WIN_BASE: 50,
-  ARENA_WIN_MULT: 10,
-  CATCH_POKEMON: 25,
-  QUEST_COMPLETE: 20,
+  ARENA_WIN_MULT: 15,
+  RARE_EVENT: 30,
 }
 
-// XP Formel
-export const xpForNextLevel = (level) => Math.floor(20 * Math.pow(1.3, level))
+export const xpForNextLevel = (level) => Math.floor(25 * Math.pow(1.25, level))
 
-// Typ-Effektivitäten (komplett wie im echten Spiel)
+// ============================================
+// TYP-EFFEKTIVITÄT
+// ============================================
 export const TYPE_EFFECTIVENESS = {
   normal: { rock: 0.5, ghost: 0, steel: 0.5 },
   fire: { fire: 0.5, water: 0.5, grass: 2, ice: 2, bug: 2, rock: 0.5, dragon: 0.5, steel: 2 },
@@ -91,101 +142,35 @@ export const TYPE_EFFECTIVENESS = {
 
 // Trainer Namen
 export const TRAINER_TITLES = [
-  'Recruiter', 'HR Manager', 'Tech Lead', 'Senior Developer', 'CTO', 
-  'Hiring Manager', 'Engineering Manager', 'Besucher', 'Frontend Lead',
-  'Product Owner', 'Scrum Master', 'DevOps Engineer', 'UX Designer'
+  'Recruiter', 'HR Manager', 'Tech Lead', 'Senior Dev', 'CTO', 
+  'Hiring Manager', 'Engineering Lead', 'Besucher', 'Frontend Lead',
+  'Product Owner', 'Scrum Master', 'DevOps', 'UX Designer', 'Praktikant'
 ]
 
-export const TRAINER_FIRST_NAMES = [
+export const TRAINER_NAMES = [
   'Anna', 'Max', 'Sophie', 'Leon', 'Emma', 'Paul', 'Laura', 'Tim',
-  'Julia', 'Felix', 'Sarah', 'David', 'Lisa', 'Jonas', 'Marie', 'Lukas',
-  'Hannah', 'Finn', 'Lea', 'Noah', 'Mia', 'Ben', 'Lena', 'Tom',
-  'Christina', 'Michael', 'Sandra', 'Stefan', 'Melanie', 'Andreas'
-]
-
-export const TRAINER_LAST_NAMES = [
-  'Müller', 'Schmidt', 'Weber', 'Fischer', 'Meyer', 'Wagner', 'Becker',
-  'Hoffmann', 'Koch', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann',
-  'Braun', 'Zimmermann', 'Krüger', 'Hartmann', 'Lange', 'Werner',
-  'Schwarz', 'Hofmann', 'Krause', 'Lehmann', 'Köhler', 'Maier'
+  'Julia', 'Felix', 'Sarah', 'David', 'Lisa', 'Jonas', 'Marie', 'Lukas'
 ]
 
 export const generateTrainerName = () => {
   const title = TRAINER_TITLES[Math.floor(Math.random() * TRAINER_TITLES.length)]
-  const firstName = TRAINER_FIRST_NAMES[Math.floor(Math.random() * TRAINER_FIRST_NAMES.length)]
-  const lastName = TRAINER_LAST_NAMES[Math.floor(Math.random() * TRAINER_LAST_NAMES.length)]
-  return `${title} ${firstName} ${lastName}`
+  const name = TRAINER_NAMES[Math.floor(Math.random() * TRAINER_NAMES.length)]
+  return `${title} ${name}`
 }
 
 // Tech-Arenen
 export const TECH_ARENAS = [
-  { 
-    id: 1, company: 'Google', leader: 'CEO Sundar Pichai', 
-    color: 'from-blue-500 to-red-500', requiredLevel: 3,
-    pokemon: [25, 81, 137], badge: '🔍'
-  },
-  { 
-    id: 2, company: 'Apple', leader: 'CEO Tim Cook', 
-    color: 'from-gray-400 to-gray-600', requiredLevel: 7,
-    pokemon: [82, 132, 233], badge: '🍎'
-  },
-  { 
-    id: 3, company: 'Microsoft', leader: 'CEO Satya Nadella', 
-    color: 'from-blue-600 to-green-500', requiredLevel: 12,
-    pokemon: [137, 474, 462], badge: '🪟'
-  },
-  { 
-    id: 4, company: 'Amazon', leader: 'CEO Andy Jassy', 
-    color: 'from-orange-500 to-yellow-500', requiredLevel: 18,
-    pokemon: [52, 53, 143], badge: '📦'
-  },
-  { 
-    id: 5, company: 'Meta', leader: 'CEO Mark Zuckerberg', 
-    color: 'from-blue-600 to-blue-400', requiredLevel: 25,
-    pokemon: [63, 64, 65], badge: '👁️'
-  },
-  { 
-    id: 6, company: 'Tesla', leader: 'CEO Elon Musk', 
-    color: 'from-red-600 to-gray-800', requiredLevel: 33,
-    pokemon: [100, 101, 145], badge: '⚡'
-  },
-  { 
-    id: 7, company: 'Netflix', leader: 'CEO Ted Sarandos', 
-    color: 'from-red-600 to-black', requiredLevel: 42,
-    pokemon: [92, 93, 94], badge: '🎬'
-  },
-  { 
-    id: 8, company: 'OpenAI', leader: 'CEO Sam Altman', 
-    color: 'from-emerald-500 to-teal-600', requiredLevel: 50,
-    pokemon: [150, 151, 386], badge: '🤖'
-  },
+  { id: 1, company: 'Google', leader: 'Sundar', color: 'from-blue-500 to-red-500', requiredLevel: 5, pokemon: [25, 81, 137], badge: '🔍', power: 150 },
+  { id: 2, company: 'Apple', leader: 'Tim', color: 'from-gray-400 to-gray-600', requiredLevel: 10, pokemon: [82, 132, 233], badge: '🍎', power: 280 },
+  { id: 3, company: 'Microsoft', leader: 'Satya', color: 'from-blue-600 to-green-500', requiredLevel: 18, pokemon: [137, 474, 462], badge: '🪟', power: 450 },
+  { id: 4, company: 'Amazon', leader: 'Andy', color: 'from-orange-500 to-yellow-500', requiredLevel: 25, pokemon: [52, 53, 143], badge: '📦', power: 600 },
+  { id: 5, company: 'Meta', leader: 'Mark', color: 'from-blue-600 to-blue-400', requiredLevel: 32, pokemon: [63, 64, 65], badge: '👁️', power: 750 },
+  { id: 6, company: 'Tesla', leader: 'Elon', color: 'from-red-600 to-gray-800', requiredLevel: 40, pokemon: [100, 101, 145], badge: '⚡', power: 900 },
+  { id: 7, company: 'Netflix', leader: 'Ted', color: 'from-red-600 to-black', requiredLevel: 48, pokemon: [92, 93, 94], badge: '🎬', power: 1050 },
+  { id: 8, company: 'OpenAI', leader: 'Sam', color: 'from-emerald-500 to-teal-600', requiredLevel: 55, pokemon: [150, 151, 386], badge: '🤖', power: 1500 },
 ]
 
-// Items
-export const ITEMS = {
-  potion: { id: 'potion', name: 'Trank', effect: 'heal', value: 20, price: 10, emoji: '🧪' },
-  superPotion: { id: 'superPotion', name: 'Supertrank', effect: 'heal', value: 50, price: 25, emoji: '💊' },
-  hyperPotion: { id: 'hyperPotion', name: 'Hypertrank', effect: 'heal', value: 100, price: 50, emoji: '💉' },
-  revive: { id: 'revive', name: 'Beleber', effect: 'revive', value: 50, price: 75, emoji: '✨' },
-  pokeball: { id: 'pokeball', name: 'Pokéball', effect: 'catch', value: 1, price: 20, emoji: '🔴' },
-  greatball: { id: 'greatball', name: 'Superball', effect: 'catch', value: 1.5, price: 40, emoji: '🔵' },
-  ultraball: { id: 'ultraball', name: 'Hyperball', effect: 'catch', value: 2, price: 80, emoji: '⚫' },
-  xAttack: { id: 'xAttack', name: 'X-Angriff', effect: 'boost', stat: 'attack', value: 1.5, price: 30, emoji: '⚔️' },
-  xDefense: { id: 'xDefense', name: 'X-Verteidigung', effect: 'boost', stat: 'defense', value: 1.5, price: 30, emoji: '🛡️' },
-  berry: { id: 'berry', name: 'Sinelbeere', effect: 'heal', value: 10, price: 5, emoji: '🍇' },
-}
-
-// Tägliche Quests
-export const DAILY_QUESTS = [
-  { id: 'pet3', type: 'pet', target: 3, xp: 15, description: '3x Pokémon streicheln' },
-  { id: 'battle2', type: 'battle', target: 2, xp: 25, description: '2 Kämpfe gewinnen' },
-  { id: 'scroll', type: 'scroll', target: 100, xp: 10, description: 'Seite komplett scrollen' },
-  { id: 'visit', type: 'visit', target: 1, xp: 5, description: 'Portfolio besuchen' },
-  { id: 'catch1', type: 'catch', target: 1, xp: 30, description: '1 Pokémon fangen' },
-  { id: 'arena1', type: 'arena', target: 1, xp: 50, description: '1 Arena herausfordern' },
-]
-
-// Typ Farben für UI
+// Typ Farben
 export const TYPE_COLORS = {
   fire: 'bg-orange-500', water: 'bg-blue-500', grass: 'bg-green-500',
   electric: 'bg-yellow-400', psychic: 'bg-pink-500', ice: 'bg-cyan-300',
@@ -195,11 +180,25 @@ export const TYPE_COLORS = {
   bug: 'bg-lime-500', ghost: 'bg-purple-800', steel: 'bg-gray-500',
 }
 
-// Max Team Größe
+// Shiny Chance
+export const SHINY_CHANCE = 0.10
+
+// Items (vereinfacht)
+export const ITEMS = {
+  potion: { id: 'potion', name: 'Trank', effect: 'heal', value: 20, emoji: '🧪' },
+  rareCandy: { id: 'rareCandy', name: 'Sonderbonbon', effect: 'levelup', value: 1, emoji: '🍬' },
+  protein: { id: 'protein', name: 'Protein', effect: 'boost_attack', value: 5, emoji: '💪' },
+  calcium: { id: 'calcium', name: 'Kalzium', effect: 'boost_spAttack', value: 5, emoji: '✨' },
+}
+
+// Max Team Size
 export const MAX_TEAM_SIZE = 6
 
-// Shiny Chance
-export const SHINY_CHANCE = 0.10 // 10%
-
-// Catch Rate Basis
-export const BASE_CATCH_RATE = 0.4 // 40% Basis
+// Daily Quests
+export const DAILY_QUESTS = [
+  { id: 'pet5', type: 'pet', goal: 5, reward: 50, description: 'Streichle dein Pokémon 5x' },
+  { id: 'battle3', type: 'battle', goal: 3, reward: 100, description: 'Gewinne 3 Kämpfe' },
+  { id: 'xp100', type: 'xp', goal: 100, reward: 75, description: 'Sammle 100 XP' },
+  { id: 'arena1', type: 'arena', goal: 1, reward: 200, description: 'Besiege eine Arena' },
+  { id: 'catch1', type: 'catch', goal: 1, reward: 150, description: 'Fange ein Pokémon' },
+]

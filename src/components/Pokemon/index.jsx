@@ -21,7 +21,7 @@ import DailyQuests, { QuestBadge } from './components/DailyQuests'
 
 // Utils & Constants
 import { fetchPokemonData, fetchMoveDetails } from './api'
-import { checkEvolutionPossible, calculateEffectiveStats } from './utils'
+import { checkEvolutionPossible, calculateEffectiveStats, calculatePowerScore } from './utils'
 import { TECH_ARENAS, COOLDOWNS, TYPE_COLORS, xpForNextLevel } from './constants'
 
 // Re-export giveXP for external use
@@ -152,11 +152,18 @@ export default function PokemonBuddy() {
       const result = await gameState.selectStarter(starter)
       setPokemonInfoMap(prev => ({ ...prev, [starter.id]: starter }))
       
+      // Show detailed info about the Pokemon's unique characteristics
+      let msg = `${starter.name}, ich wähle dich!`
       if (result.isShiny) {
-        setMessage(`WOW! Ein SHINY ${starter.name}! ✨`)
-      } else {
-        setMessage(`${starter.name}, ich wähle dich!`)
+        msg = `WOW! Ein SHINY ${starter.name}! ✨`
       }
+      if (result.nature) {
+        msg += ` (${result.nature.emoji} ${result.nature.name})`
+      }
+      if (result.ivs?.potential === 'Outstanding') {
+        msg += ' ⭐ Ausgezeichnete Gene!'
+      }
+      setMessage(msg)
     } catch (error) {
       setMessage('Fehler beim Laden des Starters!')
     }
@@ -254,16 +261,21 @@ export default function PokemonBuddy() {
   
   const canChallengeArena = nextArena && activePokemon && activePokemon.level >= nextArena.requiredLevel
   
-  // Effective Stats (memoized)
+  // Effective Stats (memoized) - Updated for new Pokemon structure
   const effectiveStats = useMemo(() => {
     if (!activePokemonInfo?.stats || !activePokemon) return null
     return calculateEffectiveStats(
       activePokemonInfo.stats,
       activePokemon.level,
-      activePokemon.moves || [],
-      activePokemon.isShiny
+      activePokemon // Pass whole pokemon object with IVs, nature, etc.
     )
-  }, [activePokemonInfo?.stats, activePokemon?.level, activePokemon?.moves, activePokemon?.isShiny])
+  }, [activePokemonInfo?.stats, activePokemon])
+  
+  // Power Score for display
+  const powerScore = useMemo(() => {
+    if (!activePokemon) return 0
+    return calculatePowerScore(activePokemon, activePokemonInfo?.stats)
+  }, [activePokemon, activePokemonInfo?.stats])
   
   // XP Progress
   const xpNeeded = activePokemon ? xpForNextLevel(activePokemon.level) : 0
@@ -428,7 +440,42 @@ export default function PokemonBuddy() {
 
                     {/* Stats */}
                     {activePokemon && activePokemonInfo && (
-                      <PokemonStats pokemon={activePokemon} pokemonInfo={activePokemonInfo} />
+                      <>
+                        {/* Power Score Display */}
+                        <div className={`flex justify-center items-center gap-4 mb-3 p-2 rounded-lg ${
+                          istDunkel ? 'bg-gray-800' : 'bg-gray-100'
+                        }`}>
+                          <div className="text-center">
+                            <p className={`text-lg font-bold ${istDunkel ? 'text-cyan-400' : 'text-cyan-600'}`}>
+                              ⚡ {powerScore}
+                            </p>
+                            <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>Power Score</p>
+                          </div>
+                          {activePokemon.nature && (
+                            <div className="text-center">
+                              <p className={`text-sm font-medium ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
+                                {activePokemon.nature.emoji} {activePokemon.nature.name}
+                              </p>
+                              <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>Natur</p>
+                            </div>
+                          )}
+                          {activePokemon.ivs && (
+                            <div className="text-center">
+                              <p className={`text-sm font-medium ${
+                                activePokemon.ivs.potential === 'Outstanding' ? 'text-yellow-400' :
+                                activePokemon.ivs.potential === 'Great' ? 'text-green-400' :
+                                istDunkel ? 'text-gray-300' : 'text-gray-600'
+                              }`}>
+                                {activePokemon.ivs.potential === 'Outstanding' ? '⭐' :
+                                 activePokemon.ivs.potential === 'Great' ? '🌟' : ''}
+                                {activePokemon.ivs.potential}
+                              </p>
+                              <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>Gene</p>
+                            </div>
+                          )}
+                        </div>
+                        <PokemonStats pokemon={activePokemon} pokemonInfo={activePokemonInfo} />
+                      </>
                     )}
 
                     {/* Action Buttons */}

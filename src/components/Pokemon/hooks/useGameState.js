@@ -3,9 +3,9 @@
 // ============================================
 
 import { useReducer, useEffect, useCallback } from 'react'
-import { xpForNextLevel, SHINY_CHANCE, MAX_TEAM_SIZE, ITEMS, DAILY_QUESTS } from '../constants'
+import { xpForNextLevel, SHINY_CHANCE, MAX_TEAM_SIZE, ITEMS, DAILY_QUESTS, IV_RANGE, NATURES, PERSONALITIES, RARE_EVENTS } from '../constants'
 import { fetchPokemonData, loadInitialMoves } from '../api'
-import { checkEvolutionPossible, generateUniqueId } from '../utils'
+import { checkEvolutionPossible, generateUniqueId, generateIVs, getRandomNature, getRandomPersonality } from '../utils'
 
 // Initial State
 const getInitialState = () => {
@@ -390,6 +390,11 @@ export const useGameState = () => {
       const isShiny = Math.random() < SHINY_CHANCE
       const initialMoves = await loadInitialMoves(starterInfo, 1)
       
+      // Generate individual stats for this Pokemon
+      const ivs = generateIVs()
+      const nature = getRandomNature()
+      const personality = getRandomPersonality()
+      
       const newPokemon = {
         uniqueId: generateUniqueId(),
         pokemonId: starterInfo.id,
@@ -401,12 +406,17 @@ export const useGameState = () => {
         currentHP: 100,
         maxHP: 100,
         nickname: null,
+        // NEW: Individual stats
+        ivs,           // { hp, attack, defense, spAttack, spDefense, speed }
+        nature,        // { name, up, down, emoji }
+        personality,   // { name, trait, bonusStat, bonus }
+        friendship: 70, // Base friendship (affects some mechanics)
       }
       
       dispatch({ type: ACTIONS.ADD_POKEMON, payload: newPokemon })
       dispatch({ type: ACTIONS.SET_LOADING, payload: false })
       
-      return { isShiny, pokemon: newPokemon }
+      return { isShiny, pokemon: newPokemon, ivs, nature, personality }
     } catch (error) {
       dispatch({ type: ACTIONS.SET_ERROR, payload: 'Fehler beim Laden des Starters' })
       dispatch({ type: ACTIONS.SET_LOADING, payload: false })
@@ -431,6 +441,11 @@ export const useGameState = () => {
     try {
       const initialMoves = await loadInitialMoves(pokemonInfo, 5)
       
+      // Generate individual stats for caught Pokemon
+      const ivs = generateIVs()
+      const nature = getRandomNature()
+      const personality = getRandomPersonality()
+      
       const newPokemon = {
         uniqueId: generateUniqueId(),
         pokemonId: pokemonInfo.id,
@@ -442,6 +457,11 @@ export const useGameState = () => {
         currentHP: 100,
         maxHP: 100,
         nickname: null,
+        // Individual stats
+        ivs,
+        nature,
+        personality,
+        friendship: 70,
       }
       
       dispatch({ type: ACTIONS.ADD_POKEMON, payload: newPokemon })

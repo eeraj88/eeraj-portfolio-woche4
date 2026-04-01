@@ -1,50 +1,32 @@
 // ============================================
-// BATTLE OVERLAY COMPONENT
+// AUTO-BATTLE OVERLAY COMPONENT
+// Simplified UI for fast automatic battles
 // ============================================
 
-import { useContext, useMemo } from 'react'
+import { useContext } from 'react'
 import { ThemeContext } from '../../../Context/ThemeContext'
 import { BATTLE_PHASES, BATTLE_TYPES } from '../hooks/useBattle'
-import { TYPE_COLORS, ITEMS } from '../constants'
-import { getHPBarColor, calculateHPPercent } from '../utils'
+import { TYPE_COLORS } from '../constants'
 
-export default function BattleOverlay({ battle, inventory, onClose }) {
+export default function BattleOverlay({ battle, onClose }) {
   const { istDunkel } = useContext(ThemeContext)
   
   const {
     battlePhase,
     battleType,
     battleLog,
-    isPlayerTurn,
+    battleProgress,
+    battleResult,
     playerPokemon,
-    playerHP,
-    playerMaxHP,
+    playerPower,
     enemyPokemon,
-    enemyHP,
-    enemyMaxHP,
+    enemyPower,
     enemyLevel,
     trainerName,
     currentArena,
-    arenaIndex,
-    canCatch,
-    executeMove,
-    useItemInBattle,
-    attemptFlee,
+    arenaProgress,
     closeBattle,
   } = battle
-  
-  const playerHPPercent = calculateHPPercent(playerHP, playerMaxHP)
-  const enemyHPPercent = calculateHPPercent(enemyHP, enemyMaxHP)
-  
-  // Verfügbare Items im Kampf
-  const battleItems = useMemo(() => {
-    const items = []
-    if (inventory?.potion > 0) items.push({ ...ITEMS.potion, count: inventory.potion })
-    if (inventory?.superPotion > 0) items.push({ ...ITEMS.superPotion, count: inventory.superPotion })
-    if (canCatch && inventory?.pokeball > 0) items.push({ ...ITEMS.pokeball, count: inventory.pokeball })
-    if (canCatch && inventory?.greatball > 0) items.push({ ...ITEMS.greatball, count: inventory.greatball })
-    return items
-  }, [inventory, canCatch])
   
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/85 backdrop-blur-sm p-4">
@@ -71,13 +53,13 @@ export default function BattleOverlay({ battle, inventory, onClose }) {
             <p className="text-xs text-white/80">{trainerName}</p>
           )}
           {currentArena && (
-            <p className="text-xs text-white/60">Pokémon {arenaIndex + 1}/3</p>
+            <p className="text-xs text-white/60">Pokémon {arenaProgress + 1}/3</p>
           )}
         </div>
         
         {/* Battle Arena */}
         <div className="p-4">
-          <div className="flex justify-between items-start mb-4">
+          <div className="flex justify-between items-center mb-4">
             
             {/* Player Pokemon */}
             <div className="text-center flex-1">
@@ -86,16 +68,16 @@ export default function BattleOverlay({ battle, inventory, onClose }) {
               </p>
               {playerPokemon && (
                 <>
-                  <div className={`relative ${battlePhase === BATTLE_PHASES.ANIMATION ? 'animate-pulse' : ''}`}>
+                  <div className={`relative ${battlePhase === BATTLE_PHASES.BATTLING ? 'animate-bounce' : ''}`}>
                     <img 
                       src={playerPokemon.isShiny ? 
                         (playerPokemon.pokemonInfo?.shinySprite || playerPokemon.pokemonInfo?.spriteStatic) :
                         playerPokemon.pokemonInfo?.spriteStatic
                       }
                       alt="Dein Pokemon"
-                      className={`w-20 h-20 mx-auto transition-all ${
-                        playerHP <= 0 ? 'grayscale opacity-50 rotate-90' : ''
-                      } ${playerPokemon.isShiny ? 'drop-shadow-[0_0_8px_gold]' : ''}`}
+                      className={`w-20 h-20 mx-auto ${
+                        playerPokemon.isShiny ? 'drop-shadow-[0_0_8px_gold]' : ''
+                      }`}
                     />
                     {playerPokemon.isShiny && (
                       <span className="absolute -top-1 -right-1 text-yellow-400">✨</span>
@@ -109,45 +91,56 @@ export default function BattleOverlay({ battle, inventory, onClose }) {
                     </span>
                   </p>
                   
-                  {/* HP Bar */}
-                  <div className={`h-2 w-20 mx-auto rounded-full overflow-hidden mt-1 ${
-                    istDunkel ? 'bg-gray-700' : 'bg-gray-200'
+                  {/* Power Score */}
+                  <div className={`mt-1 px-3 py-1 rounded-full inline-block ${
+                    istDunkel ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-100 text-cyan-700'
                   }`}>
-                    <div 
-                      className={`h-full transition-all duration-300 ${getHPBarColor(playerHPPercent)}`}
-                      style={{ width: `${playerHPPercent}%` }}
-                    />
+                    <span className="text-xs font-bold">⚡ {playerPower}</span>
                   </div>
-                  <p className={`text-[10px] ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {playerHP}/{playerMaxHP} HP
-                  </p>
                 </>
               )}
             </div>
             
-            {/* VS */}
-            <div className={`text-2xl font-black px-2 ${
-              battlePhase === BATTLE_PHASES.ANIMATION 
-                ? 'text-yellow-400 animate-pulse' 
-                : istDunkel ? 'text-gray-600' : 'text-gray-300'
-            }`}>
-              VS
+            {/* VS with Battle Animation */}
+            <div className="flex flex-col items-center px-4">
+              <div className={`text-2xl font-black ${
+                battlePhase === BATTLE_PHASES.BATTLING 
+                  ? 'text-yellow-400 animate-pulse' 
+                  : battleResult?.won ? 'text-green-400' 
+                  : battleResult ? 'text-red-400'
+                  : istDunkel ? 'text-gray-600' : 'text-gray-300'
+              }`}>
+                {battlePhase === BATTLE_PHASES.BATTLING ? '⚔️' : 
+                 battleResult?.won ? '🏆' : 
+                 battleResult ? '💀' : 'VS'}
+              </div>
+              
+              {/* Progress Bar during battle */}
+              {battlePhase === BATTLE_PHASES.BATTLING && (
+                <div className={`w-16 h-1.5 rounded-full overflow-hidden mt-2 ${
+                  istDunkel ? 'bg-gray-700' : 'bg-gray-200'
+                }`}>
+                  <div 
+                    className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-100"
+                    style={{ width: `${battleProgress}%` }}
+                  />
+                </div>
+              )}
             </div>
             
             {/* Enemy Pokemon */}
             <div className="text-center flex-1">
               <p className={`text-[10px] mb-1 truncate ${istDunkel ? 'text-orange-400' : 'text-orange-600'}`}>
-                {battleType === BATTLE_TYPES.WILD ? 'Wild' : trainerName?.split(' ')[0]}
+                {battleType === BATTLE_TYPES.WILD ? 'Wild' : trainerName?.split(' ')[0] || 'Gegner'}
               </p>
               {enemyPokemon ? (
                 <>
-                  <div className={`relative ${battlePhase === BATTLE_PHASES.ENEMY_TURN ? 'animate-pulse' : ''}`}>
+                  <div className={`relative ${battlePhase === BATTLE_PHASES.BATTLING ? 'animate-bounce' : ''}`} 
+                       style={{ animationDelay: '0.1s' }}>
                     <img 
                       src={enemyPokemon.spriteStatic}
                       alt={enemyPokemon.name}
-                      className={`w-20 h-20 mx-auto transition-all ${
-                        enemyHP <= 0 ? 'grayscale opacity-50 rotate-90' : ''
-                      }`}
+                      className="w-20 h-20 mx-auto"
                     />
                   </div>
                   
@@ -158,18 +151,12 @@ export default function BattleOverlay({ battle, inventory, onClose }) {
                     </span>
                   </p>
                   
-                  {/* HP Bar */}
-                  <div className={`h-2 w-20 mx-auto rounded-full overflow-hidden mt-1 ${
-                    istDunkel ? 'bg-gray-700' : 'bg-gray-200'
+                  {/* Power Score */}
+                  <div className={`mt-1 px-3 py-1 rounded-full inline-block ${
+                    istDunkel ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-700'
                   }`}>
-                    <div 
-                      className={`h-full transition-all duration-300 ${getHPBarColor(enemyHPPercent)}`}
-                      style={{ width: `${enemyHPPercent}%` }}
-                    />
+                    <span className="text-xs font-bold">⚡ {enemyPower}</span>
                   </div>
-                  <p className={`text-[10px] ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
-                    {enemyHP}/{enemyMaxHP} HP
-                  </p>
                   
                   {/* Type Badges */}
                   <div className="flex justify-center gap-1 mt-1">
@@ -191,7 +178,7 @@ export default function BattleOverlay({ battle, inventory, onClose }) {
           </div>
           
           {/* Battle Log */}
-          <div className={`rounded-lg p-3 h-28 overflow-y-auto text-xs space-y-1 mb-3 ${
+          <div className={`rounded-lg p-3 h-32 overflow-y-auto text-xs space-y-1 mb-3 ${
             istDunkel ? 'bg-gray-800' : 'bg-gray-100'
           }`}>
             {battleLog.map((log) => (
@@ -200,102 +187,72 @@ export default function BattleOverlay({ battle, inventory, onClose }) {
               </p>
             ))}
             {battlePhase === BATTLE_PHASES.SEARCHING && (
-              <p className="text-blue-400 animate-pulse">🔍 Suche...</p>
+              <p className="text-blue-400 animate-pulse">🔍 Suche Gegner...</p>
+            )}
+            {battlePhase === BATTLE_PHASES.BATTLING && (
+              <p className="text-yellow-400 animate-pulse">⚔️ Kampf läuft...</p>
             )}
           </div>
           
-          {/* Action Buttons - nur wenn Spieler am Zug */}
-          {isPlayerTurn && playerPokemon?.moves && (
-            <div className="space-y-2">
-              {/* Moves */}
-              <div className="grid grid-cols-2 gap-2">
-                {playerPokemon.moves.map((move, i) => (
-                  <button
-                    key={i}
-                    onClick={() => executeMove(move)}
-                    className={`p-2 rounded-lg text-left transition-all hover:scale-[1.02] ${
-                      istDunkel ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'
-                    }`}
-                  >
-                    <div className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${TYPE_COLORS[move.type]}`} />
-                      <span className={`text-xs font-medium ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
-                        {move.name}
-                      </span>
-                    </div>
-                    <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
-                      {move.power > 0 ? `${move.power} PWR` : 'Status'} • {move.type}
-                    </p>
-                  </button>
-                ))}
-              </div>
+          {/* Result Display */}
+          {battleResult && (
+            <div className={`rounded-xl p-4 mb-3 text-center ${
+              battleResult.won 
+                ? istDunkel ? 'bg-green-500/20 border border-green-500/50' : 'bg-green-100 border border-green-300'
+                : istDunkel ? 'bg-red-500/20 border border-red-500/50' : 'bg-red-100 border border-red-300'
+            }`}>
+              <p className={`text-lg font-bold mb-2 ${
+                battleResult.won ? 'text-green-400' : 'text-red-400'
+              }`}>
+                {battleResult.won ? '🎉 Sieg!' : '😔 Niederlage'}
+              </p>
               
-              {/* Items & Actions */}
-              <div className="flex gap-2">
-                {/* Items Dropdown */}
-                {battleItems.length > 0 && (
-                  <div className="relative group flex-1">
-                    <button className={`w-full py-2 px-3 rounded-lg text-xs font-medium transition-all ${
-                      istDunkel 
-                        ? 'bg-yellow-600/20 text-yellow-400 hover:bg-yellow-600/30' 
-                        : 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200'
-                    }`}>
-                      🎒 Items
-                    </button>
-                    <div className={`absolute bottom-full left-0 w-full mb-1 rounded-lg overflow-hidden shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity ${
-                      istDunkel ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'
-                    }`}>
-                      {battleItems.map(item => (
-                        <button
-                          key={item.id}
-                          onClick={() => useItemInBattle(item.id)}
-                          className={`w-full p-2 text-left text-xs flex items-center justify-between ${
-                            istDunkel ? 'hover:bg-gray-700' : 'hover:bg-gray-100'
-                          }`}
-                        >
-                          <span>{item.emoji} {item.name}</span>
-                          <span className={istDunkel ? 'text-gray-500' : 'text-gray-400'}>
-                            x{item.count}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {/* Flucht (nur bei wilden Pokemon) */}
-                {battleType === BATTLE_TYPES.WILD && (
-                  <button
-                    onClick={attemptFlee}
-                    className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-all ${
-                      istDunkel 
-                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                        : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                    }`}
-                  >
-                    🏃 Fliehen
-                  </button>
-                )}
-              </div>
+              {battleResult.won && (
+                <div className="space-y-1 text-sm">
+                  {battleResult.xpGain > 0 && (
+                    <p className="text-cyan-400">+{battleResult.xpGain} XP</p>
+                  )}
+                  {battleResult.coins > 0 && (
+                    <p className="text-yellow-400">+{battleResult.coins} Münzen</p>
+                  )}
+                  {battleResult.badge && (
+                    <p className="text-yellow-400 font-bold">{battleResult.badge} Orden erhalten!</p>
+                  )}
+                  {battleResult.rareEvent && (
+                    <p className="text-purple-400 font-bold animate-pulse">
+                      {battleResult.rareEvent.emoji} {battleResult.rareEvent.name}!
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           )}
           
-          {/* Result / Close Button */}
+          {/* Close Button */}
           {battlePhase === BATTLE_PHASES.RESULT && (
             <button
               onClick={closeBattle}
-              className="w-full mt-3 py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium hover:scale-[1.02] transition-all"
+              className="w-full py-2.5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium hover:scale-[1.02] transition-all"
             >
               Schließen
             </button>
           )}
           
-          {/* Waiting indicator */}
-          {(battlePhase === BATTLE_PHASES.ENEMY_TURN || battlePhase === BATTLE_PHASES.ANIMATION) && (
-            <div className={`text-center py-2 text-xs ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
-              <span className="animate-pulse">
-                {battlePhase === BATTLE_PHASES.ENEMY_TURN ? 'Gegner ist am Zug...' : 'Bitte warten...'}
-              </span>
+          {/* Battle in progress indicator */}
+          {battlePhase === BATTLE_PHASES.BATTLING && (
+            <div className={`text-center py-2 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="text-xs animate-pulse">
+                ⚔️ Auto-Kampf läuft... ({Math.floor(battleProgress)}%)
+              </p>
+            </div>
+          )}
+          
+          {/* Searching indicator */}
+          {battlePhase === BATTLE_PHASES.SEARCHING && (
+            <div className={`text-center py-2 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="text-xs animate-pulse">
+                🔍 Lade Gegner...
+              </p>
             </div>
           )}
         </div>
@@ -326,6 +283,7 @@ function getLogColor(type, isDark) {
     fail: 'text-red-400',
     error: 'text-red-500 font-bold',
     boost: 'text-purple-400',
+    rare: 'text-purple-400 font-bold animate-pulse',
   }
   return colors[type] || (isDark ? 'text-gray-300' : 'text-gray-700')
 }
