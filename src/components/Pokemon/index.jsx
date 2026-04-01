@@ -14,10 +14,7 @@ import { useXPEvents, giveXP } from './hooks/useXPEvents'
 import StarterSelection from './components/StarterSelection'
 import PokemonStats from './components/PokemonStats'
 import BattleOverlay from './components/BattleOverlay'
-import TeamDisplay from './components/TeamDisplay'
-import Inventory, { Shop } from './components/Inventory'
 import Pokedex from './components/Pokedex'
-import DailyQuests, { QuestBadge } from './components/DailyQuests'
 
 // Utils & Constants
 import { fetchPokemonData, fetchMoveDetails } from './api'
@@ -45,10 +42,7 @@ export default function PokemonBuddy() {
   
   // UI State
   const [isOpen, setIsOpen] = useState(false)
-  const [activeTab, setActiveTab] = useState('pokemon') // pokemon, team, inventory
   const [showPokedex, setShowPokedex] = useState(false)
-  const [showQuests, setShowQuests] = useState(false)
-  const [showShop, setShowShop] = useState(false)
   const [showMoveSelect, setShowMoveSelect] = useState(false)
   const [pendingMove, setPendingMove] = useState(null)
   
@@ -240,19 +234,6 @@ export default function PokemonBuddy() {
     await battle.startArenaBattle(arena)
   }
   
-  const handleBuyItem = (itemId, price) => {
-    if (gameState.spendCoins(price)) {
-      gameState.addItem(itemId)
-      setMessage(`${itemId} gekauft!`)
-    }
-  }
-  
-  const handleUseItem = (itemId) => {
-    if (gameState.useItem(itemId)) {
-      setMessage('Item benutzt!')
-    }
-  }
-  
   // Get next available arena
   const nextArena = useMemo(() => {
     if (!state?.defeatedArenas) return TECH_ARENAS[0]
@@ -352,26 +333,7 @@ export default function PokemonBuddy() {
                 Pokémon Buddy
                 {activePokemon?.isShiny && <span className="text-yellow-300">✨</span>}
               </h3>
-              <div className="flex items-center gap-2">
-                {/* Quest Badge */}
-                {state?.dailyQuests?.length > 0 && (
-                  <QuestBadge 
-                    quests={state.dailyQuests} 
-                    progress={state.questProgress || {}}
-                    onClick={() => setShowQuests(true)}
-                  />
-                )}
-                {/* Pending Move */}
-                {pendingMove && (
-                  <button 
-                    onClick={() => setShowMoveSelect(true)}
-                    className="bg-yellow-500 text-black px-2 py-0.5 rounded-full text-xs font-bold animate-pulse"
-                  >
-                    🔔
-                  </button>
-                )}
-                <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white text-xl">×</button>
-              </div>
+              <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white text-xl">×</button>
             </div>
             {activePokemonInfo && (
               <p className="text-xs text-white/80">{activePokemonInfo.name} • Lv. {activePokemon?.level}</p>
@@ -384,215 +346,144 @@ export default function PokemonBuddy() {
               <StarterSelection onSelect={handleStarterSelect} />
             ) : (
               <>
-                {/* Tabs */}
-                <div className="flex gap-1 mb-3">
-                  {['pokemon', 'team', 'items'].map(tab => (
-                    <button
-                      key={tab}
-                      onClick={() => setActiveTab(tab)}
-                      className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                        activeTab === tab
-                          ? 'bg-red-500 text-white'
-                          : istDunkel
-                            ? 'bg-gray-800 text-gray-400 hover:bg-gray-700'
-                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                      }`}
-                    >
-                      {tab === 'pokemon' && '🎮 Pokémon'}
-                      {tab === 'team' && `👥 Team (${state?.team?.length || 0})`}
-                      {tab === 'items' && '🎒 Items'}
-                    </button>
-                  ))}
+                {/* Pokemon Display */}
+                <div className={`text-center mb-3 ${isEvolving ? 'evolving' : isAnimating ? 'animate-bounce' : ''}`}>
+                  {activePokemonInfo && (
+                    <>
+                      <img 
+                        src={activePokemon?.isShiny ? activePokemonInfo.shinySprite : activePokemonInfo.sprite}
+                        alt={activePokemonInfo.name}
+                        className={`w-24 h-24 mx-auto ${activePokemon?.isShiny ? 'shiny-sparkle' : ''}`}
+                      />
+                      <div className="flex justify-center gap-1 mt-1">
+                        {activePokemonInfo.types?.map(type => (
+                          <span key={type} className={`px-2 py-0.5 rounded text-[9px] text-white uppercase font-bold ${TYPE_COLORS[type]}`}>
+                            {type}
+                          </span>
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                {/* Pokemon Tab */}
-                {activeTab === 'pokemon' && (
-                  <>
-                    {/* Pokemon Display */}
-                    <div className={`text-center mb-3 ${isEvolving ? 'evolving' : isAnimating ? 'animate-bounce' : ''}`}>
-                      {activePokemonInfo && (
-                        <>
-                          <img 
-                            src={activePokemon?.isShiny ? activePokemonInfo.shinySprite : activePokemonInfo.sprite}
-                            alt={activePokemonInfo.name}
-                            className={`w-24 h-24 mx-auto ${activePokemon?.isShiny ? 'shiny-sparkle' : ''}`}
-                          />
-                          <div className="flex justify-center gap-1 mt-1">
-                            {activePokemonInfo.types?.map(type => (
-                              <span key={type} className={`px-2 py-0.5 rounded text-[9px] text-white uppercase font-bold ${TYPE_COLORS[type]}`}>
-                                {type}
-                              </span>
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
+                {/* Message */}
+                {message && (
+                  <div className={`text-center p-2 mb-3 rounded-lg text-xs ${
+                    isEvolving ? 'bg-yellow-500/20 text-yellow-400 font-bold' 
+                    : istDunkel ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-600'
+                  }`}>
+                    {message}
+                  </div>
+                )}
 
-                    {/* Message */}
-                    {message && (
-                      <div className={`text-center p-2 mb-3 rounded-lg text-xs ${
-                        isEvolving ? 'bg-yellow-500/20 text-yellow-400 font-bold' 
-                        : istDunkel ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-600'
-                      }`}>
-                        {message}
-                      </div>
+                {/* Power Score & Nature - Simplified */}
+                {activePokemon && (
+                  <div className={`flex justify-center items-center gap-3 mb-3 p-2 rounded-lg text-sm ${
+                    istDunkel ? 'bg-gray-800' : 'bg-gray-100'
+                  }`}>
+                    <span className={`font-bold ${istDunkel ? 'text-cyan-400' : 'text-cyan-600'}`}>
+                      ⚡ {powerScore}
+                    </span>
+                    {activePokemon.nature && (
+                      <span className={istDunkel ? 'text-gray-300' : 'text-gray-600'}>
+                        {activePokemon.nature.emoji} {activePokemon.nature.name}
+                      </span>
                     )}
+                  </div>
+                )}
 
-                    {/* Stats */}
-                    {activePokemon && activePokemonInfo && (
-                      <>
-                        {/* Power Score Display */}
-                        <div className={`flex justify-center items-center gap-4 mb-3 p-2 rounded-lg ${
-                          istDunkel ? 'bg-gray-800' : 'bg-gray-100'
-                        }`}>
-                          <div className="text-center">
-                            <p className={`text-lg font-bold ${istDunkel ? 'text-cyan-400' : 'text-cyan-600'}`}>
-                              ⚡ {powerScore}
-                            </p>
-                            <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>Power Score</p>
-                          </div>
-                          {activePokemon.nature && (
-                            <div className="text-center">
-                              <p className={`text-sm font-medium ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
-                                {activePokemon.nature.emoji} {activePokemon.nature.name}
-                              </p>
-                              <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>Natur</p>
-                            </div>
-                          )}
-                          {activePokemon.ivs && (
-                            <div className="text-center">
-                              <p className={`text-sm font-medium ${
-                                activePokemon.ivs.potential === 'Outstanding' ? 'text-yellow-400' :
-                                activePokemon.ivs.potential === 'Great' ? 'text-green-400' :
-                                istDunkel ? 'text-gray-300' : 'text-gray-600'
-                              }`}>
-                                {activePokemon.ivs.potential === 'Outstanding' ? '⭐' :
-                                 activePokemon.ivs.potential === 'Great' ? '🌟' : ''}
-                                {activePokemon.ivs.potential}
-                              </p>
-                              <p className={`text-[10px] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>Gene</p>
-                            </div>
-                          )}
-                        </div>
-                        <PokemonStats pokemon={activePokemon} pokemonInfo={activePokemonInfo} />
-                      </>
-                    )}
-
-                    {/* Action Buttons */}
-                    <div className="space-y-2 mt-3">
-                      {/* Pet Button */}
-                      <button
-                        onClick={handlePet}
-                        disabled={!canPet}
-                        className={`w-full py-2 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
-                          canPet 
-                            ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white hover:scale-[1.02]' 
-                            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                        }`}
-                      >
-                        💕 {canPet ? 'Streicheln (+5 XP)' : 'Warte...'}
-                      </button>
-
-                      {/* Battle Buttons */}
-                      <div className="grid grid-cols-2 gap-2">
-                        <button
-                          onClick={() => handleStartBattle('wild')}
-                          disabled={!canBattle}
-                          className={`py-2 rounded-xl font-medium text-sm transition-all ${
-                            canBattle 
-                              ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-[1.02]' 
-                              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                          }`}
-                        >
-                          🌿 Wild
-                        </button>
-                        <button
-                          onClick={() => handleStartBattle('trainer')}
-                          disabled={!canBattle}
-                          className={`py-2 rounded-xl font-medium text-sm transition-all ${
-                            canBattle 
-                              ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:scale-[1.02]' 
-                              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                          }`}
-                        >
-                          ⚔️ Trainer
-                        </button>
-                      </div>
-
-                      {/* Arena Button */}
-                      {nextArena ? (
-                        <button
-                          onClick={() => handleStartArena(nextArena)}
-                          disabled={!canChallengeArena}
-                          className={`w-full py-2 rounded-xl font-medium transition-all flex flex-col items-center ${
-                            canChallengeArena
-                              ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:scale-[1.02]'
-                              : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                          }`}
-                        >
-                          <span>🏟️ Arena: {nextArena.company}</span>
-                          <span className="text-[10px] opacity-80">
-                            {canChallengeArena 
-                              ? `${nextArena.leader} (${state?.defeatedArenas?.length || 0}/8)`
-                              : `Ab Level ${nextArena.requiredLevel}`
-                            }
-                          </span>
-                        </button>
-                      ) : (
-                        <div className="w-full py-2 rounded-xl bg-gradient-to-r from-yellow-500 to-orange-600 text-white text-center">
-                          🏆 Alle Arenen besiegt!
-                        </div>
-                      )}
+                {/* XP Bar */}
+                {activePokemon && (
+                  <div className="mb-3">
+                    <div className="flex justify-between text-[10px] mb-1">
+                      <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>XP</span>
+                      <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>
+                        {activePokemon.xp}/{xpNeeded}
+                      </span>
                     </div>
-
-                    {/* Quick Links */}
-                    <div className="flex gap-2 mt-3">
-                      <button
-                        onClick={() => setShowPokedex(true)}
-                        className={`flex-1 py-1.5 rounded-lg text-xs font-medium ${
-                          istDunkel ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                        }`}
-                      >
-                        📖 Pokédex
-                      </button>
-                      <button
-                        onClick={gameState.resetGame}
-                        className={`py-1.5 px-3 rounded-lg text-xs ${
-                          istDunkel ? 'text-gray-600 hover:text-red-400' : 'text-gray-400 hover:text-red-500'
-                        }`}
-                      >
-                        🗑️
-                      </button>
+                    <div className={`h-2 rounded-full overflow-hidden ${istDunkel ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                      <div 
+                        className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-300"
+                        style={{ width: `${xpProgress}%` }}
+                      />
                     </div>
-                  </>
+                  </div>
                 )}
 
-                {/* Team Tab */}
-                {activeTab === 'team' && (
-                  <TeamDisplay
-                    team={state?.team}
-                    activeIndex={state?.activeIndex}
-                    onSelect={gameState.setActiveIndex}
-                    pokemonInfoMap={pokemonInfoMap}
-                  />
-                )}
+                {/* Action Buttons */}
+                <div className="space-y-2">
+                  {/* Pet Button */}
+                  <button
+                    onClick={handlePet}
+                    disabled={!canPet}
+                    className={`w-full py-2 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
+                      canPet 
+                        ? 'bg-gradient-to-r from-pink-500 to-red-500 text-white hover:scale-[1.02]' 
+                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    💕 {canPet ? 'Streicheln (+5 XP)' : 'Warte...'}
+                  </button>
 
-                {/* Items Tab */}
-                {activeTab === 'items' && (
-                  <Inventory
-                    inventory={state?.inventory}
-                    onUseItem={handleUseItem}
-                    onBuyItem={() => setShowShop(true)}
-                  />
-                )}
+                  {/* Battle Buttons */}
+                  <div className="grid grid-cols-2 gap-2">
+                    <button
+                      onClick={() => handleStartBattle('wild')}
+                      disabled={!canBattle}
+                      className={`py-2 rounded-xl font-medium text-sm transition-all ${
+                        canBattle 
+                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-[1.02]' 
+                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      🌿 Wild
+                    </button>
+                    <button
+                      onClick={() => handleStartBattle('trainer')}
+                      disabled={!canBattle}
+                      className={`py-2 rounded-xl font-medium text-sm transition-all ${
+                        canBattle 
+                          ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:scale-[1.02]' 
+                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      ⚔️ Trainer
+                    </button>
+                  </div>
 
-                {/* Stats Footer */}
+                  {/* Arena Button */}
+                  {nextArena && (
+                    <button
+                      onClick={() => handleStartArena(nextArena)}
+                      disabled={!canChallengeArena}
+                      className={`w-full py-2 rounded-xl font-medium transition-all text-sm ${
+                        canChallengeArena
+                          ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:scale-[1.02]'
+                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      🏟️ {nextArena.company} Arena {!canChallengeArena && `(Lv.${nextArena.requiredLevel})`}
+                    </button>
+                  )}
+                </div>
+
+                {/* Footer Stats */}
                 <div className={`mt-3 pt-2 border-t text-[10px] flex justify-between ${
                   istDunkel ? 'border-gray-700 text-gray-500' : 'border-gray-200 text-gray-400'
                 }`}>
-                  <span>🏆 {state?.wins || 0}W / {state?.losses || 0}L</span>
-                  <span>📖 {Object.keys(state?.pokedex || {}).length} gesehen</span>
-                  <span>Tag {Math.floor((Date.now() - (state?.createdAt || Date.now())) / 86400000) + 1}</span>
+                  <span>🏆 {state?.wins || 0}W/{state?.losses || 0}L</span>
+                  <button
+                    onClick={() => setShowPokedex(true)}
+                    className="hover:text-cyan-400"
+                  >
+                    📖 Pokédex
+                  </button>
+                  <button
+                    onClick={gameState.resetGame}
+                    className="hover:text-red-400"
+                  >
+                    🗑️ Reset
+                  </button>
                 </div>
               </>
             )}
@@ -670,24 +561,6 @@ export default function PokemonBuddy() {
       {/* Pokedex Overlay */}
       {showPokedex && (
         <Pokedex pokedex={state?.pokedex} onClose={() => setShowPokedex(false)} />
-      )}
-
-      {/* Quests Overlay */}
-      {showQuests && (
-        <DailyQuests
-          quests={state?.dailyQuests || []}
-          progress={state?.questProgress || {}}
-          onClose={() => setShowQuests(false)}
-        />
-      )}
-
-      {/* Shop Overlay */}
-      {showShop && (
-        <Shop
-          inventory={state?.inventory}
-          onBuy={handleBuyItem}
-          onClose={() => setShowShop(false)}
-        />
       )}
     </>
   )

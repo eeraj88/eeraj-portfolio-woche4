@@ -147,12 +147,22 @@ export const loadInitialMoves = async (pokemonInfo, level = 1) => {
   // Alle Moves die bis zum aktuellen Level gelernt werden können
   const learnableMoves = pokemonInfo.levelUpMoves.filter(m => m.level <= level)
   
+  // Duplikate entfernen (nach URL)
+  const uniqueMoves = learnableMoves.filter((move, index, self) => 
+    index === self.findIndex(m => m.url === move.url)
+  )
+  
   // Die letzten 4 Moves laden (oder alle wenn weniger)
-  const movesToLoad = learnableMoves.slice(-4)
+  const movesToLoad = uniqueMoves.slice(-4)
   const promises = movesToLoad.map(m => fetchMoveDetails(m.url).catch(() => null))
   const moves = await Promise.all(promises)
   
-  return moves.filter(Boolean)
+  // Nochmal Duplikate nach ID filtern
+  const uniqueResults = moves.filter(Boolean).filter((move, index, self) =>
+    index === self.findIndex(m => m.id === move.id)
+  )
+  
+  return uniqueResults
 }
 
 /**
