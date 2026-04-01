@@ -8,7 +8,7 @@ import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
-import PokemonBuddy from './components/PokemonBuddy'
+import PokemonBuddy from './components/Pokemon'
 import { ThemeContext } from './Context/ThemeContext'
 
 function App() {
