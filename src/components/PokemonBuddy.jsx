@@ -68,6 +68,66 @@ const EVOLUTION_CHAINS = {
 
 const EVOLUTION_LEVELS = { stage2: 16, stage3: 36 }
 
+// 8 Tech-Arenen mit CEOs und ihren Pokemon-Teams
+const TECH_ARENAS = [
+  { 
+    id: 1, 
+    company: 'Google', 
+    leader: 'CEO Sundar Pichai', 
+    color: 'from-blue-500 to-red-500',
+    pokemon: [25, 81, 137] // Pikachu, Magnetilo, Porygon (Tech/Electric)
+  },
+  { 
+    id: 2, 
+    company: 'Apple', 
+    leader: 'CEO Tim Cook', 
+    color: 'from-gray-400 to-gray-600',
+    pokemon: [82, 132, 233] // Magneton, Ditto, Porygon2
+  },
+  { 
+    id: 3, 
+    company: 'Microsoft', 
+    leader: 'CEO Satya Nadella', 
+    color: 'from-blue-600 to-green-500',
+    pokemon: [137, 474, 462] // Porygon, Porygon-Z, Magnezone
+  },
+  { 
+    id: 4, 
+    company: 'Amazon', 
+    leader: 'CEO Andy Jassy', 
+    color: 'from-orange-500 to-yellow-500',
+    pokemon: [52, 53, 143] // Mauzi, Snobilikat, Relaxo (Lieferung & Faulenzen)
+  },
+  { 
+    id: 5, 
+    company: 'Meta', 
+    leader: 'CEO Mark Zuckerberg', 
+    color: 'from-blue-600 to-blue-400',
+    pokemon: [63, 64, 65] // Abra, Kadabra, Simsala (Mind Control lol)
+  },
+  { 
+    id: 6, 
+    company: 'Tesla', 
+    leader: 'CEO Elon Musk', 
+    color: 'from-red-600 to-gray-800',
+    pokemon: [100, 101, 145] // Voltobal, Lektrobal, Zapdos (Electric)
+  },
+  { 
+    id: 7, 
+    company: 'Netflix', 
+    leader: 'CEO Ted Sarandos', 
+    color: 'from-red-600 to-black',
+    pokemon: [92, 93, 94] // Nebulak, Alpollo, Gengar (Binge-Watching Geister)
+  },
+  { 
+    id: 8, 
+    company: 'OpenAI', 
+    leader: 'CEO Sam Altman', 
+    color: 'from-emerald-500 to-teal-600',
+    pokemon: [150, 151, 386] // Mewtu, Mew, Deoxys (AI/Psychic legendaries)
+  },
+]
+
 const getStoredData = () => {
   try {
     const stored = localStorage.getItem('pokemonBuddy')
@@ -101,9 +161,15 @@ export default function PokemonBuddy() {
   const [opponent, setOpponent] = useState(null)
   const [trainerName, setTrainerName] = useState('')
   const [battleLog, setBattleLog] = useState([])
-  const [battlePhase, setBattlePhase] = useState('idle') // idle, intro, fighting, result
+  const [battlePhase, setBattlePhase] = useState('idle') // idle, searching, intro, fighting, result
   const [playerHP, setPlayerHP] = useState(100)
   const [opponentHP, setOpponentHP] = useState(100)
+  
+  // Arena states
+  const [showArenaSelect, setShowArenaSelect] = useState(false)
+  const [currentArena, setCurrentArena] = useState(null)
+  const [arenaOpponentIndex, setArenaOpponentIndex] = useState(0) // 0, 1, 2 für die 3 Pokemon
+  const [arenaOpponents, setArenaOpponents] = useState([]) // Die 3 Pokemon des Arenaleiters
 
   // XP Event Listener
   useEffect(() => {
@@ -463,6 +529,172 @@ export default function PokemonBuddy() {
     setBattlePhase('idle')
     setOpponent(null)
     setBattleLog([])
+    setCurrentArena(null)
+    setArenaOpponentIndex(0)
+    setArenaOpponents([])
+  }
+
+  // === ARENA SYSTEM ===
+  const getDefeatedArenas = () => data?.defeatedArenas || []
+  
+  const startArenaBattle = async (arena) => {
+    if (!data) return
+    
+    setShowArenaSelect(false)
+    setCurrentArena(arena)
+    setArenaOpponentIndex(0)
+    setIsBattling(true)
+    setBattlePhase('searching')
+    setBattleLog(['Betrete Arena...'])
+    setPlayerHP(100)
+    setOpponentHP(100)
+    setOpponent(null)
+    setTrainerName(arena.leader)
+    
+    await new Promise(r => setTimeout(r, 1500))
+    
+    // Alle 3 Pokemon des Arenaleiters laden
+    const opponentInfos = []
+    for (const pokemonId of arena.pokemon) {
+      const info = await fetchPokemonData(pokemonId)
+      if (info) opponentInfos.push(info)
+    }
+    setArenaOpponents(opponentInfos)
+    
+    // Arena-Level ist immer Spieler-Level + 2
+    const arenaLevel = data.level + 2
+    
+    setBattleLog([
+      `🏟️ ${arena.company} Arena!`,
+      `${arena.leader} ist aufgetaucht!`
+    ])
+    setBattlePhase('intro')
+    
+    await new Promise(r => setTimeout(r, 1500))
+    
+    // Erstes Pokemon des Arenaleiters
+    if (opponentInfos[0]) {
+      setOpponent({ ...opponentInfos[0], level: arenaLevel })
+      setBattleLog([
+        `🏟️ ${arena.company} Arena!`,
+        `${arena.leader} ist aufgetaucht!`,
+        `${arena.leader} schickt ${opponentInfos[0].name} (Lv.${arenaLevel})!`,
+        `[Pokemon 1/3]`
+      ])
+      
+      setTimeout(() => {
+        setBattlePhase('fighting')
+        runArenaBattle(arena, opponentInfos, 0, arenaLevel, 100)
+      }, 1500)
+    }
+  }
+
+  const runArenaBattle = async (arena, opponentInfos, oppIndex, arenaLevel, currentPlayerHP) => {
+    const opponentInfo = opponentInfos[oppIndex]
+    const levelDiff = data.level - arenaLevel // Wird negativ sein (Spieler ist schwächer)
+    
+    let pHP = currentPlayerHP
+    let oHP = 100
+    
+    const logs = [
+      `🏟️ ${arena.company} Arena!`,
+      `${arena.leader}: Pokemon ${oppIndex + 1}/3`,
+      `${opponentInfo.name} (Lv.${arenaLevel}) kämpft!`
+    ]
+    
+    // Simuliere Kampf
+    const rounds = 3 + Math.floor(Math.random() * 3)
+    
+    for (let i = 0; i < rounds && pHP > 0 && oHP > 0; i++) {
+      await new Promise(r => setTimeout(r, 700))
+      
+      // Spieler greift an
+      const playerBaseDmg = 10 + Math.random() * 10
+      const playerLevelBonus = data.level * 3
+      const playerAdvantage = levelDiff > 0 ? levelDiff * 5 : 0
+      const playerDmg = Math.floor(playerBaseDmg + playerLevelBonus + playerAdvantage)
+      oHP = Math.max(0, oHP - playerDmg)
+      logs.push(`${pokemonInfo.name} greift an! -${playerDmg} HP`)
+      setBattleLog([...logs])
+      setOpponentHP(oHP)
+      
+      if (oHP <= 0) break
+      
+      await new Promise(r => setTimeout(r, 500))
+      
+      // Gegner greift an (stärker weil höheres Level)
+      const opponentBaseDmg = 12 + Math.random() * 12
+      const opponentLevelBonus = arenaLevel * 3
+      const opponentAdvantage = Math.abs(levelDiff) * 4
+      const opponentDmg = Math.floor(opponentBaseDmg + opponentLevelBonus + opponentAdvantage)
+      pHP = Math.max(0, pHP - opponentDmg)
+      logs.push(`${opponentInfo.name} greift an! -${opponentDmg} HP`)
+      setBattleLog([...logs])
+      setPlayerHP(pHP)
+    }
+    
+    await new Promise(r => setTimeout(r, 500))
+    
+    // Wer hat gewonnen?
+    const playerWins = oHP <= 0 || pHP > oHP
+    
+    if (playerWins) {
+      setOpponentHP(0)
+      
+      // Gibt es noch mehr Pokemon?
+      if (oppIndex < 2 && opponentInfos[oppIndex + 1]) {
+        logs.push(`✓ ${opponentInfo.name} besiegt!`)
+        logs.push(`${arena.leader} schickt ${opponentInfos[oppIndex + 1].name}!`)
+        setBattleLog([...logs])
+        
+        await new Promise(r => setTimeout(r, 1500))
+        
+        // Nächstes Pokemon
+        setArenaOpponentIndex(oppIndex + 1)
+        setOpponent({ ...opponentInfos[oppIndex + 1], level: arenaLevel })
+        setOpponentHP(100)
+        
+        // Weiterkämpfen mit verbleibendem HP
+        setTimeout(() => {
+          runArenaBattle(arena, opponentInfos, oppIndex + 1, arenaLevel, pHP)
+        }, 500)
+      } else {
+        // ALLE 3 BESIEGT - Arena gewonnen!
+        const xpGain = 50 + (arena.id * 10) // Mehr XP für spätere Arenen
+        logs.push(`🏆 ARENA BESIEGT!`)
+        logs.push(`${arena.leader}: "Unglaublich!"`)
+        logs.push(`+${xpGain} XP erhalten!`)
+        logs.push(`🎖️ ${arena.company}-Orden erhalten!`)
+        setBattleLog([...logs])
+        
+        setTimeout(() => {
+          giveXP(xpGain, `${arena.company} Arena`)
+          setData(prev => ({
+            ...prev,
+            defeatedArenas: [...(prev.defeatedArenas || []), arena.id]
+          }))
+        }, 500)
+        
+        setBattlePhase('result')
+      }
+    } else {
+      // Spieler verloren
+      const xpLoss = Math.min(data.xp, 15 + arena.id * 2)
+      logs.push(`${pokemonInfo.name} wurde besiegt...`)
+      logs.push(`${arena.leader}: "Trainiere mehr und komm wieder!"`)
+      logs.push(`-${xpLoss} XP verloren`)
+      setBattleLog([...logs])
+      setPlayerHP(0)
+      
+      setTimeout(() => {
+        setData(prev => ({
+          ...prev,
+          xp: Math.max(0, prev.xp - xpLoss)
+        }))
+      }, 500)
+      
+      setBattlePhase('result')
+    }
   }
 
   // Starter wählen
@@ -689,6 +921,14 @@ export default function PokemonBuddy() {
                   ⚔️ {canBattle ? 'Kämpfen!' : 'Cooldown...'}
                 </button>
 
+                {/* Arena Button */}
+                <button
+                  onClick={() => setShowArenaSelect(true)}
+                  className="w-full py-2 mt-2 rounded-xl font-medium transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:scale-105"
+                >
+                  🏟️ Arena ({getDefeatedArenas().length}/8)
+                </button>
+
                 {/* Info */}
                 <div className={`mt-3 text-xs space-y-1 ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
                   <p className="text-center">XP durch: Seite besuchen, Zeit verbringen, Wiederkommen</p>
@@ -717,9 +957,16 @@ export default function PokemonBuddy() {
             istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
           }`}>
             {/* Battle Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 p-3 text-white text-center">
-              <h3 className="font-bold text-sm">⚔️ Trainer-Kampf</h3>
+            <div className={`p-3 text-white text-center bg-gradient-to-r ${
+              currentArena ? currentArena.color : 'from-purple-600 to-indigo-700'
+            }`}>
+              <h3 className="font-bold text-sm">
+                {currentArena ? `🏟️ ${currentArena.company} Arena` : '⚔️ Trainer-Kampf'}
+              </h3>
               <p className="text-xs text-white/80">{trainerName}</p>
+              {currentArena && (
+                <p className="text-xs text-white/60">Pokemon {arenaOpponentIndex + 1}/3</p>
+              )}
             </div>
 
             {/* Battle Arena */}
@@ -808,16 +1055,20 @@ export default function PokemonBuddy() {
                     log.includes('besiegt...') ? 'text-red-400' :
                     log.includes('+') && log.includes('XP') ? 'text-cyan-400' :
                     log.includes('-') && log.includes('XP') ? 'text-red-500 font-bold' :
-                    log.includes('Beeindruckend') || log.includes('nächstes Mal') ? 'text-orange-400 italic' :
+                    log.includes('ARENA BESIEGT') || log.includes('Orden') ? 'text-yellow-400 font-bold' :
+                    log.includes('Beeindruckend') || log.includes('nächstes Mal') || log.includes('Unglaublich') || log.includes('Trainiere mehr') ? 'text-orange-400 italic' :
                     log.includes('aufgetaucht') ? 'text-yellow-400 font-bold' :
-                    log.includes('schickt') ? 'text-purple-400' :
-                    log.includes('Suche') ? 'text-blue-400 animate-pulse' :
+                    log.includes('Arena!') ? 'text-orange-500 font-bold' :
+                    log.includes('schickt') || log.includes('kämpft') ? 'text-purple-400' :
+                    log.includes('✓') ? 'text-green-400' :
+                    log.includes('Suche') || log.includes('Betrete') ? 'text-blue-400 animate-pulse' :
+                    log.includes('Pokemon') && log.includes('/3') ? 'text-gray-400 text-[10px]' :
                     istDunkel ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     {log}
                   </p>
                 ))}
-                {battlePhase === 'searching' && (
+                {battlePhase === 'searching' && !currentArena && (
                   <p className="text-blue-400 animate-pulse">🔍 Suche Gegner...</p>
                 )}
                 {battlePhase === 'fighting' && (
@@ -834,6 +1085,76 @@ export default function PokemonBuddy() {
                   Schließen
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Arena Select Overlay */}
+      {showArenaSelect && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className={`w-full max-w-md max-h-[80vh] rounded-2xl overflow-hidden ${
+            istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
+          }`}>
+            {/* Arena Header */}
+            <div className="bg-gradient-to-r from-yellow-500 to-orange-600 p-3 text-white text-center">
+              <h3 className="font-bold">🏟️ Tech-Arenen</h3>
+              <p className="text-xs text-white/80">Besiege die CEOs! (Lv. +2)</p>
+            </div>
+
+            {/* Arena List */}
+            <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
+              {TECH_ARENAS.map((arena) => {
+                const isDefeated = getDefeatedArenas().includes(arena.id)
+                return (
+                  <button
+                    key={arena.id}
+                    onClick={() => !isDefeated && startArenaBattle(arena)}
+                    disabled={isDefeated}
+                    className={`w-full p-3 rounded-xl text-left transition-all ${
+                      isDefeated 
+                        ? 'bg-gray-700/50 cursor-not-allowed'
+                        : `bg-gradient-to-r ${arena.color} hover:scale-[1.02] hover:shadow-lg`
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className={`font-bold ${isDefeated ? 'text-gray-500' : 'text-white'}`}>
+                          {isDefeated ? '✓ ' : ''}{arena.company}
+                        </p>
+                        <p className={`text-xs ${isDefeated ? 'text-gray-600' : 'text-white/80'}`}>
+                          {arena.leader}
+                        </p>
+                      </div>
+                      <div className={`text-2xl ${isDefeated ? 'grayscale opacity-50' : ''}`}>
+                        {arena.id === 1 && '🔍'}
+                        {arena.id === 2 && '🍎'}
+                        {arena.id === 3 && '🪟'}
+                        {arena.id === 4 && '📦'}
+                        {arena.id === 5 && '👤'}
+                        {arena.id === 6 && '🚗'}
+                        {arena.id === 7 && '🎬'}
+                        {arena.id === 8 && '🤖'}
+                      </div>
+                    </div>
+                    {isDefeated && (
+                      <p className="text-xs text-green-500 mt-1">🎖️ Orden erhalten!</p>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Close Button */}
+            <div className="p-4 pt-0">
+              <button
+                onClick={() => setShowArenaSelect(false)}
+                className={`w-full py-2 rounded-xl font-medium ${
+                  istDunkel ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Zurück
+              </button>
             </div>
           </div>
         </div>
