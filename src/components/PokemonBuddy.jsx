@@ -316,14 +316,26 @@ export default function PokemonBuddy() {
     
     setCanBattle(false)
     setIsBattling(true)
-    setBattlePhase('intro')
-    setBattleLog([])
+    setBattlePhase('searching') // Neue Phase: Gegner suchen
+    setBattleLog(['Suche Gegner...'])
     setPlayerHP(100)
     setOpponentHP(100)
+    setOpponent(null)
+    setTrainerName('')
+    
+    // Kurze Pause für "Suche Gegner..."
+    await new Promise(r => setTimeout(r, 1500))
     
     // Trainer generieren
     const trainer = generateTrainerName()
     setTrainerName(trainer)
+    
+    // "Trainer ist aufgetaucht!" anzeigen
+    setBattleLog([`${trainer} ist aufgetaucht!`])
+    setBattlePhase('intro')
+    
+    // Kurze Pause bevor Pokemon gezeigt wird
+    await new Promise(r => setTimeout(r, 1200))
     
     // Zufälliges Gegner-Pokemon laden
     const randomId = WILD_POKEMON_IDS[Math.floor(Math.random() * WILD_POKEMON_IDS.length)]
@@ -335,7 +347,7 @@ export default function PokemonBuddy() {
       setOpponent({ ...opponentInfo, level: opponentLevel })
       
       setBattleLog([
-        `${trainer} fordert dich heraus!`,
+        `${trainer} ist aufgetaucht!`,
         `${trainer} schickt ${opponentInfo.name} (Lv.${opponentLevel})!`
       ])
       
@@ -343,7 +355,7 @@ export default function PokemonBuddy() {
       setTimeout(() => {
         setBattlePhase('fighting')
         runBattle(opponentInfo, opponentLevel, trainer)
-      }, 2000)
+      }, 1500)
     }
   }
 
@@ -354,7 +366,7 @@ export default function PokemonBuddy() {
     let pHP = 100
     let oHP = 100
     const logs = [
-      `${trainer} fordert dich heraus!`,
+      `${trainer} ist aufgetaucht!`,
       `${trainer} schickt ${opponentInfo.name} (Lv.${opponentLevel})!`
     ]
     
@@ -797,12 +809,17 @@ export default function PokemonBuddy() {
                     log.includes('+') && log.includes('XP') ? 'text-cyan-400' :
                     log.includes('-') && log.includes('XP') ? 'text-red-500 font-bold' :
                     log.includes('Beeindruckend') || log.includes('nächstes Mal') ? 'text-orange-400 italic' :
-                    log.includes('fordert') || log.includes('schickt') ? 'text-purple-400' :
+                    log.includes('aufgetaucht') ? 'text-yellow-400 font-bold' :
+                    log.includes('schickt') ? 'text-purple-400' :
+                    log.includes('Suche') ? 'text-blue-400 animate-pulse' :
                     istDunkel ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     {log}
                   </p>
                 ))}
+                {battlePhase === 'searching' && (
+                  <p className="text-blue-400 animate-pulse">🔍 Suche Gegner...</p>
+                )}
                 {battlePhase === 'fighting' && (
                   <p className="text-yellow-400 animate-pulse">Kampf läuft...</p>
                 )}
