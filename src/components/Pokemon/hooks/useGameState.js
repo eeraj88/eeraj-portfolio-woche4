@@ -389,11 +389,25 @@ export const useGameState = () => {
   // === ACTION CREATORS ===
   
   const selectStarter = useCallback(async (starterInfo) => {
+    if (!starterInfo || !starterInfo.id) {
+      console.error('Invalid starter info:', starterInfo)
+      dispatch({ type: ACTIONS.SET_ERROR, payload: 'Ungültiges Pokemon' })
+      return null
+    }
+    
     dispatch({ type: ACTIONS.SET_LOADING, payload: true })
     
     try {
       const isShiny = Math.random() < SHINY_CHANCE
-      const initialMoves = await loadInitialMoves(starterInfo, 1)
+      
+      // Try to load moves, but don't fail if it doesn't work
+      let initialMoves = []
+      try {
+        initialMoves = await loadInitialMoves(starterInfo, 1)
+      } catch (moveError) {
+        console.warn('Could not load moves, using empty:', moveError)
+        initialMoves = []
+      }
       
       // Generate individual stats for this Pokemon
       const ivs = generateIVs()
@@ -423,9 +437,10 @@ export const useGameState = () => {
       
       return { isShiny, pokemon: newPokemon, ivs, nature, personality }
     } catch (error) {
+      console.error('Starter selection failed:', error)
       dispatch({ type: ACTIONS.SET_ERROR, payload: 'Fehler beim Laden des Starters' })
       dispatch({ type: ACTIONS.SET_LOADING, payload: false })
-      throw error
+      return null
     }
   }, [])
   
