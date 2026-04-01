@@ -1,6 +1,6 @@
 // ============================================
 // AUTO-BATTLE OVERLAY COMPONENT
-// Simplified UI for fast automatic battles
+// Animated battles with HP bars
 // ============================================
 
 import { useContext } from 'react'
@@ -15,13 +15,14 @@ export default function BattleOverlay({ battle, onClose }) {
     battlePhase,
     battleType,
     battleLog,
-    battleProgress,
     battleResult,
     playerPokemon,
     playerPower,
+    playerHP,
     enemyPokemon,
     enemyPower,
     enemyLevel,
+    opponentHP,
     trainerName,
     currentArena,
     arenaProgress,
@@ -91,11 +92,27 @@ export default function BattleOverlay({ battle, onClose }) {
                     </span>
                   </p>
                   
+                  {/* HP Bar */}
+                  <div className="mt-2 px-2">
+                    <div className="flex justify-between text-[9px] mb-0.5">
+                      <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>HP</span>
+                      <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>{Math.round(playerHP || 0)}%</span>
+                    </div>
+                    <div className={`h-2 rounded-full overflow-hidden ${istDunkel ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                      <div 
+                        className={`h-full transition-all duration-500 ${
+                          (playerHP || 0) > 50 ? 'bg-green-500' : (playerHP || 0) > 20 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}
+                        style={{ width: `${playerHP || 0}%` }}
+                      />
+                    </div>
+                  </div>
+                  
                   {/* Power Score */}
                   <div className={`mt-1 px-3 py-1 rounded-full inline-block ${
                     istDunkel ? 'bg-cyan-500/20 text-cyan-400' : 'bg-cyan-100 text-cyan-700'
                   }`}>
-                    <span className="text-xs font-bold">⚡ {playerPower}</span>
+                    <span className="text-xs font-bold">⚡ {Math.round(playerPower || 0)}</span>
                   </div>
                 </>
               )}
@@ -114,24 +131,12 @@ export default function BattleOverlay({ battle, onClose }) {
                  battleResult?.won ? '🏆' : 
                  battleResult ? '💀' : 'VS'}
               </div>
-              
-              {/* Progress Bar during battle */}
-              {battlePhase === BATTLE_PHASES.BATTLING && (
-                <div className={`w-16 h-1.5 rounded-full overflow-hidden mt-2 ${
-                  istDunkel ? 'bg-gray-700' : 'bg-gray-200'
-                }`}>
-                  <div 
-                    className="h-full bg-gradient-to-r from-yellow-400 to-orange-500 transition-all duration-100"
-                    style={{ width: `${battleProgress}%` }}
-                  />
-                </div>
-              )}
             </div>
             
             {/* Enemy Pokemon */}
             <div className="text-center flex-1">
               <p className={`text-[10px] mb-1 truncate ${istDunkel ? 'text-orange-400' : 'text-orange-600'}`}>
-                {battleType === BATTLE_TYPES.WILD ? 'Wild' : trainerName?.split(' ')[0] || 'Gegner'}
+                {trainerName?.split(' ')[0] || 'Gegner'}
               </p>
               {enemyPokemon ? (
                 <>
@@ -151,11 +156,27 @@ export default function BattleOverlay({ battle, onClose }) {
                     </span>
                   </p>
                   
+                  {/* HP Bar */}
+                  <div className="mt-2 px-2">
+                    <div className="flex justify-between text-[9px] mb-0.5">
+                      <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>HP</span>
+                      <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>{Math.round(opponentHP || 0)}%</span>
+                    </div>
+                    <div className={`h-2 rounded-full overflow-hidden ${istDunkel ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                      <div 
+                        className={`h-full transition-all duration-500 ${
+                          (opponentHP || 0) > 50 ? 'bg-green-500' : (opponentHP || 0) > 20 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}
+                        style={{ width: `${opponentHP || 0}%` }}
+                      />
+                    </div>
+                  </div>
+                  
                   {/* Power Score */}
                   <div className={`mt-1 px-3 py-1 rounded-full inline-block ${
                     istDunkel ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-700'
                   }`}>
-                    <span className="text-xs font-bold">⚡ {enemyPower}</span>
+                    <span className="text-xs font-bold">⚡ {Math.round(enemyPower || 0)}</span>
                   </div>
                   
                   {/* Type Badges */}
@@ -242,13 +263,13 @@ export default function BattleOverlay({ battle, onClose }) {
           {battlePhase === BATTLE_PHASES.BATTLING && (
             <div className={`text-center py-2 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
               <p className="text-xs animate-pulse">
-                ⚔️ Auto-Kampf läuft... ({Math.floor(battleProgress)}%)
+                ⚔️ Kampf läuft...
               </p>
             </div>
           )}
           
           {/* Searching indicator */}
-          {battlePhase === BATTLE_PHASES.SEARCHING && (
+          {(battlePhase === BATTLE_PHASES.SEARCHING || battlePhase === BATTLE_PHASES.INTRO) && (
             <div className={`text-center py-2 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
               <p className="text-xs animate-pulse">
                 🔍 Lade Gegner...

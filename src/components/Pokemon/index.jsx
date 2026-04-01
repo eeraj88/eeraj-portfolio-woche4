@@ -206,7 +206,7 @@ export default function PokemonBuddy() {
     setShowMoveSelect(false)
   }
   
-  const handleStartBattle = async (type = 'trainer') => {
+  const handleStartBattle = async () => {
     if (!canBattle) return
     
     setCanBattle(false)
@@ -217,11 +217,7 @@ export default function PokemonBuddy() {
       battle.playerPokemon = { ...activePokemon, pokemonInfo: activePokemonInfo }
     }
     
-    if (type === 'wild') {
-      await battle.startWildBattle()
-    } else {
-      await battle.startTrainerBattle()
-    }
+    await battle.startTrainerBattle()
   }
   
   const handleStartArena = async (arena) => {
@@ -425,31 +421,18 @@ export default function PokemonBuddy() {
                     💕 {canPet ? 'Streicheln (+5 XP)' : 'Warte...'}
                   </button>
 
-                  {/* Battle Buttons */}
-                  <div className="grid grid-cols-2 gap-2">
-                    <button
-                      onClick={() => handleStartBattle('wild')}
-                      disabled={!canBattle}
-                      className={`py-2 rounded-xl font-medium text-sm transition-all ${
-                        canBattle 
-                          ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:scale-[1.02]' 
-                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                      }`}
-                    >
-                      🌿 Wild
-                    </button>
-                    <button
-                      onClick={() => handleStartBattle('trainer')}
-                      disabled={!canBattle}
-                      className={`py-2 rounded-xl font-medium text-sm transition-all ${
-                        canBattle 
-                          ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:scale-[1.02]' 
-                          : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                      }`}
-                    >
-                      ⚔️ Trainer
-                    </button>
-                  </div>
+                  {/* Trainer Battle Button */}
+                  <button
+                    onClick={handleStartBattle}
+                    disabled={!canBattle}
+                    className={`w-full py-2 rounded-xl font-medium transition-all ${
+                      canBattle 
+                        ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:scale-[1.02]' 
+                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                    }`}
+                  >
+                    ⚔️ {canBattle ? 'Trainer-Kampf' : 'Warte...'}
+                  </button>
 
                   {/* Arena Button */}
                   {nextArena && (
