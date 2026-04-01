@@ -69,12 +69,14 @@ const EVOLUTION_CHAINS = {
 const EVOLUTION_LEVELS = { stage2: 16, stage3: 36 }
 
 // 8 Tech-Arenen mit CEOs und ihren Pokemon-Teams
+// requiredLevel = Mindestlevel um Arena zu betreten
 const TECH_ARENAS = [
   { 
     id: 1, 
     company: 'Google', 
     leader: 'CEO Sundar Pichai', 
     color: 'from-blue-500 to-red-500',
+    requiredLevel: 3,
     pokemon: [25, 81, 137] // Pikachu, Magnetilo, Porygon (Tech/Electric)
   },
   { 
@@ -82,6 +84,7 @@ const TECH_ARENAS = [
     company: 'Apple', 
     leader: 'CEO Tim Cook', 
     color: 'from-gray-400 to-gray-600',
+    requiredLevel: 7,
     pokemon: [82, 132, 233] // Magneton, Ditto, Porygon2
   },
   { 
@@ -89,6 +92,7 @@ const TECH_ARENAS = [
     company: 'Microsoft', 
     leader: 'CEO Satya Nadella', 
     color: 'from-blue-600 to-green-500',
+    requiredLevel: 12,
     pokemon: [137, 474, 462] // Porygon, Porygon-Z, Magnezone
   },
   { 
@@ -96,6 +100,7 @@ const TECH_ARENAS = [
     company: 'Amazon', 
     leader: 'CEO Andy Jassy', 
     color: 'from-orange-500 to-yellow-500',
+    requiredLevel: 18,
     pokemon: [52, 53, 143] // Mauzi, Snobilikat, Relaxo (Lieferung & Faulenzen)
   },
   { 
@@ -103,6 +108,7 @@ const TECH_ARENAS = [
     company: 'Meta', 
     leader: 'CEO Mark Zuckerberg', 
     color: 'from-blue-600 to-blue-400',
+    requiredLevel: 25,
     pokemon: [63, 64, 65] // Abra, Kadabra, Simsala (Mind Control lol)
   },
   { 
@@ -110,6 +116,7 @@ const TECH_ARENAS = [
     company: 'Tesla', 
     leader: 'CEO Elon Musk', 
     color: 'from-red-600 to-gray-800',
+    requiredLevel: 33,
     pokemon: [100, 101, 145] // Voltobal, Lektrobal, Zapdos (Electric)
   },
   { 
@@ -117,6 +124,7 @@ const TECH_ARENAS = [
     company: 'Netflix', 
     leader: 'CEO Ted Sarandos', 
     color: 'from-red-600 to-black',
+    requiredLevel: 42,
     pokemon: [92, 93, 94] // Nebulak, Alpollo, Gengar (Binge-Watching Geister)
   },
   { 
@@ -124,6 +132,7 @@ const TECH_ARENAS = [
     company: 'OpenAI', 
     leader: 'CEO Sam Altman', 
     color: 'from-emerald-500 to-teal-600',
+    requiredLevel: 50,
     pokemon: [150, 151, 386] // Mewtu, Mew, Deoxys (AI/Psychic legendaries)
   },
 ]
@@ -166,7 +175,7 @@ export default function PokemonBuddy() {
   const [opponentHP, setOpponentHP] = useState(100)
   
   // Arena states
-  const [showArenaSelect, setShowArenaSelect] = useState(false)
+
   const [currentArena, setCurrentArena] = useState(null)
   const [arenaOpponentIndex, setArenaOpponentIndex] = useState(0) // 0, 1, 2 für die 3 Pokemon
   const [arenaOpponents, setArenaOpponents] = useState([]) // Die 3 Pokemon des Arenaleiters
@@ -537,10 +546,29 @@ export default function PokemonBuddy() {
   // === ARENA SYSTEM ===
   const getDefeatedArenas = () => data?.defeatedArenas || []
   
+  // Nächste verfügbare Arena ermitteln
+  const getNextArena = () => {
+    const defeated = getDefeatedArenas()
+    // Finde die erste Arena die noch nicht besiegt ist
+    return TECH_ARENAS.find(arena => !defeated.includes(arena.id)) || null
+  }
+  
+  // Prüfen ob Arena verfügbar ist (Level-Check)
+  const canChallengeArena = (arena) => {
+    if (!data || !arena) return false
+    return data.level >= arena.requiredLevel
+  }
+  
+  const startNextArena = () => {
+    const nextArena = getNextArena()
+    if (nextArena && canChallengeArena(nextArena)) {
+      startArenaBattle(nextArena)
+    }
+  }
+  
   const startArenaBattle = async (arena) => {
     if (!data) return
     
-    setShowArenaSelect(false)
     setCurrentArena(arena)
     setArenaOpponentIndex(0)
     setIsBattling(true)
@@ -922,12 +950,40 @@ export default function PokemonBuddy() {
                 </button>
 
                 {/* Arena Button */}
-                <button
-                  onClick={() => setShowArenaSelect(true)}
-                  className="w-full py-2 mt-2 rounded-xl font-medium transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:scale-105"
-                >
-                  🏟️ Arena ({getDefeatedArenas().length}/8)
-                </button>
+                {(() => {
+                  const nextArena = getNextArena()
+                  const canChallenge = nextArena && canChallengeArena(nextArena)
+                  const allDefeated = !nextArena
+                  
+                  return (
+                    <button
+                      onClick={startNextArena}
+                      disabled={!canChallenge && !allDefeated}
+                      className={`w-full py-2 mt-2 rounded-xl font-medium transition-all flex flex-col items-center justify-center ${
+                        allDefeated
+                          ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white'
+                          : canChallenge
+                            ? 'bg-gradient-to-r from-yellow-500 to-orange-600 text-white hover:scale-105'
+                            : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                      }`}
+                    >
+                      <span className="flex items-center gap-2">
+                        🏟️ {allDefeated 
+                          ? 'Alle Arenen besiegt! 🏆' 
+                          : `Arena: ${nextArena.company}`
+                        }
+                      </span>
+                      {!allDefeated && (
+                        <span className="text-[10px] opacity-80">
+                          {canChallenge 
+                            ? `${nextArena.leader} (${getDefeatedArenas().length + 1}/8)`
+                            : `Ab Level ${nextArena.requiredLevel} (${getDefeatedArenas().length}/8)`
+                          }
+                        </span>
+                      )}
+                    </button>
+                  )
+                })()}
 
                 {/* Info */}
                 <div className={`mt-3 text-xs space-y-1 ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
@@ -1090,75 +1146,6 @@ export default function PokemonBuddy() {
         </div>
       )}
 
-      {/* Arena Select Overlay */}
-      {showArenaSelect && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className={`w-full max-w-md max-h-[80vh] rounded-2xl overflow-hidden ${
-            istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
-          }`}>
-            {/* Arena Header */}
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-600 p-3 text-white text-center">
-              <h3 className="font-bold">🏟️ Tech-Arenen</h3>
-              <p className="text-xs text-white/80">Besiege die CEOs! (Lv. +2)</p>
-            </div>
-
-            {/* Arena List */}
-            <div className="p-4 space-y-2 overflow-y-auto max-h-[60vh]">
-              {TECH_ARENAS.map((arena) => {
-                const isDefeated = getDefeatedArenas().includes(arena.id)
-                return (
-                  <button
-                    key={arena.id}
-                    onClick={() => !isDefeated && startArenaBattle(arena)}
-                    disabled={isDefeated}
-                    className={`w-full p-3 rounded-xl text-left transition-all ${
-                      isDefeated 
-                        ? 'bg-gray-700/50 cursor-not-allowed'
-                        : `bg-gradient-to-r ${arena.color} hover:scale-[1.02] hover:shadow-lg`
-                    }`}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className={`font-bold ${isDefeated ? 'text-gray-500' : 'text-white'}`}>
-                          {isDefeated ? '✓ ' : ''}{arena.company}
-                        </p>
-                        <p className={`text-xs ${isDefeated ? 'text-gray-600' : 'text-white/80'}`}>
-                          {arena.leader}
-                        </p>
-                      </div>
-                      <div className={`text-2xl ${isDefeated ? 'grayscale opacity-50' : ''}`}>
-                        {arena.id === 1 && '🔍'}
-                        {arena.id === 2 && '🍎'}
-                        {arena.id === 3 && '🪟'}
-                        {arena.id === 4 && '📦'}
-                        {arena.id === 5 && '👤'}
-                        {arena.id === 6 && '🚗'}
-                        {arena.id === 7 && '🎬'}
-                        {arena.id === 8 && '🤖'}
-                      </div>
-                    </div>
-                    {isDefeated && (
-                      <p className="text-xs text-green-500 mt-1">🎖️ Orden erhalten!</p>
-                    )}
-                  </button>
-                )
-              })}
-            </div>
-
-            {/* Close Button */}
-            <div className="p-4 pt-0">
-              <button
-                onClick={() => setShowArenaSelect(false)}
-                className={`w-full py-2 rounded-xl font-medium ${
-                  istDunkel ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                }`}
-              >
-                Zurück
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   )
 }
