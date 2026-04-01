@@ -92,31 +92,41 @@ export const getLeaderboard = async (limit = 10) => {
 export const subscribeToLeaderboard = (callback, limit = 10) => {
   if (!database) {
     console.warn('Firebase not initialized')
+    callback([]) // Return empty array immediately
     return () => {}
   }
   
-  const trainersRef = ref(database, 'trainers')
-  const topTrainersQuery = query(trainersRef, orderByChild('score'), limitToLast(limit))
-  
-  const unsubscribe = onValue(topTrainersQuery, (snapshot) => {
-    if (!snapshot.exists()) {
-      callback([])
-      return
-    }
+  try {
+    const trainersRef = ref(database, 'trainers')
+    const topTrainersQuery = query(trainersRef, orderByChild('score'), limitToLast(limit))
     
-    const trainers = []
-    snapshot.forEach((child) => {
-      trainers.push({
-        id: child.key,
-        ...child.val()
+    const unsubscribe = onValue(topTrainersQuery, (snapshot) => {
+      if (!snapshot.exists()) {
+        callback([])
+        return
+      }
+      
+      const trainers = []
+      snapshot.forEach((child) => {
+        trainers.push({
+          id: child.key,
+          ...child.val()
+        })
       })
+      
+      // Sort descending by score
+      callback(trainers.sort((a, b) => b.score - a.score))
+    }, (error) => {
+      console.error('Leaderboard subscription error:', error)
+      callback([])
     })
     
-    // Sort descending by score
-    callback(trainers.sort((a, b) => b.score - a.score))
-  })
-  
-  return unsubscribe
+    return unsubscribe
+  } catch (error) {
+    console.error('Leaderboard setup error:', error)
+    callback([])
+    return () => {}
+  }
 }
 
 /**

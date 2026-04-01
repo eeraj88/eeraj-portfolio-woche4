@@ -18,30 +18,40 @@ function Skills() {
     Frontend: {
       icon: '💻',
       gradient: 'from-blue-500 to-cyan-500',
-      gridClass: 'md:col-span-2 md:row-span-2', // Große Box
+      bg: 'bg-blue-500/10',
+      border: 'border-blue-500/30',
+      gridClass: 'md:col-span-2', // Breite Box
       description: 'Web Development'
     },
     Marketing: {
       icon: '📈',
       gradient: 'from-green-500 to-emerald-500',
-      gridClass: 'md:col-span-2', // Breite Box
+      bg: 'bg-green-500/10',
+      border: 'border-green-500/30',
+      gridClass: 'md:col-span-1', // Kleine Box
       description: 'Digital Marketing'
     },
     Design: {
       icon: '🎨',
       gradient: 'from-purple-500 to-pink-500',
-      gridClass: 'md:col-span-2 md:row-span-2', // Große Box
+      bg: 'bg-purple-500/10',
+      border: 'border-purple-500/30',
+      gridClass: 'md:col-span-1', // Kleine Box
       description: 'Creative Suite'
     },
     Business: {
       icon: '💼',
       gradient: 'from-orange-500 to-red-500',
+      bg: 'bg-orange-500/10',
+      border: 'border-orange-500/30',
       gridClass: 'md:col-span-1', // Kleine Box
       description: 'Sales & Management'
     },
     Tools: {
       icon: '⚡',
-      gradient: 'from-yellow-500 to-orange-500',
+      gradient: 'from-yellow-500 to-amber-500',
+      bg: 'bg-yellow-500/10',
+      border: 'border-yellow-500/30',
       gridClass: 'md:col-span-1', // Kleine Box
       description: 'Productivity'
     }
@@ -78,7 +88,7 @@ function Skills() {
         </p>
 
         {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-fr">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {kategorien.map(kategorie => {
             const config = kategorieConfig[kategorie]
             const katSkills = skillsNachKategorie[kategorie]
@@ -87,11 +97,11 @@ function Skills() {
               <div 
                 key={kategorie}
                 className={`
-                  group relative overflow-hidden rounded-2xl p-6
-                  transition-all duration-500 hover:scale-[1.02]
+                  group relative overflow-hidden rounded-2xl p-5
+                  transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1
                   ${config.gridClass}
                   ${istDunkel 
-                    ? 'bg-gray-900/70 border border-gray-700/50 hover:border-gray-600' 
+                    ? `${config.bg} border ${config.border} hover:border-opacity-60` 
                     : 'bg-white border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-lg'
                   }
                 `}
@@ -103,15 +113,15 @@ function Skills() {
                 `} />
 
                 {/* Header */}
-                <div className="relative z-10 flex items-center gap-3 mb-4">
-                  <span className="text-3xl">{config.icon}</span>
+                <div className="relative z-10 flex items-center gap-3 mb-3">
+                  <span className="text-2xl">{config.icon}</span>
                   <div>
-                    <h3 className={`text-xl font-bold ${
+                    <h3 className={`text-lg font-bold ${
                       istDunkel ? 'text-white' : 'text-gray-900'
                     }`}>
                       {kategorie}
                     </h3>
-                    <p className={`text-xs ${
+                    <p className={`text-[10px] ${
                       istDunkel ? 'text-gray-500' : 'text-gray-400'
                     }`}>
                       {config.description}
@@ -120,7 +130,7 @@ function Skills() {
                   
                   {/* Skill Count Badge */}
                   <span className={`
-                    ml-auto px-2 py-1 rounded-full text-xs font-medium
+                    ml-auto px-2 py-0.5 rounded-full text-xs font-medium
                     bg-gradient-to-r ${config.gradient} text-white
                   `}>
                     {katSkills.length}
@@ -128,13 +138,13 @@ function Skills() {
                 </div>
 
                 {/* Skills as Pills */}
-                <div className="relative z-10 flex flex-wrap gap-2">
+                <div className="relative z-10 flex flex-wrap gap-1.5">
                   {katSkills.map(skill => (
                     <div
                       key={skill.id}
                       className={`
-                        group/skill relative px-3 py-1.5 rounded-full text-sm font-medium
-                        border transition-all duration-300 cursor-default
+                        group/skill relative px-2.5 py-1 rounded-full text-xs font-medium
+                        border transition-all duration-200 cursor-default
                         hover:scale-105
                         ${istDunkel ? getLevelColor(skill.level) : getLevelColorLight(skill.level)}
                       `}
@@ -157,9 +167,9 @@ function Skills() {
 
                 {/* Decorative Corner Gradient */}
                 <div className={`
-                  absolute -bottom-10 -right-10 w-32 h-32 rounded-full
-                  bg-gradient-to-br ${config.gradient} opacity-10
-                  group-hover:opacity-20 transition-opacity duration-500
+                  absolute -bottom-8 -right-8 w-24 h-24 rounded-full
+                  bg-gradient-to-br ${config.gradient} opacity-5
+                  group-hover:opacity-15 transition-opacity duration-300
                 `} />
               </div>
             )

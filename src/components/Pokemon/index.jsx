@@ -175,9 +175,14 @@ export default function PokemonBuddy() {
   
   const handleStarterSelect = async (starter) => {
     try {
+      if (!starter || !starter.id) {
+        setMessage('Fehler: Ungültiges Pokémon!')
+        return
+      }
+      
       const result = await gameState.selectStarter(starter)
       
-      if (!result) {
+      if (!result || !result.pokemon) {
         setMessage('Fehler beim Laden des Starters!')
         return
       }
@@ -198,7 +203,7 @@ export default function PokemonBuddy() {
       setMessage(msg)
     } catch (error) {
       console.error('Starter selection error:', error)
-      setMessage('Fehler beim Laden des Starters!')
+      setMessage('Fehler beim Laden! Bitte nochmal versuchen.')
     }
   }
   

@@ -16,12 +16,21 @@ export default function Leaderboard() {
   useEffect(() => {
     setIsLoading(true)
     
+    // Timeout falls Firebase nicht antwortet
+    const timeout = setTimeout(() => {
+      setIsLoading(false)
+    }, 3000)
+    
     const unsubscribe = subscribeToLeaderboard((data) => {
+      clearTimeout(timeout)
       setTrainers(data)
       setIsLoading(false)
     }, 10)
     
-    return () => unsubscribe()
+    return () => {
+      clearTimeout(timeout)
+      unsubscribe()
+    }
   }, [])
   
   // Get medal emoji for top 3
