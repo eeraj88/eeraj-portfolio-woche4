@@ -215,23 +215,25 @@ export default function PokemonBuddy() {
     return () => clearInterval(interval)
   }, [data])
 
-  // Scroll XP - alle 25% der Seite = +5 XP
+  // Scroll XP - nur bei 50% und 100% = +2 XP (max 4 XP pro Seitenbesuch)
   useEffect(() => {
     if (!data) return
     
-    let lastMilestone = 0
+    let scrollMilestones = { 50: false, 100: false }
     
     const handleScroll = () => {
       const scrollPercent = Math.floor(
         (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
       )
       
-      // Alle 25% ein Milestone
-      const currentMilestone = Math.floor(scrollPercent / 25)
-      
-      if (currentMilestone > lastMilestone && currentMilestone <= 4) {
-        lastMilestone = currentMilestone
-        giveXP(5, `${currentMilestone * 25}% gescrollt`)
+      // Nur bei 50% und 100%
+      if (scrollPercent >= 50 && !scrollMilestones[50]) {
+        scrollMilestones[50] = true
+        giveXP(2, '50% gescrollt')
+      }
+      if (scrollPercent >= 95 && !scrollMilestones[100]) {
+        scrollMilestones[100] = true
+        giveXP(2, 'Seite komplett')
       }
     }
     
@@ -412,18 +414,18 @@ export default function PokemonBuddy() {
     for (const move of newMoves) {
       const moveDetails = await fetchMoveDetails(move.url)
       if (moveDetails) {
-        // Wenn weniger als 2 Moves, automatisch lernen
+        // Wenn weniger als 4 Moves, automatisch lernen
         const currentMoves = data?.moves || []
-        if (currentMoves.length < 2) {
+        if (currentMoves.length < 4) {
           setData(prev => ({
             ...prev,
             moves: [...(prev.moves || []), moveDetails]
           }))
           setMessage(`${pokemonInfo.name} lernt ${moveDetails.name}!`)
         } else {
-          // Sonst Auswahl anbieten
+          // Sonst als Benachrichtigung speichern (nicht sofort Popup)
           setPendingMoveChoice(moveDetails)
-          setShowMoveSelect(true)
+          // Nicht automatisch öffnen - User klickt auf Glocke
         }
       }
     }
@@ -458,9 +460,9 @@ export default function PokemonBuddy() {
     // Alle Moves die bis zum aktuellen Level gelernt werden können
     const learnableMoves = pokemonInfo.levelUpMoves.filter(m => m.level <= level)
     
-    // Die ersten 2 Moves laden (oder alle wenn weniger)
+    // Die ersten 4 Moves laden (oder alle wenn weniger)
     const initialMoves = []
-    for (const move of learnableMoves.slice(0, 2)) {
+    for (const move of learnableMoves.slice(0, 4)) {
       const details = await fetchMoveDetails(move.url)
       if (details) initialMoves.push(details)
     }
@@ -1058,30 +1060,43 @@ export default function PokemonBuddy() {
       )}
       
       {/* Floating Button */}
-      <button
-        onClick={() => {
-          setIsOpen(!isOpen)
-          if (!data && starterList.length === 0) loadStarters()
-        }}
-        className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center overflow-hidden ${
-          isAnimating ? 'animate-bounce' : 'wiggle-animation'
-        } ${
-          istDunkel 
-            ? 'bg-gradient-to-br from-red-500 to-red-700 shadow-red-500/30' 
-            : 'bg-gradient-to-br from-red-400 to-red-600 shadow-red-400/30'
-        }`}
-        style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.4)' }}
-      >
-        {pokemonInfo ? (
-          <img 
-            src={data?.isShiny ? pokemonInfo.shinySprite : (pokemonInfo.sprite || pokemonInfo.spriteStatic)}
-            alt={pokemonInfo.name}
-            className={`w-14 h-14 object-contain ${data?.isShiny ? 'shiny-sparkle' : ''} ${isEvolving ? 'evolving' : ''}`}
-          />
-        ) : (
-          <span className="text-3xl">🎮</span>
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => {
+            setIsOpen(!isOpen)
+            if (!data && starterList.length === 0) loadStarters()
+          }}
+          className={`w-16 h-16 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center overflow-hidden ${
+            isAnimating ? 'animate-bounce' : 'wiggle-animation'
+          } ${
+            istDunkel 
+              ? 'bg-gradient-to-br from-red-500 to-red-700 shadow-red-500/30' 
+              : 'bg-gradient-to-br from-red-400 to-red-600 shadow-red-400/30'
+          }`}
+          style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.4)' }}
+        >
+          {pokemonInfo ? (
+            <img 
+              src={data?.isShiny ? pokemonInfo.shinySprite : (pokemonInfo.sprite || pokemonInfo.spriteStatic)}
+              alt={pokemonInfo.name}
+              className={`w-14 h-14 object-contain ${data?.isShiny ? 'shiny-sparkle' : ''} ${isEvolving ? 'evolving' : ''}`}
+            />
+          ) : (
+            <span className="text-3xl">🎮</span>
+          )}
+        </button>
+        
+        {/* Benachrichtigung Badge für neue Attacke */}
+        {pendingMoveChoice && (
+          <button
+            onClick={() => setShowMoveSelect(true)}
+            className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center animate-bounce shadow-lg"
+            title="Neue Attacke verfügbar!"
+          >
+            <span className="text-sm">🔔</span>
+          </button>
         )}
-      </button>
+      </div>
 
       {/* Panel */}
       {isOpen && (
@@ -1095,7 +1110,18 @@ export default function PokemonBuddy() {
                 Pokemon Buddy
                 {data?.isShiny && <span className="text-yellow-300 text-xs">✨</span>}
               </h3>
-              <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white">×</button>
+              <div className="flex items-center gap-2">
+                {/* Glocke für neue Attacke */}
+                {pendingMoveChoice && (
+                  <button 
+                    onClick={() => setShowMoveSelect(true)}
+                    className="bg-yellow-500 text-black px-2 py-0.5 rounded-full text-xs font-bold animate-pulse flex items-center gap-1"
+                  >
+                    🔔 Neue Attacke!
+                  </button>
+                )}
+                <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white">×</button>
+              </div>
             </div>
             {pokemonInfo && (
               <p className="text-xs text-white/80">{pokemonInfo.name} • Lv. {data.level}</p>
