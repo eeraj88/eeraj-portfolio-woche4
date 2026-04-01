@@ -166,10 +166,13 @@ export const useBattle = (gameState, gameActions) => {
     // Player attacks first (always, for fairness at low levels)
     const playerFirst = playerLevel >= oppLevel || playerPower >= oppPower
     
-    // Run 3-5 rounds
-    const rounds = 3 + Math.floor(Math.random() * 3)
+    // Fight until someone reaches 0 HP (max 10 rounds for safety)
+    let round = 0
+    const maxRounds = 10
     
-    for (let i = 0; i < rounds && pHP > 0 && oHP > 0; i++) {
+    while (pHP > 0 && oHP > 0 && round < maxRounds) {
+      round++
+      
       if (playerFirst) {
         // Player attacks
         await delay(800)
@@ -211,21 +214,19 @@ export const useBattle = (gameState, gameActions) => {
     
     await delay(500)
     
-    // Determine winner
-    const won = oHP <= 0 || (pHP > 0 && pHP >= oHP)
+    // Determine winner - must have 0 HP to lose
+    const won = oHP <= 0
     
     if (won) {
       const xpGain = XP_REWARDS.BATTLE_WIN_BASE + (oppLevel * XP_REWARDS.BATTLE_WIN_LEVEL_MULT)
-      const coins = 10 + oppLevel * 2
       
       logs.push(`🎉 ${oppInfo.name} wurde besiegt!`)
-      logs.push(`+${xpGain} XP, +${coins} Münzen!`)
+      logs.push(`+${xpGain} XP`)
       setBattleLog([...logs])
       
       gameActions.recordBattle(true, xpGain)
-      gameActions.addCoins(coins)
       
-      setBattleResult({ won: true, xpGain, coins })
+      setBattleResult({ won: true, xpGain })
     } else {
       logs.push(`😔 ${playerInfo?.name || 'Dein Pokémon'} wurde besiegt...`)
       setBattleLog([...logs])
@@ -327,10 +328,13 @@ export const useBattle = (gameState, gameActions) => {
       
       const logs = [`${arena.leader} schickt ${oppInfo.name}! [${i + 1}/3]`]
       
-      // Run rounds
-      const rounds = 3 + Math.floor(Math.random() * 2)
+      // Fight until someone reaches 0 HP
+      let round = 0
+      const maxRounds = 10
       
-      for (let r = 0; r < rounds && pHP > 0 && oHP > 0; r++) {
+      while (pHP > 0 && oHP > 0 && round < maxRounds) {
+        round++
+        
         // Player attacks
         await delay(700)
         const dmg = calculateDamage(playerPower, oppPower)
@@ -351,7 +355,7 @@ export const useBattle = (gameState, gameActions) => {
       }
       
       // Check if player lost
-      if (pHP <= 0 || (oHP > 0 && oHP > pHP)) {
+      if (pHP <= 0) {
         logs.push(`😔 Niederlage gegen ${arena.company}...`)
         setBattleLog([...logs])
         setBattleResult({ won: false })
@@ -372,19 +376,17 @@ export const useBattle = (gameState, gameActions) => {
     // Won the arena!
     await delay(500)
     const xpGain = XP_REWARDS.ARENA_WIN_BASE + (arena.id * XP_REWARDS.ARENA_WIN_MULT)
-    const coins = 50 + arena.id * 25
     
     const finalLogs = [
       `🏆 ${arena.company} Arena besiegt!`,
       `${arena.leader} übergibt den Orden!`,
-      `+${xpGain} XP, +${coins} Münzen!`
+      `+${xpGain} XP`
     ]
     setBattleLog(finalLogs)
     
     gameActions.defeatArena(arena.id, xpGain)
-    gameActions.addCoins(coins)
     
-    setBattleResult({ won: true, xpGain, coins, badge: `${arena.company}` })
+    setBattleResult({ won: true, xpGain, badge: `${arena.company}` })
     setBattlePhase(BATTLE_PHASES.RESULT)
   }
   

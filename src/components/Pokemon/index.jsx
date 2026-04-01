@@ -12,6 +12,7 @@ import { useXPEvents, giveXP } from './hooks/useXPEvents'
 
 // Components
 import StarterSelection from './components/StarterSelection'
+import TrainerNameInput from './components/TrainerNameInput'
 import PokemonStats from './components/PokemonStats'
 import BattleOverlay from './components/BattleOverlay'
 import Pokedex from './components/Pokedex'
@@ -21,6 +22,9 @@ import { fetchPokemonData, fetchMoveDetails } from './api'
 import { checkEvolutionPossible, calculateEffectiveStats, calculatePowerScore } from './utils'
 import { TECH_ARENAS, COOLDOWNS, TYPE_COLORS, xpForNextLevel } from './constants'
 
+// Firebase
+import { saveTrainerData, calculateTrainerScore } from '../../firebase'
+
 // Re-export giveXP for external use
 export { giveXP }
 
@@ -29,7 +33,7 @@ export default function PokemonBuddy() {
   
   // Game State (useReducer)
   const gameState = useGameState()
-  const { state, activePokemon, hasStarted } = gameState
+  const { state, activePokemon, hasStarted, hasTrainerName } = gameState
   
   // Battle System
   const battle = useBattle(
@@ -54,6 +58,34 @@ export default function PokemonBuddy() {
   const [isEvolving, setIsEvolving] = useState(false)
   const [canPet, setCanPet] = useState(true)
   const [canBattle, setCanBattle] = useState(true)
+  
+  // Sync to Firebase leaderboard when important stats change
+  useEffect(() => {
+    if (!state?.trainerId || !state?.trainerName || !activePokemon) return
+    
+    const syncToLeaderboard = async () => {
+      const trainerData = {
+        name: state.trainerName,
+        pokemonId: activePokemon.pokemonId,
+        level: activePokemon.level,
+        wins: state.wins || 0,
+        losses: state.losses || 0,
+        defeatedArenas: state.defeatedArenas || [],
+        isShiny: activePokemon.isShiny || false,
+        score: calculateTrainerScore({
+          level: activePokemon.level,
+          wins: state.wins || 0,
+          losses: state.losses || 0,
+          defeatedArenas: state.defeatedArenas || [],
+          isShiny: activePokemon.isShiny || false,
+        })
+      }
+      
+      await saveTrainerData(state.trainerId, trainerData)
+    }
+    
+    syncToLeaderboard()
+  }, [state?.trainerId, activePokemon?.level, state?.wins, state?.losses, state?.defeatedArenas?.length])
   
   // Load Pokemon Info when team changes
   useEffect(() => {
@@ -144,6 +176,12 @@ export default function PokemonBuddy() {
   const handleStarterSelect = async (starter) => {
     try {
       const result = await gameState.selectStarter(starter)
+      
+      if (!result) {
+        setMessage('Fehler beim Laden des Starters!')
+        return
+      }
+      
       setPokemonInfoMap(prev => ({ ...prev, [starter.id]: starter }))
       
       // Show detailed info about the Pokemon's unique characteristics
@@ -151,14 +189,15 @@ export default function PokemonBuddy() {
       if (result.isShiny) {
         msg = `WOW! Ein SHINY ${starter.name}! ✨`
       }
-      if (result.nature) {
-        msg += ` (${result.nature.emoji} ${result.nature.name})`
+      if (result.nature?.name) {
+        msg += ` (${result.nature.emoji || ''} ${result.nature.name})`
       }
       if (result.ivs?.potential === 'Outstanding') {
         msg += ' ⭐ Ausgezeichnete Gene!'
       }
       setMessage(msg)
     } catch (error) {
+      console.error('Starter selection error:', error)
       setMessage('Fehler beim Laden des Starters!')
     }
   }
@@ -326,7 +365,7 @@ export default function PokemonBuddy() {
           <div className="bg-gradient-to-r from-red-500 to-red-700 p-3 text-white">
             <div className="flex justify-between items-center">
               <h3 className="font-bold flex items-center gap-2">
-                Pokémon Buddy
+                {state?.trainerName ? `Trainer ${state.trainerName}` : 'Pokémon Buddy'}
                 {activePokemon?.isShiny && <span className="text-yellow-300">✨</span>}
               </h3>
               <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white text-xl">×</button>
@@ -338,7 +377,12 @@ export default function PokemonBuddy() {
 
           {/* Content */}
           <div className="p-4 max-h-[70vh] overflow-y-auto">
-            {!hasStarted ? (
+            {!hasTrainerName ? (
+              <TrainerNameInput onSubmit={(name) => {
+                gameState.setTrainerName(name)
+                setMessage(`Willkommen, ${name}!`)
+              }} />
+            ) : !hasStarted ? (
               <StarterSelection onSelect={handleStarterSelect} />
             ) : (
               <>

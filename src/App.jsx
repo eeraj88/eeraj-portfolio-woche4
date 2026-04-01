@@ -9,6 +9,7 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
 import PokemonBuddy from './components/Pokemon'
+import Leaderboard from './components/Leaderboard'
 import { ThemeContext } from './Context/ThemeContext'
 
 function App() {
@@ -95,6 +96,7 @@ function App() {
         </div>
 
         {/* Floating Widgets */}
+        <Leaderboard />
         <PokemonBuddy />
       </div>
     </ThemeContext.Provider>

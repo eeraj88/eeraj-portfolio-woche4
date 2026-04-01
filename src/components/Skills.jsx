@@ -1,128 +1,188 @@
-import { useState, useContext } from 'react'
+import { useContext } from 'react'
 import skills from '../data/skills'
 import { ThemeContext } from '../Context/ThemeContext'
 
 function Skills() {
   const { istDunkel } = useContext(ThemeContext)
-  const [offeneKategorie, setOffeneKategorie] = useState(null)
 
-  // Kategorien ohne "Alle"
+  // Kategorien mit ihren Skills gruppieren
   const kategorien = [...new Set(skills.map(skill => skill.kategorie))]
-
-  // Skills nach Kategorie gruppieren
+  
   const skillsNachKategorie = kategorien.reduce((acc, kategorie) => {
     acc[kategorie] = skills.filter(skill => skill.kategorie === kategorie)
     return acc
   }, {})
 
-  // Kategorie-Icons
-  const kategorieIcons = {
-    Frontend: '💻',
-    Marketing: '📈',
-    Design: '🎨',
-    Business: '💼',
-    Tools: '⚡'
+  // Kategorie-Konfiguration für Bento Grid
+  const kategorieConfig = {
+    Frontend: {
+      icon: '💻',
+      gradient: 'from-blue-500 to-cyan-500',
+      gridClass: 'md:col-span-2 md:row-span-2', // Große Box
+      description: 'Web Development'
+    },
+    Marketing: {
+      icon: '📈',
+      gradient: 'from-green-500 to-emerald-500',
+      gridClass: 'md:col-span-2', // Breite Box
+      description: 'Digital Marketing'
+    },
+    Design: {
+      icon: '🎨',
+      gradient: 'from-purple-500 to-pink-500',
+      gridClass: 'md:col-span-2 md:row-span-2', // Große Box
+      description: 'Creative Suite'
+    },
+    Business: {
+      icon: '💼',
+      gradient: 'from-orange-500 to-red-500',
+      gridClass: 'md:col-span-1', // Kleine Box
+      description: 'Sales & Management'
+    },
+    Tools: {
+      icon: '⚡',
+      gradient: 'from-yellow-500 to-orange-500',
+      gridClass: 'md:col-span-1', // Kleine Box
+      description: 'Productivity'
+    }
   }
 
-  const toggleKategorie = (kategorie) => {
-    setOffeneKategorie(offeneKategorie === kategorie ? null : kategorie)
+  // Skill Level zu Farbe
+  const getLevelColor = (level) => {
+    if (level >= 80) return 'bg-green-500/20 text-green-400 border-green-500/30'
+    if (level >= 70) return 'bg-blue-500/20 text-blue-400 border-blue-500/30'
+    if (level >= 60) return 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+    return 'bg-gray-500/20 text-gray-400 border-gray-500/30'
+  }
+
+  const getLevelColorLight = (level) => {
+    if (level >= 80) return 'bg-green-100 text-green-700 border-green-200'
+    if (level >= 70) return 'bg-blue-100 text-blue-700 border-blue-200'
+    if (level >= 60) return 'bg-yellow-100 text-yellow-700 border-yellow-200'
+    return 'bg-gray-100 text-gray-600 border-gray-200'
   }
 
   return (
     <section id="skills" className="py-20 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
           istDunkel ? 'text-white' : 'text-gray-900'
         }`}>
           Meine <span className="gradient-text">Skills</span>
         </h2>
 
-        <p className={`text-center mb-10 ${
+        <p className={`text-center mb-12 ${
           istDunkel ? 'text-gray-400' : 'text-gray-600'
         }`}>
           Technologien und Tools, die ich benutze
         </p>
 
-        {/* Akkordeon */}
-        <div className="space-y-3">
-          {kategorien.map(kategorie => (
-            <div key={kategorie} className="overflow-hidden rounded-xl">
-              {/* Kategorie Header - Klickbar */}
-              <button
-                onClick={() => toggleKategorie(kategorie)}
-                className={`w-full px-6 py-4 flex items-center justify-between transition-all duration-300 ${
-                  offeneKategorie === kategorie
-                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white'
-                    : istDunkel
-                      ? 'bg-gray-800/70 text-white hover:bg-gray-700'
-                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                }`}
+        {/* Bento Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-fr">
+          {kategorien.map(kategorie => {
+            const config = kategorieConfig[kategorie]
+            const katSkills = skillsNachKategorie[kategorie]
+            
+            return (
+              <div 
+                key={kategorie}
+                className={`
+                  group relative overflow-hidden rounded-2xl p-6
+                  transition-all duration-500 hover:scale-[1.02]
+                  ${config.gridClass}
+                  ${istDunkel 
+                    ? 'bg-gray-900/70 border border-gray-700/50 hover:border-gray-600' 
+                    : 'bg-white border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-lg'
+                  }
+                `}
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">{kategorieIcons[kategorie]}</span>
-                  <span className="text-lg font-bold">{kategorie}</span>
-                  <span className={`text-sm px-2 py-0.5 rounded-full ${
-                    offeneKategorie === kategorie
-                      ? 'bg-white/20'
-                      : istDunkel ? 'bg-gray-700' : 'bg-gray-200'
-                  }`}>
-                    {skillsNachKategorie[kategorie].length}
+                {/* Gradient Overlay on Hover */}
+                <div className={`
+                  absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500
+                  bg-gradient-to-br ${config.gradient}
+                `} />
+
+                {/* Header */}
+                <div className="relative z-10 flex items-center gap-3 mb-4">
+                  <span className="text-3xl">{config.icon}</span>
+                  <div>
+                    <h3 className={`text-xl font-bold ${
+                      istDunkel ? 'text-white' : 'text-gray-900'
+                    }`}>
+                      {kategorie}
+                    </h3>
+                    <p className={`text-xs ${
+                      istDunkel ? 'text-gray-500' : 'text-gray-400'
+                    }`}>
+                      {config.description}
+                    </p>
+                  </div>
+                  
+                  {/* Skill Count Badge */}
+                  <span className={`
+                    ml-auto px-2 py-1 rounded-full text-xs font-medium
+                    bg-gradient-to-r ${config.gradient} text-white
+                  `}>
+                    {katSkills.length}
                   </span>
                 </div>
-                
-                {/* Pfeil Icon */}
-                <svg 
-                  className={`w-5 h-5 transition-transform duration-300 ${
-                    offeneKategorie === kategorie ? 'rotate-180' : ''
-                  }`}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
 
-              {/* Skills Content - Aufklappbar */}
-              <div className={`transition-all duration-300 ease-in-out ${
-                offeneKategorie === kategorie 
-                  ? 'max-h-[500px] opacity-100' 
-                  : 'max-h-0 opacity-0'
-              }`}>
-                <div className={`p-4 space-y-3 ${
-                  istDunkel ? 'bg-gray-800/40' : 'bg-white'
-                }`}>
-                  {skillsNachKategorie[kategorie].map(skill => (
-                    <div key={skill.id} className="flex items-center gap-4">
-                      <span className={`w-32 sm:w-40 text-sm font-medium truncate ${
-                        istDunkel ? 'text-gray-300' : 'text-gray-700'
-                      }`}>
-                        {skill.name}
-                      </span>
+                {/* Skills as Pills */}
+                <div className="relative z-10 flex flex-wrap gap-2">
+                  {katSkills.map(skill => (
+                    <div
+                      key={skill.id}
+                      className={`
+                        group/skill relative px-3 py-1.5 rounded-full text-sm font-medium
+                        border transition-all duration-300 cursor-default
+                        hover:scale-105
+                        ${istDunkel ? getLevelColor(skill.level) : getLevelColorLight(skill.level)}
+                      `}
+                    >
+                      <span>{skill.name}</span>
                       
-                      {/* Progress Bar */}
-                      <div className={`flex-1 h-2 rounded-full ${
-                        istDunkel ? 'bg-gray-700' : 'bg-gray-200'
-                      }`}>
-                        <div
-                          className="h-2 rounded-full bg-gradient-to-r from-orange-500 to-red-500 transition-all duration-700"
-                          style={{ 
-                            width: offeneKategorie === kategorie ? `${skill.level}%` : '0%'
-                          }}
-                        />
-                      </div>
-                      
-                      <span className={`w-10 text-right text-sm font-medium ${
-                        istDunkel ? 'text-orange-400' : 'text-orange-600'
-                      }`}>
+                      {/* Level Tooltip */}
+                      <span className={`
+                        absolute -top-8 left-1/2 -translate-x-1/2 
+                        px-2 py-1 rounded text-xs font-bold whitespace-nowrap
+                        opacity-0 group-hover/skill:opacity-100 transition-opacity
+                        pointer-events-none z-20
+                        ${istDunkel ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'}
+                      `}>
                         {skill.level}%
                       </span>
                     </div>
                   ))}
                 </div>
+
+                {/* Decorative Corner Gradient */}
+                <div className={`
+                  absolute -bottom-10 -right-10 w-32 h-32 rounded-full
+                  bg-gradient-to-br ${config.gradient} opacity-10
+                  group-hover:opacity-20 transition-opacity duration-500
+                `} />
               </div>
-            </div>
-          ))}
+            )
+          })}
+        </div>
+
+        {/* Legend */}
+        <div className={`
+          mt-8 flex flex-wrap justify-center gap-4 text-xs
+          ${istDunkel ? 'text-gray-500' : 'text-gray-400'}
+        `}>
+          <div className="flex items-center gap-2">
+            <span className={`w-3 h-3 rounded-full ${istDunkel ? 'bg-green-500/50' : 'bg-green-200'}`} />
+            <span>Expert (80%+)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`w-3 h-3 rounded-full ${istDunkel ? 'bg-blue-500/50' : 'bg-blue-200'}`} />
+            <span>Advanced (70%+)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className={`w-3 h-3 rounded-full ${istDunkel ? 'bg-yellow-500/50' : 'bg-yellow-200'}`} />
+            <span>Intermediate (60%+)</span>
+          </div>
         </div>
       </div>
     </section>

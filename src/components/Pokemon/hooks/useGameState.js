@@ -48,19 +48,16 @@ const getInitialState = () => {
 }
 
 const getDefaultState = () => ({
+  // Trainer Info
+  trainerName: null,
+  trainerId: null,
+  
   // Team (max 6 Pokemon)
   team: [],
   activeIndex: 0, // Welches Pokemon ist aktiv
   
   // Pokedex: { [id]: { seen: boolean, caught: boolean, shiny: boolean } }
   pokedex: {},
-  
-  // Inventar
-  inventory: {
-    pokeball: 5,
-    potion: 3,
-    coins: 100,
-  },
   
   // Statistiken
   totalVisits: 1,
@@ -123,6 +120,7 @@ const ACTIONS = {
   // System
   SET_ERROR: 'SET_ERROR',
   SET_LOADING: 'SET_LOADING',
+  SET_TRAINER: 'SET_TRAINER',
   RESET_GAME: 'RESET_GAME',
   LOAD_STATE: 'LOAD_STATE',
 }
@@ -344,6 +342,13 @@ const gameReducer = (state, action) => {
     case ACTIONS.SET_LOADING:
       return { ...state, isLoading: action.payload }
     
+    case ACTIONS.SET_TRAINER:
+      return { 
+        ...state, 
+        trainerName: action.payload.name,
+        trainerId: action.payload.id
+      }
+    
     case ACTIONS.RESET_GAME:
       localStorage.removeItem('pokemonGame')
       localStorage.removeItem('pokemonBuddy') // Alte Daten auch löschen
@@ -558,13 +563,23 @@ export const useGameState = () => {
     })
   }, [state?.team])
   
+  const setTrainerName = useCallback((name) => {
+    const id = Date.now().toString(36) + Math.random().toString(36).substr(2, 9)
+    dispatch({ type: ACTIONS.SET_TRAINER, payload: { name, id } })
+    return id
+  }, [])
+  
   // Aktives Pokemon
   const activePokemon = state?.team?.[state?.activeIndex] || null
+  
+  // Check if trainer name is set
+  const hasTrainerName = state !== null && state?.trainerName !== null
   
   return {
     state,
     activePokemon,
     hasStarted: state !== null && state?.team?.length > 0,
+    hasTrainerName,
     
     // Actions
     selectStarter,
@@ -584,6 +599,7 @@ export const useGameState = () => {
     addItem,
     updateQuestProgress,
     healTeam,
+    setTrainerName,
     
     // Dispatch für erweiterte Aktionen
     dispatch,

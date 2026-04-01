@@ -202,16 +202,20 @@ export default function BattleOverlay({ battle, onClose }) {
           <div className={`rounded-lg p-3 h-32 overflow-y-auto text-xs space-y-1 mb-3 ${
             istDunkel ? 'bg-gray-800' : 'bg-gray-100'
           }`}>
-            {battleLog.map((log) => (
-              <p key={log.id} className={getLogColor(log.type, istDunkel)}>
-                {log.message}
-              </p>
-            ))}
+            {battleLog.map((log, index) => {
+              // Support both string logs and object logs
+              const isString = typeof log === 'string'
+              const message = isString ? log : log.message
+              const logType = isString ? 'system' : log.type
+              
+              return (
+                <p key={isString ? index : log.id} className={getLogColor(logType, istDunkel)}>
+                  {message}
+                </p>
+              )
+            })}
             {battlePhase === BATTLE_PHASES.SEARCHING && (
               <p className="text-blue-400 animate-pulse">🔍 Suche Gegner...</p>
-            )}
-            {battlePhase === BATTLE_PHASES.BATTLING && (
-              <p className="text-yellow-400 animate-pulse">⚔️ Kampf läuft...</p>
             )}
           </div>
           
@@ -232,9 +236,6 @@ export default function BattleOverlay({ battle, onClose }) {
                 <div className="space-y-1 text-sm">
                   {battleResult.xpGain > 0 && (
                     <p className="text-cyan-400">+{battleResult.xpGain} XP</p>
-                  )}
-                  {battleResult.coins > 0 && (
-                    <p className="text-yellow-400">+{battleResult.coins} Münzen</p>
                   )}
                   {battleResult.badge && (
                     <p className="text-yellow-400 font-bold">{battleResult.badge} Orden erhalten!</p>
