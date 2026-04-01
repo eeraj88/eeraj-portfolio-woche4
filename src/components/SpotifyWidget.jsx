@@ -11,9 +11,8 @@ import { ThemeContext } from '../Context/ThemeContext'
 // Option C: Eigene Spotify API Integration (benötigt Backend)
 
 const SPOTIFY_CONFIG = {
-  // Ersetze mit deiner Spotify User ID oder Playlist ID
-  playlistId: '37i9dQZF1DXcBWIGoYBM5M', // Beispiel: Today's Top Hits
-  userId: '', // Deine Spotify User ID
+  // Eeraj's Spotify User ID
+  userId: '11128491035',
   // Discord User ID für Lanyard (falls du Discord benutzt)
   discordUserId: '', // z.B. '123456789012345678'
 }
@@ -140,17 +139,17 @@ export default function SpotifyWidget() {
         <span className={`text-sm font-medium ${
           istDunkel ? 'text-white' : 'text-gray-900'
         }`}>
-          {isExpanded ? 'Meine Playlist' : '🎵'}
+          {isExpanded ? 'Mein Spotify' : '🎵'}
         </span>
       </button>
 
-      {/* Expanded Embed */}
+      {/* Expanded Embed - Zeigt dein Spotify Profil */}
       {isExpanded && (
         <div className={`mt-3 rounded-2xl overflow-hidden shadow-lg ${
           istDunkel ? 'bg-gray-900/95' : 'bg-white/95'
         }`}>
           <iframe
-            src={`https://open.spotify.com/embed/playlist/${SPOTIFY_CONFIG.playlistId}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
+            src={`https://open.spotify.com/embed/user/${SPOTIFY_CONFIG.userId}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
             width="100%"
             height="352"
             frameBorder="0"
@@ -160,9 +159,14 @@ export default function SpotifyWidget() {
             className="rounded-xl"
           />
           <div className="p-3">
-            <p className={`text-xs text-center ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
-              Meine Lieblings-Playlist auf Spotify
-            </p>
+            <a 
+              href={`https://open.spotify.com/user/${SPOTIFY_CONFIG.userId}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`text-xs text-center block hover:text-green-500 transition-colors ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}
+            >
+              Folge mir auf Spotify
+            </a>
           </div>
         </div>
       )}

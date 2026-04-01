@@ -189,17 +189,39 @@ export default function Tamagotchi() {
 
   return (
     <>
-      {/* Floating Button */}
+      {/* Floating Button mit Wackel-Animation */}
+      <style>{`
+        @keyframes wiggle {
+          0%, 100% { transform: rotate(-3deg); }
+          25% { transform: rotate(3deg) scale(1.05); }
+          50% { transform: rotate(-3deg); }
+          75% { transform: rotate(3deg) scale(1.05); }
+        }
+        @keyframes wiggle-strong {
+          0%, 100% { transform: rotate(-5deg) scale(1); }
+          20% { transform: rotate(5deg) scale(1.1); }
+          40% { transform: rotate(-5deg) scale(1); }
+          60% { transform: rotate(5deg) scale(1.1); }
+          80% { transform: rotate(-5deg) scale(1); }
+        }
+        .wiggle-animation {
+          animation: wiggle 2s ease-in-out infinite;
+        }
+        .wiggle-animation:hover {
+          animation: wiggle-strong 0.5s ease-in-out;
+        }
+      `}</style>
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={`fixed bottom-6 right-6 z-50 w-16 h-16 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center text-3xl ${
-          isAnimating ? 'animate-bounce' : ''
+          isAnimating ? 'animate-bounce' : 'wiggle-animation'
         } ${
           istDunkel 
-            ? 'bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500' 
-            : 'bg-gradient-to-br from-orange-400 to-red-500 hover:from-orange-300 hover:to-red-400'
+            ? 'bg-gradient-to-br from-orange-500 to-red-600 hover:from-orange-400 hover:to-red-500 shadow-orange-500/30' 
+            : 'bg-gradient-to-br from-orange-400 to-red-500 hover:from-orange-300 hover:to-red-400 shadow-orange-400/30'
         }`}
-        title="Portfolio Buddy"
+        style={{ boxShadow: '0 0 20px rgba(249, 115, 22, 0.4)' }}
+        title="Portfolio Buddy - Klick mich!"
       >
         {stage.emoji}
       </button>
