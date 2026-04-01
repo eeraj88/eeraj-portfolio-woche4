@@ -9,7 +9,6 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
 import PokemonBuddy from './components/PokemonBuddy'
-import SpotifyWidget from './components/SpotifyWidget'
 import { ThemeContext } from './Context/ThemeContext'
 
 function App() {
@@ -97,7 +96,6 @@ function App() {
 
         {/* Floating Widgets */}
         <PokemonBuddy />
-        <SpotifyWidget />
       </div>
     </ThemeContext.Provider>
   )

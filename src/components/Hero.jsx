@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
+import CodeTyping from './CodeTyping'
 
 function Hero() {
   const { istDunkel } = useContext(ThemeContext)
@@ -71,6 +72,11 @@ function Hero() {
               </a>
             </div>
           </div>
+        </div>
+
+        {/* Code Typing Animation */}
+        <div className="mt-16 max-w-lg mx-auto md:mx-0">
+          <CodeTyping istDunkel={istDunkel} />
         </div>
       </div>
     </section>

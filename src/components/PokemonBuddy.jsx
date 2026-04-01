@@ -91,6 +91,30 @@ export default function PokemonBuddy() {
     return () => clearInterval(interval)
   }, [data])
 
+  // Scroll XP - alle 25% der Seite = +5 XP
+  useEffect(() => {
+    if (!data) return
+    
+    let lastMilestone = 0
+    
+    const handleScroll = () => {
+      const scrollPercent = Math.floor(
+        (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
+      )
+      
+      // Alle 25% ein Milestone
+      const currentMilestone = Math.floor(scrollPercent / 25)
+      
+      if (currentMilestone > lastMilestone && currentMilestone <= 4) {
+        lastMilestone = currentMilestone
+        giveXP(5, `${currentMilestone * 25}% gescrollt`)
+      }
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [data])
+
   // Wiederkehr-Bonus beim Laden
   useEffect(() => {
     if (!data) return
