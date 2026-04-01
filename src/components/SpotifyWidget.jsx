@@ -11,8 +11,8 @@ import { ThemeContext } from '../Context/ThemeContext'
 // Option C: Eigene Spotify API Integration (benötigt Backend)
 
 const SPOTIFY_CONFIG = {
-  // Eeraj's Spotify User ID
-  userId: '11128491035',
+  // Eeraj's Lieblingssongs Playlist
+  playlistId: '4pL1hvnfqIkYaoMKUNl7QJ',
   // Discord User ID für Lanyard (falls du Discord benutzt)
   discordUserId: '', // z.B. '123456789012345678'
 }
@@ -143,13 +143,13 @@ export default function SpotifyWidget() {
         </span>
       </button>
 
-      {/* Expanded Embed - Zeigt dein Spotify Profil */}
+      {/* Expanded Embed - Zeigt deine Lieblingssongs */}
       {isExpanded && (
         <div className={`mt-3 rounded-2xl overflow-hidden shadow-lg ${
           istDunkel ? 'bg-gray-900/95' : 'bg-white/95'
         }`}>
           <iframe
-            src={`https://open.spotify.com/embed/user/${SPOTIFY_CONFIG.userId}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
+            src={`https://open.spotify.com/embed/playlist/${SPOTIFY_CONFIG.playlistId}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
             width="100%"
             height="352"
             frameBorder="0"
@@ -160,12 +160,12 @@ export default function SpotifyWidget() {
           />
           <div className="p-3">
             <a 
-              href={`https://open.spotify.com/user/${SPOTIFY_CONFIG.userId}`}
+              href={`https://open.spotify.com/playlist/${SPOTIFY_CONFIG.playlistId}`}
               target="_blank"
               rel="noopener noreferrer"
               className={`text-xs text-center block hover:text-green-500 transition-colors ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}
             >
-              Folge mir auf Spotify
+              Meine Lieblingssongs auf Spotify
             </a>
           </div>
         </div>
