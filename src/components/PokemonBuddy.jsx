@@ -23,6 +23,34 @@ const WILD_POKEMON_IDS = [
   102, 104, 109, 111, 114, 116, 118, 120, 123, 127, 128, 129, 131, 133, 137, 147
 ]
 
+// Trainer mit verschiedenen Titeln
+const TRAINER_TITLES = [
+  'Recruiter', 'HR Manager', 'Tech Lead', 'Senior Developer', 'CTO', 
+  'Hiring Manager', 'Engineering Manager', 'Besucher', 'Frontend Lead',
+  'Product Owner', 'Scrum Master', 'DevOps Engineer', 'UX Designer'
+]
+
+const TRAINER_FIRST_NAMES = [
+  'Anna', 'Max', 'Sophie', 'Leon', 'Emma', 'Paul', 'Laura', 'Tim',
+  'Julia', 'Felix', 'Sarah', 'David', 'Lisa', 'Jonas', 'Marie', 'Lukas',
+  'Hannah', 'Finn', 'Lea', 'Noah', 'Mia', 'Ben', 'Lena', 'Tom',
+  'Christina', 'Michael', 'Sandra', 'Stefan', 'Melanie', 'Andreas'
+]
+
+const TRAINER_LAST_NAMES = [
+  'Müller', 'Schmidt', 'Weber', 'Fischer', 'Meyer', 'Wagner', 'Becker',
+  'Hoffmann', 'Koch', 'Richter', 'Klein', 'Wolf', 'Schröder', 'Neumann',
+  'Braun', 'Zimmermann', 'Krüger', 'Hartmann', 'Lange', 'Werner',
+  'Schwarz', 'Hofmann', 'Krause', 'Lehmann', 'Köhler', 'Maier'
+]
+
+const generateTrainerName = () => {
+  const title = TRAINER_TITLES[Math.floor(Math.random() * TRAINER_TITLES.length)]
+  const firstName = TRAINER_FIRST_NAMES[Math.floor(Math.random() * TRAINER_FIRST_NAMES.length)]
+  const lastName = TRAINER_LAST_NAMES[Math.floor(Math.random() * TRAINER_LAST_NAMES.length)]
+  return `${title} ${firstName} ${lastName}`
+}
+
 // Evolution chains
 const EVOLUTION_CHAINS = {
   1: [1, 2, 3],
@@ -71,6 +99,7 @@ export default function PokemonBuddy() {
   const [isBattling, setIsBattling] = useState(false)
   const [canBattle, setCanBattle] = useState(true)
   const [opponent, setOpponent] = useState(null)
+  const [trainerName, setTrainerName] = useState('')
   const [battleLog, setBattleLog] = useState([])
   const [battlePhase, setBattlePhase] = useState('idle') // idle, intro, fighting, result
   const [playerHP, setPlayerHP] = useState(100)
@@ -292,6 +321,10 @@ export default function PokemonBuddy() {
     setPlayerHP(100)
     setOpponentHP(100)
     
+    // Trainer generieren
+    const trainer = generateTrainerName()
+    setTrainerName(trainer)
+    
     // Zufälliges Gegner-Pokemon laden
     const randomId = WILD_POKEMON_IDS[Math.floor(Math.random() * WILD_POKEMON_IDS.length)]
     const opponentInfo = await fetchPokemonData(randomId)
@@ -301,23 +334,29 @@ export default function PokemonBuddy() {
       const opponentLevel = Math.max(1, data.level + Math.floor(Math.random() * 7) - 3)
       setOpponent({ ...opponentInfo, level: opponentLevel })
       
-      setBattleLog([`Ein wildes ${opponentInfo.name} (Lv.${opponentLevel}) erscheint!`])
+      setBattleLog([
+        `${trainer} fordert dich heraus!`,
+        `${trainer} schickt ${opponentInfo.name} (Lv.${opponentLevel})!`
+      ])
       
       // Kampf starten nach kurzer Pause
       setTimeout(() => {
         setBattlePhase('fighting')
-        runBattle(opponentInfo, opponentLevel)
-      }, 1500)
+        runBattle(opponentInfo, opponentLevel, trainer)
+      }, 2000)
     }
   }
 
-  const runBattle = async (opponentInfo, opponentLevel) => {
+  const runBattle = async (opponentInfo, opponentLevel, trainer) => {
     const playerPower = data.level * 10 + Math.random() * 20
     const opponentPower = opponentLevel * 10 + Math.random() * 20
     
     let pHP = 100
     let oHP = 100
-    const logs = [`Ein wildes ${opponentInfo.name} (Lv.${opponentLevel}) erscheint!`]
+    const logs = [
+      `${trainer} fordert dich heraus!`,
+      `${trainer} schickt ${opponentInfo.name} (Lv.${opponentLevel})!`
+    ]
     
     // Simuliere 3-5 Runden
     const rounds = 3 + Math.floor(Math.random() * 3)
@@ -352,6 +391,7 @@ export default function PokemonBuddy() {
     if (playerWins) {
       const xpGain = 15 + Math.floor(opponentLevel * 1.5)
       logs.push(`🎉 ${opponentInfo.name} wurde besiegt!`)
+      logs.push(`${trainer}: "Beeindruckend!"`)
       logs.push(`+${xpGain} XP erhalten!`)
       setBattleLog([...logs])
       setOpponentHP(0)
@@ -362,7 +402,7 @@ export default function PokemonBuddy() {
       }, 500)
     } else {
       logs.push(`${pokemonInfo.name} wurde besiegt...`)
-      logs.push(`Nächstes Mal klappt es!`)
+      logs.push(`${trainer}: "Vielleicht nächstes Mal!"`)
       setBattleLog([...logs])
       setPlayerHP(0)
     }
@@ -633,14 +673,16 @@ export default function PokemonBuddy() {
           }`}>
             {/* Battle Header */}
             <div className="bg-gradient-to-r from-purple-600 to-indigo-700 p-3 text-white text-center">
-              <h3 className="font-bold">Pokemon Kampf!</h3>
+              <h3 className="font-bold text-sm">⚔️ Trainer-Kampf</h3>
+              <p className="text-xs text-white/80">{trainerName}</p>
             </div>
 
             {/* Battle Arena */}
             <div className="p-4">
               <div className="flex justify-between items-center mb-4">
                 {/* Player Pokemon */}
-                <div className="text-center">
+                <div className="text-center flex-1">
+                  <p className={`text-[10px] mb-1 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>Du</p>
                   {pokemonInfo && (
                     <>
                       <img 
@@ -675,7 +717,10 @@ export default function PokemonBuddy() {
                 </span>
 
                 {/* Opponent Pokemon */}
-                <div className="text-center">
+                <div className="text-center flex-1">
+                  <p className={`text-[10px] mb-1 truncate px-1 ${istDunkel ? 'text-orange-400' : 'text-orange-600'}`}>
+                    {trainerName.split(' ')[0]}
+                  </p>
                   {opponent ? (
                     <>
                       <img 
@@ -717,6 +762,8 @@ export default function PokemonBuddy() {
                     log.includes('🎉') ? 'text-green-400 font-bold' : 
                     log.includes('besiegt...') ? 'text-red-400' :
                     log.includes('+') ? 'text-cyan-400' :
+                    log.includes('Beeindruckend') || log.includes('nächstes Mal') ? 'text-orange-400 italic' :
+                    log.includes('fordert') || log.includes('schickt') ? 'text-purple-400' :
                     istDunkel ? 'text-gray-300' : 'text-gray-700'
                   }`}>
                     {log}
