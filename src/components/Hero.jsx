@@ -73,61 +73,16 @@ function Hero() {
           </div>
         </div>
 
-        {/* Pokemon Game Teaser */}
-        <div className="mt-16 max-w-2xl mx-auto">
-          <div className={`relative overflow-hidden rounded-2xl p-6 ${
-            istDunkel 
-              ? 'bg-gradient-to-r from-purple-900/50 to-indigo-900/50 border border-purple-500/30' 
-              : 'bg-gradient-to-r from-purple-100 to-indigo-100 border border-purple-200'
+        {/* Dezenter Game Hinweis */}
+        <div className="mt-12 text-center">
+          <p className={`text-sm ${
+            istDunkel ? 'text-gray-500' : 'text-gray-400'
           }`}>
-            {/* Sparkle decorations */}
-            <div className="absolute top-2 right-4 text-2xl animate-pulse">✨</div>
-            <div className="absolute bottom-2 left-4 text-xl animate-bounce" style={{ animationDelay: '0.5s' }}>⚡</div>
-            
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-              {/* Pokemon Icon */}
-              <div className="flex-shrink-0">
-                <div className={`w-16 h-16 rounded-full flex items-center justify-center text-3xl ${
-                  istDunkel ? 'bg-red-500/20' : 'bg-red-100'
-                }`}>
-                  🎮
-                </div>
-              </div>
-              
-              {/* Text */}
-              <div className="flex-1 text-center sm:text-left">
-                <h3 className={`text-lg font-bold mb-1 ${
-                  istDunkel ? 'text-white' : 'text-gray-900'
-                }`}>
-                  Interaktives Recruiting-Game
-                </h3>
-                <p className={`text-sm ${
-                  istDunkel ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  Trainiere dein Pokémon und besiege Tech-Arenen von Google, Apple & Co.
-                  <span className={`block mt-1 font-medium ${
-                    istDunkel ? 'text-purple-400' : 'text-purple-600'
-                  }`}>
-                    Klick auf den Pokéball unten rechts!
-                  </span>
-                </p>
-              </div>
-
-              {/* Arrow pointing to bottom right */}
-              <div className="flex-shrink-0 hidden sm:block">
-                <svg 
-                  className={`w-8 h-8 animate-bounce ${
-                    istDunkel ? 'text-purple-400' : 'text-purple-500'
-                  }`} 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 13l-5 5m0 0l-5-5m5 5V6" />
-                </svg>
-              </div>
-            </div>
-          </div>
+            Beweise dich gegen andere Recruiter und sichere dir deinen Platz im Ranking
+            <span className={`ml-2 ${istDunkel ? 'text-gray-600' : 'text-gray-300'}`}>
+              — unten rechts
+            </span>
+          </p>
         </div>
       </div>
     </section>
