@@ -175,10 +175,14 @@ export default function PokemonBuddy() {
   const [opponentHP, setOpponentHP] = useState(100)
   
   // Arena states
-
   const [currentArena, setCurrentArena] = useState(null)
   const [arenaOpponentIndex, setArenaOpponentIndex] = useState(0) // 0, 1, 2 für die 3 Pokemon
   const [arenaOpponents, setArenaOpponents] = useState([]) // Die 3 Pokemon des Arenaleiters
+  
+  // Move/Attacken states
+  const [availableMoves, setAvailableMoves] = useState([]) // Alle gelernten Moves mit Details
+  const [pendingMoveChoice, setPendingMoveChoice] = useState(null) // Neuer Move der gelernt werden kann
+  const [showMoveSelect, setShowMoveSelect] = useState(false)
 
   // XP Event Listener
   useEffect(() => {
@@ -261,7 +265,7 @@ export default function PokemonBuddy() {
     }
   }, []) // Nur einmal beim Mount
 
-  // Pokemon-Daten laden
+  // Pokemon-Daten laden (mit Stats und Moves)
   const fetchPokemonData = async (pokemonId) => {
     try {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
@@ -271,6 +275,30 @@ export default function PokemonBuddy() {
       const species = await speciesRes.json()
       const germanName = species.names.find(n => n.language.name === 'de')?.name || pokemon.name
       
+      // Base Stats extrahieren
+      const stats = {
+        hp: pokemon.stats.find(s => s.stat.name === 'hp')?.base_stat || 50,
+        attack: pokemon.stats.find(s => s.stat.name === 'attack')?.base_stat || 50,
+        defense: pokemon.stats.find(s => s.stat.name === 'defense')?.base_stat || 50,
+        spAttack: pokemon.stats.find(s => s.stat.name === 'special-attack')?.base_stat || 50,
+        spDefense: pokemon.stats.find(s => s.stat.name === 'special-defense')?.base_stat || 50,
+        speed: pokemon.stats.find(s => s.stat.name === 'speed')?.base_stat || 50,
+      }
+      stats.total = stats.hp + stats.attack + stats.defense + stats.spAttack + stats.spDefense + stats.speed
+      
+      // Level-Up Moves extrahieren (sortiert nach Level)
+      const levelUpMoves = pokemon.moves
+        .filter(m => m.version_group_details.some(v => v.move_learn_method.name === 'level-up'))
+        .map(m => {
+          const levelDetail = m.version_group_details.find(v => v.move_learn_method.name === 'level-up')
+          return {
+            name: m.move.name,
+            url: m.move.url,
+            level: levelDetail?.level_learned_at || 1
+          }
+        })
+        .sort((a, b) => a.level - b.level)
+      
       return {
         id: pokemon.id,
         name: germanName,
@@ -279,11 +307,50 @@ export default function PokemonBuddy() {
         spriteStatic: pokemon.sprites.front_default,
         shinySprite: pokemon.sprites.front_shiny,
         types: pokemon.types.map(t => t.type.name),
+        stats,
+        levelUpMoves,
       }
     } catch (error) {
       console.error('Pokemon fetch error:', error)
       return null
     }
+  }
+  
+  // Move-Details laden (deutsche Namen, Power, etc.)
+  const fetchMoveDetails = async (moveUrl) => {
+    try {
+      const res = await fetch(moveUrl)
+      const move = await res.json()
+      const germanName = move.names.find(n => n.language.name === 'de')?.name || move.name
+      
+      return {
+        id: move.id,
+        name: germanName,
+        englishName: move.name,
+        power: move.power || 0,
+        accuracy: move.accuracy || 100,
+        type: move.type.name,
+        damageClass: move.damage_class.name, // physical, special, status
+        pp: move.pp,
+        // Stat-Boosts aus effect
+        statBoost: parseStatBoost(move),
+      }
+    } catch (error) {
+      console.error('Move fetch error:', error)
+      return null
+    }
+  }
+  
+  // Stat-Boost aus Move-Effect parsen
+  const parseStatBoost = (move) => {
+    const boosts = {}
+    if (move.stat_changes && move.stat_changes.length > 0) {
+      move.stat_changes.forEach(sc => {
+        const statName = sc.stat.name
+        boosts[statName] = sc.change
+      })
+    }
+    return boosts
   }
 
   // Starter laden
@@ -331,8 +398,124 @@ export default function PokemonBuddy() {
       setTimeout(() => setIsAnimating(false), 1500)
       
       checkEvolution(newLevel)
+      checkNewMoves(newLevel)
     }
   }, [data?.xp])
+  
+  // Check ob neue Moves bei Level-Up verfügbar sind
+  const checkNewMoves = async (newLevel) => {
+    if (!pokemonInfo?.levelUpMoves) return
+    
+    // Finde Moves die bei diesem Level gelernt werden
+    const newMoves = pokemonInfo.levelUpMoves.filter(m => m.level === newLevel)
+    
+    for (const move of newMoves) {
+      const moveDetails = await fetchMoveDetails(move.url)
+      if (moveDetails) {
+        // Wenn weniger als 2 Moves, automatisch lernen
+        const currentMoves = data?.moves || []
+        if (currentMoves.length < 2) {
+          setData(prev => ({
+            ...prev,
+            moves: [...(prev.moves || []), moveDetails]
+          }))
+          setMessage(`${pokemonInfo.name} lernt ${moveDetails.name}!`)
+        } else {
+          // Sonst Auswahl anbieten
+          setPendingMoveChoice(moveDetails)
+          setShowMoveSelect(true)
+        }
+      }
+    }
+  }
+  
+  // Move lernen (ersetzt einen bestehenden)
+  const learnMove = (replaceIndex) => {
+    if (!pendingMoveChoice) return
+    
+    if (replaceIndex === -1) {
+      // Move nicht lernen
+      setMessage(`${pokemonInfo.name} lernt ${pendingMoveChoice.name} nicht.`)
+    } else {
+      // Move ersetzen
+      setData(prev => {
+        const newMoves = [...(prev.moves || [])]
+        const oldMove = newMoves[replaceIndex]
+        newMoves[replaceIndex] = pendingMoveChoice
+        setMessage(`${pokemonInfo.name} vergisst ${oldMove.name} und lernt ${pendingMoveChoice.name}!`)
+        return { ...prev, moves: newMoves }
+      })
+    }
+    
+    setPendingMoveChoice(null)
+    setShowMoveSelect(false)
+  }
+  
+  // Initiale Moves laden wenn Pokemon gewählt wird
+  const loadInitialMoves = async (pokemonInfo, level = 1) => {
+    if (!pokemonInfo?.levelUpMoves) return []
+    
+    // Alle Moves die bis zum aktuellen Level gelernt werden können
+    const learnableMoves = pokemonInfo.levelUpMoves.filter(m => m.level <= level)
+    
+    // Die ersten 2 Moves laden (oder alle wenn weniger)
+    const initialMoves = []
+    for (const move of learnableMoves.slice(0, 2)) {
+      const details = await fetchMoveDetails(move.url)
+      if (details) initialMoves.push(details)
+    }
+    
+    return initialMoves
+  }
+  
+  // Berechne effektive Stats basierend auf Level und Moves
+  const calculateEffectiveStats = (baseStats, level, moves = [], isShiny = false) => {
+    if (!baseStats) return { total: 300 }
+    
+    // Base Stats skaliert mit Level (wie in echtem Pokemon)
+    const levelMultiplier = 1 + (level * 0.02) // +2% pro Level
+    
+    const stats = {
+      hp: Math.floor(baseStats.hp * levelMultiplier),
+      attack: Math.floor(baseStats.attack * levelMultiplier),
+      defense: Math.floor(baseStats.defense * levelMultiplier),
+      spAttack: Math.floor(baseStats.spAttack * levelMultiplier),
+      spDefense: Math.floor(baseStats.spDefense * levelMultiplier),
+      speed: Math.floor(baseStats.speed * levelMultiplier),
+    }
+    
+    // Move-Boosts anwenden (Status-Moves geben permanente Boosts)
+    moves.forEach(move => {
+      if (move.statBoost) {
+        Object.entries(move.statBoost).forEach(([stat, boost]) => {
+          const statKey = stat.replace('-', '')
+            .replace('specialattack', 'spAttack')
+            .replace('specialdefense', 'spDefense')
+          if (stats[statKey]) {
+            stats[statKey] = Math.floor(stats[statKey] * (1 + boost * 0.1))
+          }
+        })
+      }
+      // Damage Moves addieren ihre Power zu Attack/SpAttack
+      if (move.power > 0) {
+        if (move.damageClass === 'physical') {
+          stats.attack += Math.floor(move.power * 0.3)
+        } else if (move.damageClass === 'special') {
+          stats.spAttack += Math.floor(move.power * 0.3)
+        }
+      }
+    })
+    
+    // Shiny Bonus: +10% auf alle Stats
+    if (isShiny) {
+      Object.keys(stats).forEach(key => {
+        stats[key] = Math.floor(stats[key] * 1.1)
+      })
+    }
+    
+    stats.total = stats.hp + stats.attack + stats.defense + stats.spAttack + stats.spDefense + stats.speed
+    return stats
+  }
 
   // Evolution
   const checkEvolution = async (newLevel) => {
@@ -433,68 +616,103 @@ export default function PokemonBuddy() {
       }, 1500)
     }
   }
+  
+  // Schaden berechnen basierend auf Stats
+  const calculateDamage = (attackerStats, defenderStats, isPlayer) => {
+    // Mische physischen und speziellen Angriff/Verteidigung
+    const attack = (attackerStats.attack + attackerStats.spAttack) / 2
+    const defense = (defenderStats.defense + defenderStats.spDefense) / 2
+    
+    // Basis-Schaden mit etwas Variation
+    const baseDamage = (attack / defense) * 15
+    const variation = 0.8 + Math.random() * 0.4 // 80%-120%
+    
+    return Math.floor(baseDamage * variation)
+  }
 
   const runBattle = async (opponentInfo, opponentLevel, trainer) => {
-    // Kampfkraft basiert stark auf Level - höheres Level = mehr Schaden & weniger einstecken
-    const levelDiff = data.level - opponentLevel
+    // Stats berechnen
+    const playerStats = calculateEffectiveStats(
+      pokemonInfo?.stats, 
+      data.level, 
+      data.moves || [], 
+      data.isShiny
+    )
+    const opponentStats = calculateEffectiveStats(
+      opponentInfo?.stats, 
+      opponentLevel, 
+      [], // Gegner hat keine custom Moves
+      false
+    )
     
     let pHP = 100
     let oHP = 100
     const logs = [
       `${trainer} ist aufgetaucht!`,
-      `${trainer} schickt ${opponentInfo.name} (Lv.${opponentLevel})!`
+      `${trainer} schickt ${opponentInfo.name} (Lv.${opponentLevel})!`,
+      `📊 Deine Stats: ${playerStats.total} | Gegner: ${opponentStats.total}`
     ]
     
-    // Simuliere 3-5 Runden
-    const rounds = 3 + Math.floor(Math.random() * 3)
+    // Wer ist schneller? (Initiative)
+    const playerFirst = playerStats.speed >= opponentStats.speed
+    
+    // Simuliere Kampfrunden
+    const rounds = 3 + Math.floor(Math.random() * 2)
     
     for (let i = 0; i < rounds && pHP > 0 && oHP > 0; i++) {
-      await new Promise(r => setTimeout(r, 800))
-      
-      // Spieler greift an - Schaden basiert auf Level
-      // Basis 10-20, plus 3 pro Level, plus Bonus wenn höheres Level
-      const playerBaseDmg = 10 + Math.random() * 10
-      const playerLevelBonus = data.level * 3
-      const playerAdvantage = levelDiff > 0 ? levelDiff * 5 : 0
-      const playerDmg = Math.floor(playerBaseDmg + playerLevelBonus + playerAdvantage)
-      oHP = Math.max(0, oHP - playerDmg)
-      logs.push(`${pokemonInfo.name} greift an! -${playerDmg} HP`)
-      setBattleLog([...logs])
-      setOpponentHP(oHP)
-      
-      if (oHP <= 0) break
-      
-      await new Promise(r => setTimeout(r, 600))
-      
-      // Gegner greift an - stärker wenn höheres Level
-      const opponentBaseDmg = 10 + Math.random() * 10
-      const opponentLevelBonus = opponentLevel * 3
-      const opponentAdvantage = levelDiff < 0 ? Math.abs(levelDiff) * 5 : 0
-      const opponentDmg = Math.floor(opponentBaseDmg + opponentLevelBonus + opponentAdvantage)
-      pHP = Math.max(0, pHP - opponentDmg)
-      logs.push(`${opponentInfo.name} greift an! -${opponentDmg} HP`)
-      setBattleLog([...logs])
-      setPlayerHP(pHP)
+      if (playerFirst) {
+        // Spieler greift zuerst an
+        await new Promise(r => setTimeout(r, 700))
+        const dmg = calculateDamage(playerStats, opponentStats, true)
+        oHP = Math.max(0, oHP - dmg)
+        logs.push(`${pokemonInfo.name} greift an! -${dmg} HP`)
+        setBattleLog([...logs])
+        setOpponentHP(oHP)
+        
+        if (oHP <= 0) break
+        
+        await new Promise(r => setTimeout(r, 500))
+        const oppDmg = calculateDamage(opponentStats, playerStats, false)
+        pHP = Math.max(0, pHP - oppDmg)
+        logs.push(`${opponentInfo.name} greift an! -${oppDmg} HP`)
+        setBattleLog([...logs])
+        setPlayerHP(pHP)
+      } else {
+        // Gegner greift zuerst an
+        await new Promise(r => setTimeout(r, 700))
+        const oppDmg = calculateDamage(opponentStats, playerStats, false)
+        pHP = Math.max(0, pHP - oppDmg)
+        logs.push(`${opponentInfo.name} greift an! -${oppDmg} HP`)
+        setBattleLog([...logs])
+        setPlayerHP(pHP)
+        
+        if (pHP <= 0) break
+        
+        await new Promise(r => setTimeout(r, 500))
+        const dmg = calculateDamage(playerStats, opponentStats, true)
+        oHP = Math.max(0, oHP - dmg)
+        logs.push(`${pokemonInfo.name} greift an! -${dmg} HP`)
+        setBattleLog([...logs])
+        setOpponentHP(oHP)
+      }
     }
     
     await new Promise(r => setTimeout(r, 500))
     
-    // Ergebnis: Wer hat mehr HP? Bei Gleichstand gewinnt höheres Level
+    // Ergebnis basierend auf Stats (80%) und Glück (20%)
     let playerWins = false
     if (oHP <= 0) {
       playerWins = true
     } else if (pHP <= 0) {
       playerWins = false
     } else {
-      // Beide leben noch - wer hat mehr HP?
-      if (pHP > oHP) {
-        playerWins = true
-      } else if (oHP > pHP) {
-        playerWins = false
-      } else {
-        // Gleichstand: höheres Level gewinnt
-        playerWins = data.level >= opponentLevel
-      }
+      // Beide leben noch - Stats-Vergleich mit Glücksfaktor
+      const statAdvantage = playerStats.total / (playerStats.total + opponentStats.total) // 0-1
+      const luck = Math.random() * 0.2 // 0-0.2 (20% Glück)
+      const shinyBonus = data.isShiny ? 0.05 : 0 // 5% extra für Shiny
+      const winChance = (statAdvantage * 0.8) + luck + shinyBonus
+      
+      playerWins = winChance > 0.5
     }
     
     if (playerWins) {
@@ -619,7 +837,20 @@ export default function PokemonBuddy() {
 
   const runArenaBattle = async (arena, opponentInfos, oppIndex, arenaLevel, currentPlayerHP) => {
     const opponentInfo = opponentInfos[oppIndex]
-    const levelDiff = data.level - arenaLevel // Wird negativ sein (Spieler ist schwächer)
+    
+    // Stats berechnen
+    const playerStats = calculateEffectiveStats(
+      pokemonInfo?.stats, 
+      data.level, 
+      data.moves || [], 
+      data.isShiny
+    )
+    const opponentStats = calculateEffectiveStats(
+      opponentInfo?.stats, 
+      arenaLevel, 
+      [], 
+      false
+    )
     
     let pHP = currentPlayerHP
     let oHP = 100
@@ -627,44 +858,67 @@ export default function PokemonBuddy() {
     const logs = [
       `🏟️ ${arena.company} Arena!`,
       `${arena.leader}: Pokemon ${oppIndex + 1}/3`,
-      `${opponentInfo.name} (Lv.${arenaLevel}) kämpft!`
+      `${opponentInfo.name} (Lv.${arenaLevel}) kämpft!`,
+      `📊 Deine Stats: ${playerStats.total} | Gegner: ${opponentStats.total}`
     ]
     
+    // Wer ist schneller?
+    const playerFirst = playerStats.speed >= opponentStats.speed
+    
     // Simuliere Kampf
-    const rounds = 3 + Math.floor(Math.random() * 3)
+    const rounds = 3 + Math.floor(Math.random() * 2)
     
     for (let i = 0; i < rounds && pHP > 0 && oHP > 0; i++) {
-      await new Promise(r => setTimeout(r, 700))
-      
-      // Spieler greift an
-      const playerBaseDmg = 10 + Math.random() * 10
-      const playerLevelBonus = data.level * 3
-      const playerAdvantage = levelDiff > 0 ? levelDiff * 5 : 0
-      const playerDmg = Math.floor(playerBaseDmg + playerLevelBonus + playerAdvantage)
-      oHP = Math.max(0, oHP - playerDmg)
-      logs.push(`${pokemonInfo.name} greift an! -${playerDmg} HP`)
-      setBattleLog([...logs])
-      setOpponentHP(oHP)
-      
-      if (oHP <= 0) break
-      
-      await new Promise(r => setTimeout(r, 500))
-      
-      // Gegner greift an (stärker weil höheres Level)
-      const opponentBaseDmg = 12 + Math.random() * 12
-      const opponentLevelBonus = arenaLevel * 3
-      const opponentAdvantage = Math.abs(levelDiff) * 4
-      const opponentDmg = Math.floor(opponentBaseDmg + opponentLevelBonus + opponentAdvantage)
-      pHP = Math.max(0, pHP - opponentDmg)
-      logs.push(`${opponentInfo.name} greift an! -${opponentDmg} HP`)
-      setBattleLog([...logs])
-      setPlayerHP(pHP)
+      if (playerFirst) {
+        await new Promise(r => setTimeout(r, 600))
+        const dmg = calculateDamage(playerStats, opponentStats, true)
+        oHP = Math.max(0, oHP - dmg)
+        logs.push(`${pokemonInfo.name} greift an! -${dmg} HP`)
+        setBattleLog([...logs])
+        setOpponentHP(oHP)
+        
+        if (oHP <= 0) break
+        
+        await new Promise(r => setTimeout(r, 400))
+        const oppDmg = calculateDamage(opponentStats, playerStats, false)
+        pHP = Math.max(0, pHP - oppDmg)
+        logs.push(`${opponentInfo.name} greift an! -${oppDmg} HP`)
+        setBattleLog([...logs])
+        setPlayerHP(pHP)
+      } else {
+        await new Promise(r => setTimeout(r, 600))
+        const oppDmg = calculateDamage(opponentStats, playerStats, false)
+        pHP = Math.max(0, pHP - oppDmg)
+        logs.push(`${opponentInfo.name} greift an! -${oppDmg} HP`)
+        setBattleLog([...logs])
+        setPlayerHP(pHP)
+        
+        if (pHP <= 0) break
+        
+        await new Promise(r => setTimeout(r, 400))
+        const dmg = calculateDamage(playerStats, opponentStats, true)
+        oHP = Math.max(0, oHP - dmg)
+        logs.push(`${pokemonInfo.name} greift an! -${dmg} HP`)
+        setBattleLog([...logs])
+        setOpponentHP(oHP)
+      }
     }
     
     await new Promise(r => setTimeout(r, 500))
     
-    // Wer hat gewonnen?
-    const playerWins = oHP <= 0 || pHP > oHP
+    // Ergebnis basierend auf Stats (80%) und Glück (20%)
+    let playerWins = false
+    if (oHP <= 0) {
+      playerWins = true
+    } else if (pHP <= 0) {
+      playerWins = false
+    } else {
+      const statAdvantage = playerStats.total / (playerStats.total + opponentStats.total)
+      const luck = Math.random() * 0.2
+      const shinyBonus = data.isShiny ? 0.05 : 0
+      const winChance = (statAdvantage * 0.8) + luck + shinyBonus
+      playerWins = winChance > 0.5
+    }
     
     if (playerWins) {
       setOpponentHP(0)
@@ -726,8 +980,11 @@ export default function PokemonBuddy() {
   }
 
   // Starter wählen
-  const selectStarter = (starter) => {
+  const selectStarter = async (starter) => {
     const isShiny = Math.random() < 0.10 // 10% Shiny-Chance
+    
+    // Initiale Moves laden
+    const initialMoves = await loadInitialMoves(starter, 1)
     
     const newData = {
       pokemonId: starter.id,
@@ -735,12 +992,14 @@ export default function PokemonBuddy() {
       level: 1,
       xp: 0,
       isShiny,
+      moves: initialMoves,
       totalVisits: 1,
       lastVisit: Date.now(),
       createdAt: Date.now(),
     }
     
     setData(newData)
+    setPokemonInfo(starter)
     setMessage(isShiny ? `WOW! Ein SHINY ${starter.name}!` : `${starter.name}, ich wähle dich!`)
   }
 
@@ -987,6 +1246,38 @@ export default function PokemonBuddy() {
 
                 {/* Info */}
                 <div className={`mt-3 text-xs space-y-1 ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
+                  {/* Stats Anzeige */}
+                  {pokemonInfo?.stats && (
+                    <div className={`p-2 rounded-lg mb-2 ${istDunkel ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                      <p className="font-medium text-center mb-1">Stats (Total: {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).total})</p>
+                      <div className="grid grid-cols-3 gap-1 text-[10px]">
+                        <span>❤️ {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).hp}</span>
+                        <span>⚔️ {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).attack}</span>
+                        <span>🛡️ {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).defense}</span>
+                        <span>✨ {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).spAttack}</span>
+                        <span>🔮 {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).spDefense}</span>
+                        <span>💨 {calculateEffectiveStats(pokemonInfo.stats, data.level, data.moves || [], data.isShiny).speed}</span>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Moves Anzeige */}
+                  {data.moves && data.moves.length > 0 && (
+                    <div className={`p-2 rounded-lg mb-2 ${istDunkel ? 'bg-gray-800' : 'bg-gray-100'}`}>
+                      <p className="font-medium text-center mb-1">Attacken</p>
+                      <div className="space-y-1">
+                        {data.moves.map((move, i) => (
+                          <div key={i} className="flex justify-between text-[10px]">
+                            <span>{move.name}</span>
+                            <span className="opacity-60">
+                              {move.power > 0 ? `${move.power} PWR` : 'Status'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  
                   <p className="text-center">XP durch: Seite besuchen, Zeit verbringen, Wiederkommen</p>
                   <div className="flex justify-between pt-1 border-t border-gray-700">
                     <span>Besuche: {data.totalVisits}</span>
@@ -1141,6 +1432,72 @@ export default function PokemonBuddy() {
                   Schließen
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Move Learn Overlay */}
+      {showMoveSelect && pendingMoveChoice && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className={`w-full max-w-sm rounded-2xl overflow-hidden ${
+            istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
+          }`}>
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 p-3 text-white text-center">
+              <h3 className="font-bold">🎉 Neue Attacke!</h3>
+              <p className="text-xs text-white/80">{pokemonInfo?.name} will {pendingMoveChoice.name} lernen!</p>
+            </div>
+            
+            <div className="p-4">
+              {/* Neue Attacke */}
+              <div className={`p-3 rounded-lg mb-3 border-2 border-green-500 ${istDunkel ? 'bg-green-900/30' : 'bg-green-50'}`}>
+                <div className="flex justify-between items-center">
+                  <span className={`font-bold ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
+                    {pendingMoveChoice.name}
+                  </span>
+                  <span className={`text-xs px-2 py-0.5 rounded ${istDunkel ? 'bg-gray-700' : 'bg-gray-200'}`}>
+                    {pendingMoveChoice.type}
+                  </span>
+                </div>
+                <p className={`text-xs mt-1 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
+                  {pendingMoveChoice.power > 0 
+                    ? `Power: ${pendingMoveChoice.power} | ${pendingMoveChoice.damageClass}` 
+                    : 'Status-Attacke'
+                  }
+                </p>
+              </div>
+              
+              <p className={`text-sm mb-2 ${istDunkel ? 'text-gray-300' : 'text-gray-700'}`}>
+                Welche Attacke vergessen?
+              </p>
+              
+              {/* Bestehende Attacken */}
+              {data.moves?.map((move, i) => (
+                <button
+                  key={i}
+                  onClick={() => learnMove(i)}
+                  className={`w-full p-3 rounded-lg mb-2 text-left transition-all hover:scale-[1.02] ${
+                    istDunkel ? 'bg-gray-800 hover:bg-gray-700' : 'bg-gray-100 hover:bg-gray-200'
+                  }`}
+                >
+                  <div className="flex justify-between items-center">
+                    <span className={istDunkel ? 'text-white' : 'text-gray-900'}>{move.name}</span>
+                    <span className={`text-xs ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
+                      {move.power > 0 ? `${move.power} PWR` : 'Status'}
+                    </span>
+                  </div>
+                </button>
+              ))}
+              
+              {/* Nicht lernen */}
+              <button
+                onClick={() => learnMove(-1)}
+                className={`w-full p-2 rounded-lg text-sm ${
+                  istDunkel ? 'text-gray-500 hover:text-red-400' : 'text-gray-400 hover:text-red-500'
+                }`}
+              >
+                {pendingMoveChoice.name} nicht lernen
+              </button>
             </div>
           </div>
         </div>
