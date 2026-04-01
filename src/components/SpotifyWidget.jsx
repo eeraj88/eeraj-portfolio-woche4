@@ -11,8 +11,8 @@ import { ThemeContext } from '../Context/ThemeContext'
 // Option C: Eigene Spotify API Integration (benötigt Backend)
 
 const SPOTIFY_CONFIG = {
-  // Eeraj's Lieblingssongs Playlist
-  playlistId: '4pL1hvnfqIkYaoMKUNl7QJ',
+  // Eeraj's Top Tracks Playlist
+  playlistId: '55f8XIuabL2aM5SANjYT9B',
   // Discord User ID für Lanyard (falls du Discord benutzt)
   discordUserId: '', // z.B. '123456789012345678'
 }
