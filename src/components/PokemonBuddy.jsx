@@ -16,6 +16,13 @@ const STARTER_POKEMON = [
   { id: 258, name: 'Hydropi' },
 ]
 
+// Alle möglichen Gegner-Pokemon (ID 1-151 Gen 1)
+const WILD_POKEMON_IDS = [
+  16, 19, 21, 23, 27, 29, 32, 35, 37, 39, 41, 43, 46, 48, 50, 52, 54, 56, 58,
+  60, 63, 66, 69, 72, 74, 77, 79, 81, 84, 86, 88, 90, 92, 95, 96, 98, 100,
+  102, 104, 109, 111, 114, 116, 118, 120, 123, 127, 128, 129, 131, 133, 137, 147
+]
+
 // Evolution chains
 const EVOLUTION_CHAINS = {
   1: [1, 2, 3],
@@ -59,6 +66,15 @@ export default function PokemonBuddy() {
   const [starterList, setStarterList] = useState([])
   const [isLoadingStarters, setIsLoadingStarters] = useState(false)
   const [canPet, setCanPet] = useState(true)
+  
+  // Battle states
+  const [isBattling, setIsBattling] = useState(false)
+  const [canBattle, setCanBattle] = useState(true)
+  const [opponent, setOpponent] = useState(null)
+  const [battleLog, setBattleLog] = useState([])
+  const [battlePhase, setBattlePhase] = useState('idle') // idle, intro, fighting, result
+  const [playerHP, setPlayerHP] = useState(100)
+  const [opponentHP, setOpponentHP] = useState(100)
 
   // XP Event Listener
   useEffect(() => {
@@ -263,6 +279,105 @@ export default function PokemonBuddy() {
     
     setCanPet(false)
     setTimeout(() => setCanPet(true), 10000) // 10 Sek Cooldown
+  }
+
+  // === BATTLE SYSTEM ===
+  const startBattle = async () => {
+    if (!canBattle || !data) return
+    
+    setCanBattle(false)
+    setIsBattling(true)
+    setBattlePhase('intro')
+    setBattleLog([])
+    setPlayerHP(100)
+    setOpponentHP(100)
+    
+    // Zufälliges Gegner-Pokemon laden
+    const randomId = WILD_POKEMON_IDS[Math.floor(Math.random() * WILD_POKEMON_IDS.length)]
+    const opponentInfo = await fetchPokemonData(randomId)
+    
+    if (opponentInfo) {
+      // Gegner Level basierend auf Spieler Level (±3)
+      const opponentLevel = Math.max(1, data.level + Math.floor(Math.random() * 7) - 3)
+      setOpponent({ ...opponentInfo, level: opponentLevel })
+      
+      setBattleLog([`Ein wildes ${opponentInfo.name} (Lv.${opponentLevel}) erscheint!`])
+      
+      // Kampf starten nach kurzer Pause
+      setTimeout(() => {
+        setBattlePhase('fighting')
+        runBattle(opponentInfo, opponentLevel)
+      }, 1500)
+    }
+  }
+
+  const runBattle = async (opponentInfo, opponentLevel) => {
+    const playerPower = data.level * 10 + Math.random() * 20
+    const opponentPower = opponentLevel * 10 + Math.random() * 20
+    
+    let pHP = 100
+    let oHP = 100
+    const logs = [`Ein wildes ${opponentInfo.name} (Lv.${opponentLevel}) erscheint!`]
+    
+    // Simuliere 3-5 Runden
+    const rounds = 3 + Math.floor(Math.random() * 3)
+    
+    for (let i = 0; i < rounds && pHP > 0 && oHP > 0; i++) {
+      await new Promise(r => setTimeout(r, 800))
+      
+      // Spieler greift an
+      const playerDmg = Math.floor(15 + Math.random() * 15 + (data.level * 2))
+      oHP = Math.max(0, oHP - playerDmg)
+      logs.push(`${pokemonInfo.name} greift an! -${playerDmg} HP`)
+      setBattleLog([...logs])
+      setOpponentHP(oHP)
+      
+      if (oHP <= 0) break
+      
+      await new Promise(r => setTimeout(r, 600))
+      
+      // Gegner greift an
+      const opponentDmg = Math.floor(10 + Math.random() * 15 + (opponentLevel * 1.5))
+      pHP = Math.max(0, pHP - opponentDmg)
+      logs.push(`${opponentInfo.name} greift an! -${opponentDmg} HP`)
+      setBattleLog([...logs])
+      setPlayerHP(pHP)
+    }
+    
+    await new Promise(r => setTimeout(r, 500))
+    
+    // Ergebnis bestimmen (Spieler hat leichten Vorteil)
+    const playerWins = oHP <= 0 || (pHP > 0 && playerPower * 1.2 > opponentPower)
+    
+    if (playerWins) {
+      const xpGain = 15 + Math.floor(opponentLevel * 1.5)
+      logs.push(`🎉 ${opponentInfo.name} wurde besiegt!`)
+      logs.push(`+${xpGain} XP erhalten!`)
+      setBattleLog([...logs])
+      setOpponentHP(0)
+      
+      setTimeout(() => {
+        giveXP(xpGain, 'Kampf gewonnen')
+        setData(prev => ({ ...prev, wins: (prev.wins || 0) + 1 }))
+      }, 500)
+    } else {
+      logs.push(`${pokemonInfo.name} wurde besiegt...`)
+      logs.push(`Nächstes Mal klappt es!`)
+      setBattleLog([...logs])
+      setPlayerHP(0)
+    }
+    
+    setBattlePhase('result')
+    
+    // Cooldown 60 Sekunden
+    setTimeout(() => setCanBattle(true), 60000)
+  }
+
+  const closeBattle = () => {
+    setIsBattling(false)
+    setBattlePhase('idle')
+    setOpponent(null)
+    setBattleLog([])
   }
 
   // Starter wählen
@@ -476,6 +591,19 @@ export default function PokemonBuddy() {
                   💕 {canPet ? 'Streicheln (+5 XP)' : 'Warte...'}
                 </button>
 
+                {/* Battle Button */}
+                <button
+                  onClick={startBattle}
+                  disabled={!canBattle}
+                  className={`w-full py-2 mt-2 rounded-xl font-medium transition-all flex items-center justify-center gap-2 ${
+                    canBattle 
+                      ? 'bg-gradient-to-r from-purple-500 to-indigo-600 text-white hover:scale-105' 
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  ⚔️ {canBattle ? 'Kämpfen!' : 'Cooldown...'}
+                </button>
+
                 {/* Info */}
                 <div className={`mt-3 text-xs space-y-1 ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
                   <p className="text-center">XP durch: Seite besuchen, Zeit verbringen, Wiederkommen</p>
@@ -493,6 +621,122 @@ export default function PokemonBuddy() {
                 </button>
               </>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Battle Overlay */}
+      {isBattling && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+          <div className={`w-full max-w-md rounded-2xl overflow-hidden ${
+            istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
+          }`}>
+            {/* Battle Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-indigo-700 p-3 text-white text-center">
+              <h3 className="font-bold">Pokemon Kampf!</h3>
+            </div>
+
+            {/* Battle Arena */}
+            <div className="p-4">
+              <div className="flex justify-between items-center mb-4">
+                {/* Player Pokemon */}
+                <div className="text-center">
+                  {pokemonInfo && (
+                    <>
+                      <img 
+                        src={data?.isShiny ? pokemonInfo.shinySprite : pokemonInfo.spriteStatic}
+                        alt={pokemonInfo.name}
+                        className={`w-20 h-20 mx-auto ${playerHP <= 0 ? 'grayscale opacity-50' : ''} ${
+                          battlePhase === 'fighting' ? 'animate-pulse' : ''
+                        }`}
+                      />
+                      <p className={`text-xs font-bold mt-1 ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
+                        {pokemonInfo.name} Lv.{data?.level}
+                      </p>
+                      <div className={`h-2 w-20 mx-auto rounded-full overflow-hidden mt-1 ${
+                        istDunkel ? 'bg-gray-700' : 'bg-gray-200'
+                      }`}>
+                        <div 
+                          className={`h-full transition-all duration-300 ${
+                            playerHP > 50 ? 'bg-green-500' : playerHP > 20 ? 'bg-yellow-500' : 'bg-red-500'
+                          }`}
+                          style={{ width: `${playerHP}%` }}
+                        />
+                      </div>
+                      <p className={`text-[10px] ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {playerHP}/100 HP
+                      </p>
+                    </>
+                  )}
+                </div>
+
+                <span className={`text-2xl font-bold ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
+                  VS
+                </span>
+
+                {/* Opponent Pokemon */}
+                <div className="text-center">
+                  {opponent ? (
+                    <>
+                      <img 
+                        src={opponent.spriteStatic}
+                        alt={opponent.name}
+                        className={`w-20 h-20 mx-auto ${opponentHP <= 0 ? 'grayscale opacity-50' : ''} ${
+                          battlePhase === 'fighting' ? 'animate-pulse' : ''
+                        }`}
+                      />
+                      <p className={`text-xs font-bold mt-1 ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
+                        {opponent.name} Lv.{opponent.level}
+                      </p>
+                      <div className={`h-2 w-20 mx-auto rounded-full overflow-hidden mt-1 ${
+                        istDunkel ? 'bg-gray-700' : 'bg-gray-200'
+                      }`}>
+                        <div 
+                          className={`h-full transition-all duration-300 ${
+                            opponentHP > 50 ? 'bg-green-500' : opponentHP > 20 ? 'bg-yellow-500' : 'bg-red-500'
+                          }`}
+                          style={{ width: `${opponentHP}%` }}
+                        />
+                      </div>
+                      <p className={`text-[10px] ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
+                        {opponentHP}/100 HP
+                      </p>
+                    </>
+                  ) : (
+                    <div className="w-20 h-20 mx-auto animate-pulse bg-gray-600 rounded-full" />
+                  )}
+                </div>
+              </div>
+
+              {/* Battle Log */}
+              <div className={`rounded-lg p-3 h-32 overflow-y-auto text-xs space-y-1 ${
+                istDunkel ? 'bg-gray-800' : 'bg-gray-100'
+              }`}>
+                {battleLog.map((log, i) => (
+                  <p key={i} className={`${
+                    log.includes('🎉') ? 'text-green-400 font-bold' : 
+                    log.includes('besiegt...') ? 'text-red-400' :
+                    log.includes('+') ? 'text-cyan-400' :
+                    istDunkel ? 'text-gray-300' : 'text-gray-700'
+                  }`}>
+                    {log}
+                  </p>
+                ))}
+                {battlePhase === 'fighting' && (
+                  <p className="text-yellow-400 animate-pulse">Kampf läuft...</p>
+                )}
+              </div>
+
+              {/* Close Button */}
+              {battlePhase === 'result' && (
+                <button
+                  onClick={closeBattle}
+                  className="w-full mt-3 py-2 bg-gradient-to-r from-purple-500 to-indigo-600 text-white rounded-xl font-medium hover:scale-105 transition-all"
+                >
+                  Schließen
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
