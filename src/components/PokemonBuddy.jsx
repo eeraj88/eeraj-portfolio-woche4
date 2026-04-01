@@ -348,8 +348,8 @@ export default function PokemonBuddy() {
   }
 
   const runBattle = async (opponentInfo, opponentLevel, trainer) => {
-    const playerPower = data.level * 10 + Math.random() * 20
-    const opponentPower = opponentLevel * 10 + Math.random() * 20
+    // Kampfkraft basiert stark auf Level - höheres Level = mehr Schaden & weniger einstecken
+    const levelDiff = data.level - opponentLevel
     
     let pHP = 100
     let oHP = 100
@@ -364,8 +364,12 @@ export default function PokemonBuddy() {
     for (let i = 0; i < rounds && pHP > 0 && oHP > 0; i++) {
       await new Promise(r => setTimeout(r, 800))
       
-      // Spieler greift an
-      const playerDmg = Math.floor(15 + Math.random() * 15 + (data.level * 2))
+      // Spieler greift an - Schaden basiert auf Level
+      // Basis 10-20, plus 3 pro Level, plus Bonus wenn höheres Level
+      const playerBaseDmg = 10 + Math.random() * 10
+      const playerLevelBonus = data.level * 3
+      const playerAdvantage = levelDiff > 0 ? levelDiff * 5 : 0
+      const playerDmg = Math.floor(playerBaseDmg + playerLevelBonus + playerAdvantage)
       oHP = Math.max(0, oHP - playerDmg)
       logs.push(`${pokemonInfo.name} greift an! -${playerDmg} HP`)
       setBattleLog([...logs])
@@ -375,8 +379,11 @@ export default function PokemonBuddy() {
       
       await new Promise(r => setTimeout(r, 600))
       
-      // Gegner greift an
-      const opponentDmg = Math.floor(10 + Math.random() * 15 + (opponentLevel * 1.5))
+      // Gegner greift an - stärker wenn höheres Level
+      const opponentBaseDmg = 10 + Math.random() * 10
+      const opponentLevelBonus = opponentLevel * 3
+      const opponentAdvantage = levelDiff < 0 ? Math.abs(levelDiff) * 5 : 0
+      const opponentDmg = Math.floor(opponentBaseDmg + opponentLevelBonus + opponentAdvantage)
       pHP = Math.max(0, pHP - opponentDmg)
       logs.push(`${opponentInfo.name} greift an! -${opponentDmg} HP`)
       setBattleLog([...logs])
@@ -385,8 +392,23 @@ export default function PokemonBuddy() {
     
     await new Promise(r => setTimeout(r, 500))
     
-    // Ergebnis bestimmen (Spieler hat leichten Vorteil)
-    const playerWins = oHP <= 0 || (pHP > 0 && playerPower * 1.2 > opponentPower)
+    // Ergebnis: Wer hat mehr HP? Bei Gleichstand gewinnt höheres Level
+    let playerWins = false
+    if (oHP <= 0) {
+      playerWins = true
+    } else if (pHP <= 0) {
+      playerWins = false
+    } else {
+      // Beide leben noch - wer hat mehr HP?
+      if (pHP > oHP) {
+        playerWins = true
+      } else if (oHP > pHP) {
+        playerWins = false
+      } else {
+        // Gleichstand: höheres Level gewinnt
+        playerWins = data.level >= opponentLevel
+      }
+    }
     
     if (playerWins) {
       const xpGain = 15 + Math.floor(opponentLevel * 1.5)
@@ -401,10 +423,21 @@ export default function PokemonBuddy() {
         setData(prev => ({ ...prev, wins: (prev.wins || 0) + 1 }))
       }, 500)
     } else {
+      // Niederlage: XP-Verlust (aber nie unter 0)
+      const xpLoss = Math.min(data.xp, 10 + Math.floor(opponentLevel * 0.5))
       logs.push(`${pokemonInfo.name} wurde besiegt...`)
       logs.push(`${trainer}: "Vielleicht nächstes Mal!"`)
+      logs.push(`-${xpLoss} XP verloren`)
       setBattleLog([...logs])
       setPlayerHP(0)
+      
+      setTimeout(() => {
+        setData(prev => ({ 
+          ...prev, 
+          xp: Math.max(0, prev.xp - xpLoss),
+          losses: (prev.losses || 0) + 1 
+        }))
+      }, 500)
     }
     
     setBattlePhase('result')
@@ -422,7 +455,7 @@ export default function PokemonBuddy() {
 
   // Starter wählen
   const selectStarter = (starter) => {
-    const isShiny = Math.random() < 0.05
+    const isShiny = Math.random() < 0.10 // 10% Shiny-Chance
     
     const newData = {
       pokemonId: starter.id,
@@ -565,7 +598,7 @@ export default function PokemonBuddy() {
                   </div>
                 )}
                 <p className={`text-center mt-2 text-xs ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}>
-                  5% Shiny-Chance! ✨
+                  10% Shiny-Chance! ✨
                 </p>
               </div>
             ) : (
@@ -761,7 +794,8 @@ export default function PokemonBuddy() {
                   <p key={i} className={`${
                     log.includes('🎉') ? 'text-green-400 font-bold' : 
                     log.includes('besiegt...') ? 'text-red-400' :
-                    log.includes('+') ? 'text-cyan-400' :
+                    log.includes('+') && log.includes('XP') ? 'text-cyan-400' :
+                    log.includes('-') && log.includes('XP') ? 'text-red-500 font-bold' :
                     log.includes('Beeindruckend') || log.includes('nächstes Mal') ? 'text-orange-400 italic' :
                     log.includes('fordert') || log.includes('schickt') ? 'text-purple-400' :
                     istDunkel ? 'text-gray-300' : 'text-gray-700'
