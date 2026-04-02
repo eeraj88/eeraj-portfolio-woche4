@@ -9,6 +9,7 @@ function Header({
   aboutRef,
   skillsRef,
   projectsRef,
+  testimonialsRef,
   contactsRef
 }) {
   const [menuOffen, setMenuOffen] = useState(false)
@@ -54,6 +55,9 @@ function Header({
           </button>
           <button onClick={() => handleNavigation(projectsRef)} className={navLinkClass}>
             Projekte
+          </button>
+          <button onClick={() => handleNavigation(testimonialsRef)} className={navLinkClass}>
+            Referenzen
           </button>
           <button onClick={() => handleNavigation(contactsRef)} className={navLinkClass}>
             Kontakt
@@ -139,6 +143,7 @@ function Header({
               { label: 'About', ref: aboutRef },
               { label: 'Skills', ref: skillsRef },
               { label: 'Projekte', ref: projectsRef },
+              { label: 'Referenzen', ref: testimonialsRef },
               { label: 'Kontakt', ref: contactsRef }
             ].map(({ label, ref }) => (
               <button

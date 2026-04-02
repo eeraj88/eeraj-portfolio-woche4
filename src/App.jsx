@@ -16,6 +16,7 @@ function App() {
   const aboutRef = useRef(null)
   const skillsRef = useRef(null)
   const projectsRef = useRef(null)
+  const testimonialsRef = useRef(null)
   const contactsRef = useRef(null)
 
   const [istDunkel, setIstDunkel] = useState(() => {
@@ -68,6 +69,7 @@ function App() {
             aboutRef={aboutRef}
             skillsRef={skillsRef}
             projectsRef={projectsRef}
+            testimonialsRef={testimonialsRef}
             contactsRef={contactsRef}
             scrollToSection={scrollToSection}
           />
@@ -86,7 +88,9 @@ function App() {
             <Projects />
           </div>
 
-          <Testimonials />
+          <div ref={testimonialsRef}>
+            <Testimonials />
+          </div>
 
           <div ref={contactsRef}>
             <Contact />
