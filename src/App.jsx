@@ -49,10 +49,10 @@ function App() {
         {istDunkel && (
           <>
             {/* Floating Orbs */}
-            <div className="orb orb-cyan" style={{ top: '10%', left: '5%' }}></div>
-            <div className="orb orb-orange" style={{ top: '60%', right: '10%' }}></div>
-            <div className="orb orb-purple" style={{ bottom: '20%', left: '15%' }}></div>
-            <div className="orb orb-cyan" style={{ top: '40%', right: '20%', width: '200px', height: '200px' }}></div>
+            <div className="orb-cyan" style={{ top: '10%', left: '5%' }}></div>
+            <div className="orb-orange" style={{ top: '60%', right: '10%' }}></div>
+            <div className="orb-purple" style={{ bottom: '20%', left: '15%' }}></div>
+            <div className="orb-cyan" style={{ top: '40%', right: '20%', width: '200px', height: '200px' }}></div>
             
             {/* Grid Pattern Overlay */}
             <div className="grid-pattern"></div>
