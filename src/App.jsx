@@ -39,28 +39,43 @@ function App() {
   return (
     <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
       {/* Main Container */}
-      <div className={`min-h-screen transition-colors duration-500 relative ${
+      <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${
         istDunkel 
           ? 'bg-[#0a192f] text-[#ccd6f6]' 
           : 'bg-white text-[#0a192f]'
       }`}>
         
-        {/* Partikel Animation */}
+        {/* Modern Background Effects */}
         {istDunkel && (
-          <div className="particles">
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-            <div className="particle"></div>
-          </div>
+          <>
+            {/* Floating Orbs */}
+            <div className="orb orb-cyan" style={{ top: '10%', left: '5%' }}></div>
+            <div className="orb orb-orange" style={{ top: '60%', right: '10%' }}></div>
+            <div className="orb orb-purple" style={{ bottom: '20%', left: '15%' }}></div>
+            <div className="orb orb-cyan" style={{ top: '40%', right: '20%', width: '200px', height: '200px' }}></div>
+            
+            {/* Grid Pattern Overlay */}
+            <div className="grid-pattern"></div>
+            
+            {/* Noise Texture */}
+            <div className="noise-overlay"></div>
+            
+            {/* Particle Animation */}
+            <div className="particles">
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+              <div className="particle"></div>
+            </div>
+          </>
         )}
 
         {/* Content */}

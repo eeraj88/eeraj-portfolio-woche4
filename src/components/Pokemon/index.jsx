@@ -329,14 +329,13 @@ export default function PokemonBuddy() {
       <div className="fixed bottom-6 right-6 z-50">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className={`w-16 h-16 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center overflow-hidden ${
-            isAnimating ? 'animate-bounce' : 'wiggle-animation'
+          className={`pokemon-button-pulse w-16 h-16 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center overflow-hidden ${
+            isAnimating ? 'animate-bounce' : ''
           } ${
             istDunkel 
-              ? 'bg-gradient-to-br from-red-500 to-red-700 shadow-red-500/30' 
-              : 'bg-gradient-to-br from-red-400 to-red-600 shadow-red-400/30'
+              ? 'bg-gradient-to-br from-cyan-500 to-cyan-700' 
+              : 'bg-gradient-to-br from-teal-400 to-teal-600'
           }`}
-          style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.4)' }}
         >
           {activePokemonInfo ? (
             <img 
@@ -367,7 +366,7 @@ export default function PokemonBuddy() {
         }`}>
           
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-500 to-red-700 p-3 text-white">
+          <div className={`p-3 text-white ${istDunkel ? 'bg-gradient-to-r from-cyan-600 to-cyan-800' : 'bg-gradient-to-r from-teal-500 to-teal-700'}`}>
             <div className="flex justify-between items-center">
               <h3 className="font-bold flex items-center gap-2">
                 {state?.trainerName ? `Trainer ${state.trainerName}` : 'Pokémon Buddy'}
