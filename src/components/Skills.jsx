@@ -76,13 +76,13 @@ function Skills() {
     <section id="skills" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-white' : 'text-gray-900'
+          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
         }`}>
-          Meine <span className="gradient-text">Skills</span>
+          Meine <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Skills</span>
         </h2>
 
         <p className={`text-center mb-12 ${
-          istDunkel ? 'text-gray-400' : 'text-gray-600'
+          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
         }`}>
           Technologien und Tools, die ich benutze
         </p>
@@ -101,8 +101,8 @@ function Skills() {
                   transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1
                   ${config.gridClass}
                   ${istDunkel 
-                    ? `${config.bg} border ${config.border} hover:border-opacity-60` 
-                    : 'bg-white border border-gray-200 hover:border-gray-300 shadow-sm hover:shadow-lg'
+                    ? 'bg-[#112240] border border-[#233554] hover:border-[#64ffda]/50' 
+                    : 'bg-white border border-[#e2e8f0] hover:border-[#0d9488]/50 shadow-sm hover:shadow-lg'
                   }
                 `}
               >
@@ -115,12 +115,12 @@ function Skills() {
                 {/* Header */}
                 <div className="relative z-10 mb-3">
                   <h3 className={`text-lg font-bold ${
-                    istDunkel ? 'text-white' : 'text-gray-900'
+                    istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
                   }`}>
                     {kategorie}
                   </h3>
                   <p className={`text-[10px] ${
-                    istDunkel ? 'text-gray-500' : 'text-gray-400'
+                    istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
                   }`}>
                     {config.description}
                   </p>
@@ -146,7 +146,7 @@ function Skills() {
                         px-2 py-1 rounded text-xs font-bold whitespace-nowrap
                         opacity-0 group-hover/skill:opacity-100 transition-opacity
                         pointer-events-none z-20
-                        ${istDunkel ? 'bg-white text-gray-900' : 'bg-gray-900 text-white'}
+                        ${istDunkel ? 'bg-[#ccd6f6] text-[#0a192f]' : 'bg-[#0a192f] text-white'}
                       `}>
                         {skill.level}%
                       </span>
@@ -168,7 +168,7 @@ function Skills() {
         {/* Legend */}
         <div className={`
           mt-8 flex flex-wrap justify-center gap-4 text-xs
-          ${istDunkel ? 'text-gray-500' : 'text-gray-400'}
+          ${istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}
         `}>
           <div className="flex items-center gap-2">
             <span className={`w-3 h-3 rounded-full ${istDunkel ? 'bg-green-500/50' : 'bg-green-200'}`} />

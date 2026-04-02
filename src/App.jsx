@@ -38,14 +38,18 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
-      {/* Animierter Hintergrund */}
+      {/* Main Container */}
       <div className={`min-h-screen transition-colors duration-500 relative ${
-        istDunkel ? 'animated-bg text-gray-100' : 'animated-bg-light text-gray-900'
+        istDunkel 
+          ? 'bg-[#0a192f] text-[#ccd6f6]' 
+          : 'bg-white text-[#0a192f]'
       }`}>
         
-        {/* Partikel Animation (nur im Dark Mode) */}
+        {/* Partikel Animation */}
         {istDunkel && (
           <div className="particles">
+            <div className="particle"></div>
+            <div className="particle"></div>
             <div className="particle"></div>
             <div className="particle"></div>
             <div className="particle"></div>
@@ -74,29 +78,45 @@ function App() {
             scrollToSection={scrollToSection}
           />
 
-          <Hero />
+          {/* Hero - Primary Background */}
+          <div className={istDunkel ? 'bg-[#0a192f]' : 'bg-white'}>
+            <Hero />
+          </div>
 
-          <div ref={aboutRef}>
+          {/* About - Secondary Background */}
+          <div ref={aboutRef} className={`${istDunkel ? 'bg-[#112240]' : 'bg-[#f8fafc]'}`}>
+            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <About />
           </div>
 
-          <div ref={skillsRef}>
+          {/* Skills - Primary Background */}
+          <div ref={skillsRef} className={istDunkel ? 'bg-[#0a192f]' : 'bg-white'}>
+            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Skills />
           </div>
 
-          <div ref={projectsRef}>
+          {/* Projects - Secondary Background */}
+          <div ref={projectsRef} className={`${istDunkel ? 'bg-[#112240]' : 'bg-[#f8fafc]'}`}>
+            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Projects />
           </div>
 
-          <div ref={testimonialsRef}>
+          {/* Testimonials - Tertiary Background */}
+          <div ref={testimonialsRef} className={`${istDunkel ? 'bg-[#1d3557]' : 'bg-[#f1f5f9]'}`}>
+            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Testimonials />
           </div>
 
-          <div ref={contactsRef}>
+          {/* Contact - Primary Background */}
+          <div ref={contactsRef} className={istDunkel ? 'bg-[#0a192f]' : 'bg-white'}>
+            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Contact />
           </div>
 
-          <Footer />
+          {/* Footer - Secondary Background */}
+          <div className={`${istDunkel ? 'bg-[#112240]' : 'bg-[#f8fafc]'}`}>
+            <Footer />
+          </div>
         </div>
 
         {/* Floating Widgets */}

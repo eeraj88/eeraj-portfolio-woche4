@@ -22,15 +22,15 @@ function Header({
 
   const navLinkClass = `text-sm font-medium transition-all duration-300 hover:scale-105 ${
     istDunkel
-      ? 'text-gray-300 hover:text-orange-400'
-      : 'text-gray-600 hover:text-orange-600'
+      ? 'text-[#8892b0] hover:text-[#64ffda]'
+      : 'text-[#475569] hover:text-[#0d9488]'
   }`
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       istDunkel
-        ? 'bg-gray-900/90 border-b border-gray-800'
-        : 'bg-white/90 border-b border-gray-200'
+        ? 'bg-[#0a192f]/95 border-b border-[#233554]'
+        : 'bg-white/95 border-b border-gray-200'
     } backdrop-blur-md`}>
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         
@@ -38,11 +38,11 @@ function Header({
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           className={`text-xl font-bold transition-colors ${
-            istDunkel ? 'text-white' : 'text-gray-900'
+            istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
           }`}
         >
-          <span className="gradient-text">Eeraj</span>
-          <span className={istDunkel ? 'text-gray-400' : 'text-gray-500'}>.dev</span>
+          <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Eeraj</span>
+          <span className={istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}>.dev</span>
         </button>
 
         {/* Desktop Navigation */}
@@ -72,7 +72,7 @@ function Header({
               onClick={() => setSpotifyOpen(!spotifyOpen)}
               className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 flex items-center gap-1 ${
                 istDunkel
-                  ? 'bg-gray-800 hover:bg-gray-700'
+                  ? 'bg-[#112240] hover:bg-[#1d3557] border border-[#233554]'
                   : 'bg-gray-100 hover:bg-gray-200'
               }`}
               title="Meine Musik"
@@ -90,7 +90,7 @@ function Header({
                   onClick={() => setSpotifyOpen(false)}
                 />
                 <div className={`absolute right-0 top-12 w-80 rounded-xl shadow-2xl overflow-hidden z-50 ${
-                  istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
+                  istDunkel ? 'bg-[#112240] border border-[#233554]' : 'bg-white border border-gray-200'
                 }`}>
                   <iframe
                     src={`https://open.spotify.com/embed/playlist/${SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
@@ -110,8 +110,8 @@ function Header({
             onClick={toggleDarkMode}
             className={`p-2 rounded-lg transition-all duration-300 hover:scale-110 ${
               istDunkel
-                ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'bg-[#112240] text-[#64ffda] hover:bg-[#1d3557] border border-[#233554]'
+                : 'bg-gray-100 text-[#0d9488] hover:bg-gray-200'
             }`}
             aria-label={istDunkel ? 'Light Mode aktivieren' : 'Dark Mode aktivieren'}
           >
@@ -123,8 +123,8 @@ function Header({
             onClick={() => setMenuOffen(!menuOffen)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
               istDunkel
-                ? 'bg-gray-800 text-white hover:bg-gray-700'
-                : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                ? 'bg-[#112240] text-[#ccd6f6] hover:bg-[#1d3557] border border-[#233554]'
+                : 'bg-gray-100 text-[#0a192f] hover:bg-gray-200'
             }`}
             aria-label="Menu oeffnen"
           >
@@ -136,7 +136,7 @@ function Header({
       {/* Mobile Menu */}
       {menuOffen && (
         <div className={`md:hidden px-4 pb-4 ${
-          istDunkel ? 'bg-gray-900/95' : 'bg-white/95'
+          istDunkel ? 'bg-[#0a192f]/98' : 'bg-white/98'
         } backdrop-blur-md`}>
           <nav className="flex flex-col gap-2">
             {[
@@ -151,8 +151,8 @@ function Header({
                 onClick={() => handleNavigation(ref)}
                 className={`text-left px-4 py-3 rounded-lg transition-colors ${
                   istDunkel
-                    ? 'text-gray-300 hover:bg-gray-800 hover:text-orange-400'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-orange-600'
+                    ? 'text-[#8892b0] hover:bg-[#112240] hover:text-[#64ffda]'
+                    : 'text-[#475569] hover:bg-gray-100 hover:text-[#0d9488]'
                 }`}
               >
                 {label}

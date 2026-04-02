@@ -44,8 +44,8 @@ function Footer() {
   return (
     <footer className={`relative py-12 px-4 ${
       istDunkel 
-        ? 'bg-gray-950 border-t border-gray-800' 
-        : 'bg-gray-100 border-t border-gray-200'
+        ? 'border-t border-[#233554]' 
+        : 'border-t border-[#e2e8f0]'
     }`}>
       <div className="max-w-6xl mx-auto">
         {/* Main Footer Content */}
@@ -54,12 +54,12 @@ function Footer() {
           {/* Brand */}
           <div>
             <h3 className={`text-xl font-bold mb-3 ${
-              istDunkel ? 'text-white' : 'text-gray-900'
+              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
-              <span className="gradient-text">Eeraj</span>.dev
+              <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Eeraj</span>.dev
             </h3>
             <p className={`text-sm leading-relaxed ${
-              istDunkel ? 'text-gray-400' : 'text-gray-600'
+              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
               Frontend Developer mit Leidenschaft für kreative Web-Lösungen und moderne Technologien.
             </p>
@@ -68,7 +68,7 @@ function Footer() {
           {/* Quick Links */}
           <div>
             <h4 className={`text-sm font-semibold uppercase tracking-wider mb-3 ${
-              istDunkel ? 'text-gray-300' : 'text-gray-700'
+              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
               Quick Links
             </h4>
@@ -79,8 +79,8 @@ function Footer() {
                     href={link.href}
                     className={`text-sm transition-colors hover:underline ${
                       istDunkel 
-                        ? 'text-gray-400 hover:text-cyan-400' 
-                        : 'text-gray-600 hover:text-cyan-600'
+                        ? 'text-[#8892b0] hover:text-[#64ffda]' 
+                        : 'text-[#475569] hover:text-[#0d9488]'
                     }`}
                   >
                     {link.name}
@@ -93,7 +93,7 @@ function Footer() {
           {/* Social Links */}
           <div>
             <h4 className={`text-sm font-semibold uppercase tracking-wider mb-3 ${
-              istDunkel ? 'text-gray-300' : 'text-gray-700'
+              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
               Connect
             </h4>
@@ -107,8 +107,8 @@ function Footer() {
                   aria-label={social.name}
                   className={`p-2.5 rounded-lg transition-all duration-200 hover:scale-110 ${
                     istDunkel 
-                      ? 'bg-gray-800 text-gray-400 hover:bg-gray-700 hover:text-white' 
-                      : 'bg-white text-gray-600 hover:bg-gray-200 hover:text-gray-900 shadow-sm'
+                      ? 'bg-[#112240] text-[#8892b0] hover:bg-[#1d3557] hover:text-[#64ffda] border border-[#233554]' 
+                      : 'bg-[#f8fafc] text-[#475569] hover:bg-[#f1f5f9] hover:text-[#0d9488] border border-[#e2e8f0]'
                   }`}
                 >
                   {social.icon}
@@ -116,7 +116,7 @@ function Footer() {
               ))}
             </div>
             <p className={`text-xs mt-3 ${
-              istDunkel ? 'text-gray-500' : 'text-gray-400'
+              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
               Lass uns vernetzen!
             </p>
@@ -124,22 +124,20 @@ function Footer() {
         </div>
 
         {/* Divider */}
-        <div className={`border-t mb-6 ${
-          istDunkel ? 'border-gray-800' : 'border-gray-300'
-        }`} />
+        <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'} mb-6`} />
 
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className={`text-xs ${
-            istDunkel ? 'text-gray-500' : 'text-gray-400'
+            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
           }`}>
             &copy; {aktuellesJahr} Eeraj. Alle Rechte vorbehalten.
           </p>
           
           <p className={`text-xs ${
-            istDunkel ? 'text-gray-600' : 'text-gray-400'
+            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
           }`}>
-            Gebaut mit <span className="text-cyan-500">React</span> + <span className="text-cyan-500">Tailwind CSS</span>
+            Gebaut mit <span className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>React</span> + <span className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Tailwind CSS</span>
           </p>
         </div>
       </div>

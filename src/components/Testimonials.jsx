@@ -41,8 +41,8 @@ function Testimonials() {
           ${isCenter ? 'scale-100 opacity-100' : 'scale-[0.85] opacity-60'}
           ${!isCenter ? 'blur-[2px] hover:blur-[1px] hover:opacity-75' : ''}
           ${istDunkel 
-            ? 'bg-gray-900/70 border border-gray-700/50' 
-            : 'bg-gray-50 border border-gray-200'
+            ? 'bg-[#112240] border border-[#233554]' 
+            : 'bg-white border border-[#e2e8f0] shadow-lg'
           }
         `}
         style={{
@@ -52,7 +52,9 @@ function Testimonials() {
       >
         {/* Quote Icon - only on center */}
         {isCenter && (
-          <div className="absolute top-4 left-4 text-5xl opacity-20 gradient-text font-serif">
+          <div className={`absolute top-4 left-4 text-5xl opacity-30 font-serif ${
+            istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'
+          }`}>
             "
           </div>
         )}
@@ -63,8 +65,8 @@ function Testimonials() {
           <div className="mb-4">
             <span className={`text-xs px-3 py-1 rounded-full font-medium ${
               istDunkel 
-                ? 'bg-orange-500/20 text-orange-400' 
-                : 'bg-orange-100 text-orange-700'
+                ? 'bg-[#64ffda]/10 text-[#64ffda] border border-[#64ffda]/30' 
+                : 'bg-[#0d9488]/10 text-[#0d9488] border border-[#0d9488]/30'
             }`}>
               {testimonial.projekt}
             </span>
@@ -72,7 +74,7 @@ function Testimonials() {
 
           {/* Text - truncated for side cards */}
           <p className={`leading-relaxed mb-6 ${
-            istDunkel ? 'text-gray-300' : 'text-gray-700'
+            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
           } ${isCenter ? 'text-lg md:text-xl' : 'text-sm line-clamp-3'}`}>
             "{isCenter ? testimonial.text : testimonial.text.slice(0, 100) + '...'}"
           </p>
@@ -82,18 +84,18 @@ function Testimonials() {
             <img 
               src={testimonial.bild} 
               alt={testimonial.name}
-              className={`rounded-full object-cover border-2 border-orange-500 ${
-                isCenter ? 'w-14 h-14' : 'w-10 h-10'
-              }`}
+              className={`rounded-full object-cover border-2 ${
+                istDunkel ? 'border-[#64ffda]' : 'border-[#0d9488]'
+              } ${isCenter ? 'w-14 h-14' : 'w-10 h-10'}`}
             />
             <div className="flex-1 min-w-0">
               <h4 className={`font-bold truncate ${
-                istDunkel ? 'text-white' : 'text-gray-900'
+                istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
               } ${isCenter ? 'text-lg' : 'text-sm'}`}>
                 {testimonial.name}
               </h4>
               <p className={`truncate ${
-                istDunkel ? 'text-gray-400' : 'text-gray-600'
+                istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
               } ${isCenter ? 'text-sm' : 'text-xs'}`}>
                 {testimonial.rolle}
               </p>
@@ -103,7 +105,7 @@ function Testimonials() {
             {isCenter && (
               <div className="flex gap-0.5">
                 {[...Array(testimonial.bewertung)].map((_, i) => (
-                  <span key={i} className="text-orange-400 text-lg">★</span>
+                  <span key={i} className={`text-lg ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`}>★</span>
                 ))}
               </div>
             )}
@@ -114,18 +116,16 @@ function Testimonials() {
   }
 
   return (
-    <section id="testimonials" className={`py-20 px-4 overflow-hidden ${
-      istDunkel ? 'bg-gray-800/30' : 'bg-white'
-    }`}>
+    <section id="testimonials" className="py-20 px-4 overflow-hidden">
       <div className="max-w-6xl mx-auto">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-white' : 'text-gray-900'
+          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
         }`}>
-          Was <span className="gradient-text">Kunden</span> sagen
+          Was <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Kunden</span> sagen
         </h2>
 
         <p className={`text-center mb-12 ${
-          istDunkel ? 'text-gray-400' : 'text-gray-600'
+          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
         }`}>
           Vertrauen von Weltklasse-Persoenlichkeiten
         </p>
@@ -153,8 +153,8 @@ function Testimonials() {
             onClick={vorheriges}
             className={`md:hidden absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-30 ${
               istDunkel 
-                ? 'bg-gray-800/90 hover:bg-orange-500 text-white border border-gray-700' 
-                : 'bg-white/90 hover:bg-orange-500 text-gray-800 hover:text-white border border-gray-300 shadow-lg'
+                ? 'bg-[#112240] hover:bg-[#64ffda] text-[#ccd6f6] hover:text-[#0a192f] border border-[#233554]' 
+                : 'bg-white hover:bg-[#0d9488] text-[#0a192f] hover:text-white border border-[#e2e8f0] shadow-lg'
             }`}
             aria-label="Vorheriges Testimonial"
           >
@@ -167,8 +167,8 @@ function Testimonials() {
             onClick={naechstes}
             className={`md:hidden absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-30 ${
               istDunkel 
-                ? 'bg-gray-800/90 hover:bg-orange-500 text-white border border-gray-700' 
-                : 'bg-white/90 hover:bg-orange-500 text-gray-800 hover:text-white border border-gray-300 shadow-lg'
+                ? 'bg-[#112240] hover:bg-[#64ffda] text-[#ccd6f6] hover:text-[#0a192f] border border-[#233554]' 
+                : 'bg-white hover:bg-[#0d9488] text-[#0a192f] hover:text-white border border-[#e2e8f0] shadow-lg'
             }`}
             aria-label="Naechstes Testimonial"
           >
@@ -186,10 +186,12 @@ function Testimonials() {
               onClick={() => setAktuellerIndex(index)}
               className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
                 index === aktuellerIndex
-                  ? 'bg-gradient-to-r from-orange-500 to-red-500 w-7'
+                  ? istDunkel 
+                    ? 'bg-[#64ffda] w-7' 
+                    : 'bg-[#0d9488] w-7'
                   : istDunkel 
-                    ? 'bg-gray-700 hover:bg-gray-600' 
-                    : 'bg-gray-300 hover:bg-gray-400'
+                    ? 'bg-[#233554] hover:bg-[#8892b0]' 
+                    : 'bg-[#e2e8f0] hover:bg-[#cbd5e1]'
               }`}
               aria-label={`Testimonial ${index + 1}`}
             />

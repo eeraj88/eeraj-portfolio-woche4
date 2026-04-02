@@ -1,10 +1,42 @@
 @import "tailwindcss";
 
+/* ========================================
+   DESIGN SYSTEM - Midnight Blue + Electric Cyan
+   ======================================== */
+
+:root {
+  /* Dark Mode Colors */
+  --dark-bg-primary: #0a192f;
+  --dark-bg-secondary: #112240;
+  --dark-bg-tertiary: #1d3557;
+  --dark-text-primary: #ccd6f6;
+  --dark-text-secondary: #8892b0;
+  --dark-border: #233554;
+  
+  /* Light Mode Colors */
+  --light-bg-primary: #ffffff;
+  --light-bg-secondary: #f8fafc;
+  --light-bg-tertiary: #f1f5f9;
+  --light-text-primary: #0a192f;
+  --light-text-secondary: #475569;
+  --light-border: #e2e8f0;
+  
+  /* Accent Colors */
+  --accent-cyan: #64ffda;
+  --accent-cyan-dim: #64ffda80;
+  --accent-teal: #0d9488;
+  --accent-orange: #f97316;
+  --accent-orange-dim: #f9731680;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
-/* Animierter Hintergrund-Gradient */
+/* ========================================
+   ANIMATED BACKGROUNDS
+   ======================================== */
+
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -17,22 +49,89 @@ html {
   }
 }
 
+@keyframes subtleGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
 .animated-bg {
-  background: linear-gradient(-45deg, #1a1a2e, #16213e, #0f0f23, #1a1a2e);
+  background: linear-gradient(-45deg, #0a192f, #112240, #0a192f, #1d3557);
   background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  animation: gradientShift 20s ease infinite;
 }
 
 .animated-bg-light {
-  background: linear-gradient(-45deg, #f8f9fa, #e9ecef, #f1f3f4, #ffffff);
+  background: linear-gradient(-45deg, #ffffff, #f8fafc, #f1f5f9, #ffffff);
   background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
+  animation: gradientShift 20s ease infinite;
 }
 
-/* Glow Effekt fuer Akzente */
+/* ========================================
+   SECTION STYLES - Alternating Backgrounds
+   ======================================== */
+
+/* Dark Mode Sections */
+.section-dark-primary {
+  background-color: var(--dark-bg-primary);
+}
+
+.section-dark-secondary {
+  background-color: var(--dark-bg-secondary);
+}
+
+.section-dark-tertiary {
+  background-color: var(--dark-bg-tertiary);
+}
+
+/* Light Mode Sections */
+.section-light-primary {
+  background-color: var(--light-bg-primary);
+}
+
+.section-light-secondary {
+  background-color: var(--light-bg-secondary);
+}
+
+.section-light-tertiary {
+  background-color: var(--light-bg-tertiary);
+}
+
+/* ========================================
+   GLOW EFFECTS
+   ======================================== */
+
+/* Cyan Glow - Primary Accent */
+.glow-cyan {
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.4),
+              0 0 40px rgba(100, 255, 218, 0.2),
+              0 0 60px rgba(100, 255, 218, 0.1);
+}
+
+.glow-cyan-sm {
+  box-shadow: 0 0 10px rgba(100, 255, 218, 0.3),
+              0 0 20px rgba(100, 255, 218, 0.15);
+}
+
+/* Orange Glow - Secondary Accent */
 .glow-orange {
   box-shadow: 0 0 20px rgba(249, 115, 22, 0.4),
               0 0 40px rgba(249, 115, 22, 0.2);
+}
+
+.glow-orange-sm {
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.3),
+              0 0 20px rgba(249, 115, 22, 0.15);
+}
+
+/* Text Glow */
+.glow-text-cyan {
+  text-shadow: 0 0 10px rgba(100, 255, 218, 0.5),
+               0 0 20px rgba(100, 255, 218, 0.3),
+               0 0 30px rgba(100, 255, 218, 0.2);
 }
 
 .glow-text {
@@ -40,7 +139,137 @@ html {
                0 0 20px rgba(249, 115, 22, 0.3);
 }
 
-/* Floating Animation fuer Elemente */
+/* ========================================
+   GRADIENT TEXT
+   ======================================== */
+
+.gradient-text {
+  background: linear-gradient(135deg, #64ffda 0%, #0d9488 50%, #f97316 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-cyan {
+  background: linear-gradient(135deg, #64ffda 0%, #0d9488 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-orange {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Light mode gradient - darker for visibility */
+.gradient-text-light {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #ea580c 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   CARD STYLES
+   ======================================== */
+
+/* Dark Mode Cards */
+.card-dark {
+  background: linear-gradient(145deg, #112240, #0a192f);
+  border: 1px solid var(--dark-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+              0 2px 4px -2px rgba(0, 0, 0, 0.2);
+}
+
+.card-dark:hover {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 10px 40px -10px rgba(100, 255, 218, 0.2),
+              0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+}
+
+/* Light Mode Cards */
+.card-light {
+  background: #ffffff;
+  border: 1px solid var(--light-border);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+              0 2px 4px -2px rgba(0, 0, 0, 0.06);
+}
+
+.card-light:hover {
+  border-color: var(--accent-teal);
+  box-shadow: 0 20px 40px -10px rgba(13, 148, 136, 0.15),
+              0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+}
+
+/* Card Transition */
+.card-dark, .card-light {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========================================
+   BUTTON STYLES
+   ======================================== */
+
+.btn-primary-dark {
+  background: linear-gradient(135deg, #64ffda 0%, #0d9488 100%);
+  color: #0a192f;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary-dark:hover {
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.4),
+              0 0 40px rgba(100, 255, 218, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-primary-light {
+  background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
+  color: #ffffff;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary-light:hover {
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.4),
+              0 0 40px rgba(13, 148, 136, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-secondary-dark {
+  background: transparent;
+  border: 2px solid #64ffda;
+  color: #64ffda;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-dark:hover {
+  background: rgba(100, 255, 218, 0.1);
+  box-shadow: 0 0 20px rgba(100, 255, 218, 0.2);
+}
+
+.btn-secondary-light {
+  background: transparent;
+  border: 2px solid #0d9488;
+  color: #0d9488;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary-light:hover {
+  background: rgba(13, 148, 136, 0.1);
+  box-shadow: 0 0 20px rgba(13, 148, 136, 0.2);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+/* Floating Animation */
 @keyframes float {
   0%, 100% {
     transform: translateY(0px);
@@ -54,7 +283,7 @@ html {
   animation: float 3s ease-in-out infinite;
 }
 
-/* Pulse Animation */
+/* Pulse Glow Animation */
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 1;
@@ -68,15 +297,53 @@ html {
   animation: pulse-glow 2s ease-in-out infinite;
 }
 
-/* Gradient Text */
-.gradient-text {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 50%, #dc2626 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Pulse Cyan */
+@keyframes pulse-cyan {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(100, 255, 218, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(100, 255, 218, 0.6),
+                0 0 30px rgba(100, 255, 218, 0.4);
+  }
 }
 
-/* Partikel Hintergrund */
+.pulse-cyan {
+  animation: pulse-cyan 2s ease-in-out infinite;
+}
+
+/* Blob Animation */
+@keyframes blob {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  25% {
+    transform: translate(20px, -30px) scale(1.1);
+  }
+  50% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  75% {
+    transform: translate(30px, 10px) scale(1.05);
+  }
+}
+
+.animate-blob {
+  animation: blob 8s ease-in-out infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* ========================================
+   PARTICLES - Now with Cyan + Orange
+   ======================================== */
+
 .particles {
   position: fixed;
   top: 0;
@@ -92,9 +359,20 @@ html {
   position: absolute;
   width: 4px;
   height: 4px;
-  background: rgba(249, 115, 22, 0.3);
   border-radius: 50%;
-  animation: rise 8s infinite ease-in;
+  animation: rise 10s infinite ease-in;
+}
+
+/* Cyan particles */
+.particle:nth-child(odd) {
+  background: rgba(100, 255, 218, 0.4);
+  box-shadow: 0 0 6px rgba(100, 255, 218, 0.3);
+}
+
+/* Orange particles */
+.particle:nth-child(even) {
+  background: rgba(249, 115, 22, 0.4);
+  box-shadow: 0 0 6px rgba(249, 115, 22, 0.3);
 }
 
 @keyframes rise {
@@ -124,31 +402,83 @@ html {
 .particle:nth-child(8) { left: 80%; animation-delay: 7s; }
 .particle:nth-child(9) { left: 90%; animation-delay: 0.5s; }
 .particle:nth-child(10) { left: 15%; animation-delay: 2.5s; }
+.particle:nth-child(11) { left: 25%; animation-delay: 3.5s; }
+.particle:nth-child(12) { left: 75%; animation-delay: 4.5s; }
 
-/* Blob Animation fuer Hero Hintergrund */
-@keyframes blob {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(20px, -30px) scale(1.1);
-  }
-  50% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-  75% {
-    transform: translate(30px, 10px) scale(1.05);
-  }
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+/* Borders */
+.border-accent-dark {
+  border-color: var(--accent-cyan);
 }
 
-.animate-blob {
-  animation: blob 8s ease-in-out infinite;
+.border-accent-light {
+  border-color: var(--accent-teal);
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
+/* Text Colors */
+.text-accent-dark {
+  color: var(--accent-cyan);
 }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+.text-accent-light {
+  color: var(--accent-teal);
+}
+
+/* Section Divider Line */
+.section-divider-dark {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(100, 255, 218, 0.3), transparent);
+}
+
+.section-divider-light {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(13, 148, 136, 0.3), transparent);
+}
+
+/* Focus States */
+.focus-cyan:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(100, 255, 218, 0.3);
+}
+
+.focus-teal:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.3);
+}
+
+/* ========================================
+   SCROLLBAR STYLING
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--dark-bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-cyan);
+}
+
+/* Light mode scrollbar */
+.light-scrollbar::-webkit-scrollbar-track {
+  background: var(--light-bg-primary);
+}
+
+.light-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--light-border);
+}
+
+.light-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-teal);
 }

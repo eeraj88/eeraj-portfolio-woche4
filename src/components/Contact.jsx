@@ -85,30 +85,34 @@ function Contact() {
     }
   }
 
-  const inputClass = (field) => `w-full px-4 py-3 rounded-lg border transition-all duration-300 outline-none focus:ring-2 focus:ring-orange-500 ${
+  const inputClass = (field) => `w-full px-4 py-3 rounded-lg border transition-all duration-300 outline-none focus:ring-2 ${
     istDunkel
-      ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500 focus:border-orange-500'
-      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400 focus:border-orange-500'
-  } ${fehler[field] ? 'border-red-500 focus:ring-red-500' : ''}`
+      ? `bg-[#112240] border-[#233554] text-[#ccd6f6] placeholder-[#8892b0] focus:border-[#64ffda] focus:ring-[#64ffda]/30`
+      : `bg-white border-[#e2e8f0] text-[#0a192f] placeholder-[#94a3b8] focus:border-[#0d9488] focus:ring-[#0d9488]/30`
+  } ${fehler[field] ? 'border-red-500 focus:ring-red-500/30' : ''}`
 
   return (
     <section id="contact" className="py-20 px-4">
       <div className="max-w-2xl mx-auto">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-white' : 'text-gray-900'
+          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
         }`}>
-          <span className="gradient-text">Kontakt</span>
+          <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Kontakt</span>
         </h2>
 
         <p className={`text-center mb-10 ${
-          istDunkel ? 'text-gray-400' : 'text-gray-600'
+          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
         }`}>
           Schreib mir eine Nachricht - ich freue mich von dir zu hoeren!
         </p>
 
         {/* Success Message */}
         {istGesendet && (
-          <div className="mb-8 p-4 rounded-xl bg-green-500/20 border border-green-500/50 text-green-400 text-center font-medium">
+          <div className={`mb-8 p-4 rounded-xl text-center font-medium ${
+            istDunkel 
+              ? 'bg-[#64ffda]/10 border border-[#64ffda]/30 text-[#64ffda]'
+              : 'bg-[#0d9488]/10 border border-[#0d9488]/30 text-[#0d9488]'
+          }`}>
             Nachricht erfolgreich gesendet! Ich melde mich bald.
           </div>
         )}
@@ -124,7 +128,7 @@ function Contact() {
           {/* Name */}
           <div>
             <label htmlFor="name" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-gray-300' : 'text-gray-700'
+              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
               Name
             </label>
@@ -146,7 +150,7 @@ function Contact() {
           {/* Email */}
           <div>
             <label htmlFor="email" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-gray-300' : 'text-gray-700'
+              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
               E-Mail
             </label>
@@ -168,7 +172,7 @@ function Contact() {
           {/* Message */}
           <div>
             <label htmlFor="nachricht" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-gray-300' : 'text-gray-700'
+              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
               Nachricht
             </label>
@@ -190,10 +194,14 @@ function Contact() {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full py-3 bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-lg font-semibold transition-all duration-300 ${
+            className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
               isLoading 
                 ? 'opacity-70 cursor-not-allowed' 
-                : 'hover:from-orange-600 hover:to-red-600 hover:scale-[1.02] hover:shadow-lg'
+                : 'hover:scale-[1.02]'
+            } ${
+              istDunkel 
+                ? 'bg-[#64ffda] text-[#0a192f] hover:shadow-[0_0_20px_rgba(100,255,218,0.4)]'
+                : 'bg-[#0d9488] text-white hover:bg-[#0f766e] hover:shadow-lg'
             }`}
           >
             {isLoading ? (
