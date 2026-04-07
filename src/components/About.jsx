@@ -5,7 +5,7 @@ function About() {
   const { istDunkel } = useContext(ThemeContext)
 
   // YouTube Video ID
-  const youtubeVideoId = "fRWuzTOYDXY"
+  const youtubeVideoId = "taMDOC3hTYA"
 
   const stats = [
     { value: '5+', label: 'Projekte' },
