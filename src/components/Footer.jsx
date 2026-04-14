@@ -1,5 +1,6 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
+import VisitorCounter from './VisitorCounter'
 
 function Footer() {
   const { istDunkel } = useContext(ThemeContext)
@@ -128,12 +129,19 @@ function Footer() {
 
         {/* Bottom Bar */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className={`text-xs ${
-            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-          }`}>
-            &copy; {aktuellesJahr} Eeraj. Alle Rechte vorbehalten.
-          </p>
-          
+          <div className="flex items-center gap-4">
+            <p className={`text-xs ${
+              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+            }`}>
+              &copy; {aktuellesJahr} Eeraj. Alle Rechte vorbehalten.
+            </p>
+            <p className={`text-xs ${
+              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+            }`}>
+              Besucher: <VisitorCounter />
+            </p>
+          </div>
+
           <p className={`text-xs ${
             istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
           }`}>

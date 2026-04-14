@@ -2,6 +2,8 @@ import { useState, useContext } from 'react'
 import projects from '../data/projects'
 import { ThemeContext } from '../Context/ThemeContext'
 import { giveXP } from './PokemonBuddy'
+import LikeButton from './LikeButton'
+import Comments from './Comments'
 
 function Projects() {
   const { istDunkel } = useContext(ThemeContext)
@@ -246,7 +248,7 @@ function Projects() {
                   target="_blank"
                   rel="noreferrer"
                   className={`inline-block px-6 py-3 rounded-lg font-semibold transition-all ${
-                    istDunkel 
+                    istDunkel
                       ? 'bg-[#64ffda] text-[#0a192f] hover:shadow-[0_0_20px_rgba(100,255,218,0.4)]'
                       : 'bg-[#0d9488] text-white hover:bg-[#0f766e]'
                   }`}
@@ -268,6 +270,16 @@ function Projects() {
                   GitHub Code
                 </a>
               )}
+            </div>
+
+            {/* Like Button */}
+            <div className="mt-4">
+              <LikeButton projectId={aktivesProjekt.id} />
+            </div>
+
+            {/* Comments */}
+            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-[#233554]">
+              <Comments projectId={aktivesProjekt.id} />
             </div>
           </div>
         </div>
