@@ -1,0 +1,14 @@
+com\portfolio\service\LikeService.class
+com\portfolio\PortfolioApplication.class
+com\portfolio\repository\LikeRepository.class
+com\portfolio\service\VisitorService.class
+com\portfolio\entity\Visitor.class
+com\portfolio\repository\VisitorRepository.class
+com\portfolio\controller\LikeController.class
+com\portfolio\repository\CommentRepository.class
+com\portfolio\entity\Like.class
+com\portfolio\entity\Comment.class
+com\portfolio\config\CorsConfig.class
+com\portfolio\service\CommentService.class
+com\portfolio\controller\VisitorController.class
+com\portfolio\controller\CommentController.class

@@ -42,6 +42,12 @@ const skills = [
     level: 65,
     kategorie: "Frontend"
   },
+  {
+    id: 30,
+    name: "Python",
+    level: 50,
+    kategorie: "Frontend"
+  },
 
   // MARKETING
   {

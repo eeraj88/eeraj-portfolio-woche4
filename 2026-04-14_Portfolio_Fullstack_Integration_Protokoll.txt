@@ -1,0 +1,380 @@
+═══════════════════════════════════════════════════════════════════════════════
+                    PORTFOLIO FULLSTACK INTEGRATION PROTOKOLL
+                         Datum: 2026-04-14
+                         Projekt: eeraj-portfolio-woche4
+═══════════════════════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  HEUTE ERLEDIGT (✅ = fertig, ❌ = in Arbeit)                               │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+✅ 1. Spring Boot Backend erstellt (Java 17 + Maven)
+      - backend/ Ordner mit komplettem Spring Boot Projekt
+      - Entities: Visitor, Like, Comment
+      - Repositories, Services, Controllers
+      - CORS Konfiguration
+      - H2 Datenbank (In-Memory)
+
+✅ 2. React Frontend erweitert
+      - src/services/api.js (API Service Layer)
+      - src/components/VisitorCounter.jsx
+      - src/components/LikeButton.jsx
+      - src/components/Comments.jsx
+      - src/components/Footer.jsx (Visitor Counter integriert)
+      - src/components/Projects.jsx (Like + Comments im Modal)
+
+✅ 3. Auf GitHub gepusht
+      - Commit: "feat: Add Spring Boot Backend with Visitor Counter, Likes & Comments"
+      - Push nach: https://github.com/eeraj88/eeraj-portfolio-woche4
+
+✅ 4. Frontend gestartet
+      - Läuft auf: http://localhost:5173
+      - Status: ✅ AKTIV (läuft im Hintergrund)
+
+❌ 5. Backend gestartet
+      - Problem: Maven nicht installiert
+      - In Arbeit: Umgebungsvariablen setzen
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  AKTUELLER STATUS                                                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+Frontend:  ✅ LÄUFT auf http://localhost:5173
+Backend:   ❌ LÄUFT NICHT (warten auf Maven Installation)
+
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  NÄCHSTE SCHRITTE (Detailliert)                                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+                        TEIL 1: JAVA 17 INSTALLATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Schritt 1.1: Eclipse Temurin JDK 17 installieren
+───────────────────────────────────────────────
+Datei: OpenJDK17U-jdk_x64_windows_hotspot_17.0.18+8.msi (bereits heruntergeladen)
+
+1) Doppelklick auf die MSI-Datei
+2) Im Installer:
+   - "Next" klicken
+   - "Install" klicken (oder "Next")
+   - Warten bis Installation fertig ist
+   - "Close" klicken
+
+Schritt 1.2: Terminal schließen und neu öffnen
+───────────────────────────────────────────────
+WICHTIG: Altes Terminal schließen, komplett neues Terminal öffnen!
+
+Schritt 1.3: Java-Version prüfen
+────────────────────────────────
+Im neuen Terminal eingeben:
+
+    java -version
+
+ERWARTETE AUSGABE:
+    openjdk version "17.0.18" 2024-01-16 LTS
+    OpenJDK Runtime Environment Temurin-17.0.18+8 (build 17.0.18+8-LTS)
+    OpenJDK 64-Bit Server VM Temurin-17.0.18+8 (build 17.0.18+8-LTS, mixed mode)
+
+WENN "1.8.0_441" angezeigt wird:
+    → Altes Terminal noch aktiv! Komplett schließen und neu öffnen!
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        TEIL 2: MAVEN INSTALLATION
+═══════════════════════════════════════════════════════════════════════════════
+
+Schritt 2.1: Maven herunterladen
+─────────────────────────────────
+1) Browser öffnen
+2) Gehe zu: https://maven.apache.org/download.cgi
+3) Lade herunter: "apache-maven-3.9.14-bin.zip" (Binary zip archive)
+   NICHT: tar.gz (für Linux), src.zip (Quellcode), *.sha512, *.asc
+
+Schritt 2.2: Maven entpacken
+───────────────────────────
+1) Rechtsklick auf apache-maven-3.9.14-bin.zip
+2) "Alle extrahieren" oder "Extract All"
+3) Es wird im Downloads Ordner entpackt: apache-maven-3.9.14
+
+ERGEBNIS:
+    Downloads/apache-maven-3.9.14/
+
+Schritt 2.3: Maven verschieben
+─────────────────────────────
+1) Im Windows Explorer zu: C:\Program Files\
+2) Neuen Ordner erstellen: "Maven"
+3) Zum Downloads Ordner navigieren
+4) Ordner "apache-maven-3.9.14" rechtsklicken → Ausschneiden
+5. Nach C:\Program Files\Maven\ navigieren → Einfügen
+
+ERGEBNIS:
+    C:\Program Files\Maven\apache-maven-3.9.14\
+
+Schritt 2.4: Umgebungsvariablen setzen
+───────────────────────────────────────
+1) Windows-Taste + R drücken
+2) Eingabe: sysdm.cpl
+3) Enter drücken
+4) Reiter "Erweitert" klicken
+5) Button "Umgebungsvariablen" klicken
+
+6) Bei "Systemvariablen" (unten):
+   ────────────────────────────────────────────────────────────────────────
+   A) MAVEN_HOME erstellen:
+      - Button "Neu" klicken
+      - Variablenname: MAVEN_HOME
+      - Variablenwert: C:\Program Files\Maven\apache-maven-3.9.14
+      - OK klicken
+
+   B) PATH bearbeiten:
+      - "Path" auswählen
+      - Button "Bearbeiten" klicken
+      - Button "Neu" klicken (unten im Fenster)
+      - Eingeben: %MAVEN_HOME%\bin
+      - ENTER drücken
+      - Bei allen Dialogen "OK" klicken (um alle Fenster zu schließen)
+
+Schritt 2.5: Terminal neu öffnen
+────────────────────────────────
+WICHTIG: Alle Terminals schließen, komplett neues Terminal öffnen!
+
+Schritt 2.6: Maven-Version prüfen
+─────────────────────────────────
+Im neuen Terminal eingeben:
+
+    mvn --version
+
+ERWARTETE AUSGABE:
+    Apache Maven 3.9.14 (5xxxxxxx)
+    Maven home: C:\Program Files\Maven\apache-maven-3.9.14\...
+    Java version: 17.0.18, vendor: Eclipse Adoptium
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        TEIL 3: BACKEND STARTEN
+═══════════════════════════════════════════════════════════════════════════════
+
+Schritt 3.1: In den Backend-Ordner wechseln
+──────────────────────────────────────────
+Im Terminal eingeben:
+
+    cd "C:\Users\eeraj\Documents\Morphos Schule\Module\10_WEB\Meine Codes\eeraj-portfolio-woche4\backend"
+
+Schritt 3.2: Backend starten (erster Start - dauert länger!)
+──────────────────────────────────────────────────────────────
+Im Terminal eingeben:
+
+    mvn spring-boot:run
+
+ERWARTETE AUSGABE (nach einigen Minuten):
+    [INFO] Scanning for projects...
+    [INFO] Building portfolio-backend 1.0.0
+    ...
+    [INFO] Started PortfolioApplication in 3.456 seconds
+    [INFO] Tomcat started on port(s): 8080 (http)
+
+WICHTIG: Terminal offen lassen! Backend läuft nur solange Terminal offen ist.
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        TEIL 4: TESTEN
+═══════════════════════════════════════════════════════════════════════════════
+
+Schritt 4.1: Frontend prüfen
+─────────────────────────────
+Browser öffnen: http://localhost:5173
+
+SOLLTE ANZEIGEN:
+    - Deine Portfolio Website
+    - Footer zeigt: "Besucher: XXX" (mit Anzahl)
+
+Schritt 4.2: Backend API testen
+───────────────────────────────
+Neuer Tab im Browser: http://localhost:8080/api/visitor/count
+
+SOLLTE ANZEIGEN:
+    {"count":1}  (oder eine andere Zahl)
+
+Schritt 4.3: Features testen
+─────────────────────────────
+1) Projekt öffnen (auf "Details" klicken)
+2) Like Button testen (auf Herz klicken)
+3) Kommentar schreiben:
+   - Name eingeben
+   - Nachricht eingeben
+   - "Kommentar senden" klicken
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════════════════════
+
+PROBLEM: "java -version" zeigt noch 1.8.0_441
+───────────────────────────────────────────────
+LÖSUNG: Altes Terminal noch aktiv! Alle Terminal-Fenster schließen, neu öffnen.
+
+PROBLEM: "mvn --version" wird nicht erkannt
+───────────────────────────────────────────────
+LÖSUNG 1: Umgebungsvariablen prüfen (siehe Schritt 2.3)
+LÖSUNG 2: Terminal neu öffnen
+LÖSUNG 3: Pfad prüfen: C:\Program Files\Maven\apache-maven-3.9.6 existiert?
+
+PROBLEM: Backend startet nicht ("Port 8080 bereits verwendet")
+────────────────────────────────────────────────────────────────
+LÖSUNG: Port belegen, z.B. Skype, Tomcat, etc.
+  - Andere Programme beenden die Port 8080 nutzen
+  - Oder: In application.properties den Port ändern auf 8081
+
+PROBLEM: Frontend zeigt "Fehler beim Laden..."
+───────────────────────────────────────────────
+LÖSUNG: Backend läuft nicht!
+  - Prüfen: http://localhost:8080/api/visitor/count
+  - Wenn Fehler: Backend neu starten (mvn spring-boot:run)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        PROJEKT STRUKTUR
+═══════════════════════════════════════════════════════════════════════════════
+
+eeraj-portfolio-woche4/
+├── backend/                          # Spring Boot Backend (NEU)
+│   ├── pom.xml                       # Maven Dependencies
+│   ├── README.md                     # Backend Anleitung
+│   └── src/main/java/com/portfolio/
+│       ├── PortfolioApplication.java # Main Entry Point
+│       ├── config/
+│       │   └── CorsConfig.java       # CORS für React
+│       ├── controller/
+│       │   ├── VisitorController.java
+│       │   ├── LikeController.java
+│       │   └── CommentController.java
+│       ├── entity/
+│       │   ├── Visitor.java
+│       │   ├── Like.java
+│       │   └── Comment.java
+│       ├── repository/
+│       │   ├── VisitorRepository.java
+│       │   ├── LikeRepository.java
+│       │   └── CommentRepository.java
+│       └── service/
+│           ├── VisitorService.java
+│           ├── LikeService.java
+│           └── CommentService.java
+├── src/
+│   ├── components/
+│   │   ├── VisitorCounter.jsx        # Besucher Counter (NEU)
+│   │   ├── LikeButton.jsx            # Like Button (NEU)
+│   │   ├── Comments.jsx              # Kommentare (NEU)
+│   │   ├── Footer.jsx                # Visitor Counter integriert
+│   │   └── Projects.jsx              # Like + Comments im Modal
+│   └── services/
+│       └── api.js                    # API Service Layer (NEU)
+└── package.json
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        API ENDPOINTS
+═══════════════════════════════════════════════════════════════════════════════
+
+Visitor API:
+  GET  /api/visitor/count       → {"count": 123}
+  POST /api/visitor             → Registriert Besuch
+
+Like API:
+  GET  /api/likes/{projectId}  → {"count": 5}
+  POST /api/likes/{projectId}  → {"success": true, "count": 6, "alreadyLiked": false}
+
+Comment API:
+  GET  /api/comments/{projectId} → [{id, projectId, name, message, timestamp}, ...]
+  POST /api/comments/{projectId} → {id, projectId, name, message, timestamp}
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        NACH DEM START
+═══════════════════════════════════════════════════════════════════════════════
+
+✅ Portfolio öffnen: http://localhost:5173
+✅ Footer zeigt Besucher-Zahl
+✅ Projekt öffnen → Like Button funktioniert
+✅ Projekt öffnen → Kommentare schreiben
+
+✅ H2 Datenbank Konsole: http://localhost:8080/h2-console
+   - JDBC URL: jdbc:h2:mem:portfolio_db
+   - Username: sa
+   - Password: (leer lassen)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        GITHUB REPO
+═══════════════════════════════════════════════════════════════════════════════
+
+Repository: https://github.com/eeraj88/eeraj-portfolio-woche4
+Branch: main
+Letzter Commit: "feat: Add Spring Boot Backend with Visitor Counter, Likes & Comments"
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        TECH STACK
+═══════════════════════════════════════════════════════════════════════════════
+
+Frontend:
+  - React 19.2.4
+  - Vite 8.0.1
+  - Tailwind CSS 4.2.2
+  - EmailJS (für Kontaktformular)
+
+Backend:
+  - Java 17 (Eclipse Temurin)
+  - Spring Boot 3.2.0
+  - Spring Data JPA
+  - H2 Database (In-Memory)
+  - Maven
+
+Datenbank:
+  - H2 In-Memory (Daten gehen verloren bei Restart)
+  - Für Production: PostgreSQL oder MySQL empfohlen
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        WEITERENTWICKLUNG
+═══════════════════════════════════════════════════════════════════════════════
+
+Mögliche Erweiterungen:
+  ☐ H2 durch PostgreSQL ersetzen (Production-ready)
+  ☐ Admin-Panel für Kommentare moderieren
+  ☐ Reply-Funktion für Kommentare
+  ☐ Like-Counter für alle Projekte anzeigen (nur im Modal)
+  ☐ Visitor Analytics (Charts, etc.)
+  ☐ Backend auf Render/Railway deployen
+  ☐ Vercel Umgebungsvariable für API URL
+
+
+═══════════════════════════════════════════════════════════════════════════════
+                        NOTIZEN
+═══════════════════════════════════════════════════════════════════════════════
+
+Letzter Stand:
+  - ✅ Java 17 installiert (OpenJDK17U-jdk_x64_windows_hotspot_17.0.18+8.msi)
+  - ✅ Maven 3.9.14 heruntergeladen (apache-maven-3.9.14-bin.zip)
+  - ✅ Maven entpackt (Downloads/apache-maven-3.9.14/)
+  - ✅ Maven verschoben nach C:\Program Files\Maven\apache-maven-3.9.14\
+  - ❌ Umgebungsvariablen noch nicht gesetzt (nächster Schritt!)
+
+Nächster Schritt:
+  - Umgebungsvariablen setzen (MAVEN_HOME + PATH)
+  - Terminal neu öffnen
+  - mvn --version prüfen
+  - Backend starten mit: mvn spring-boot:run
+
+Terminal Status nach Restart:
+  - Frontend läuft noch (Hintergrundprozess)
+  - Nach Umgebungsvariablen: Backend starten!
+
+Created by: Claude (Anthropic)
+Date: 2026-04-14
+Status: In Arbeit (Umgebungsvariablen setzen)
+
+═══════════════════════════════════════════════════════════════════════════════

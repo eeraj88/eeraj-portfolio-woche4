@@ -85,8 +85,8 @@ function Hero() {
               </a>
 
               <a
-                href="/Eeraj_Jan_CV.pdf"
-                download="Eeraj_Jan_CV.pdf"
+                href="/lebenslauf.pdf"
+                download="Eeraj_Lebenslauf.pdf"
                 className={`px-6 py-3 rounded-lg font-semibold border-2 transition-all duration-300 hover:scale-105 flex items-center gap-2 ${
                   istDunkel
                     ? 'border-[#233554] text-[#8892b0] hover:border-[#64ffda] hover:text-[#64ffda]'
