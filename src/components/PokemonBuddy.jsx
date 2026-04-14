@@ -163,6 +163,7 @@ export default function PokemonBuddy() {
   const [starterList, setStarterList] = useState([])
   const [isLoadingStarters, setIsLoadingStarters] = useState(false)
   const [canPet, setCanPet] = useState(true)
+  const [isInitializing, setIsInitializing] = useState(false) // NEW: Pokemon wird initialisiert
   
   // Battle states
   const [isBattling, setIsBattling] = useState(false)
@@ -215,28 +216,63 @@ export default function PokemonBuddy() {
     return () => clearInterval(interval)
   }, [data])
 
-  // Scroll XP - nur bei 50% und 100% = +2 XP (max 4 XP pro Seitenbesuch)
+  // Scroll XP - Scrollen gibt XP in beide Richtungen (aber max 4x pro Richtung)
   useEffect(() => {
     if (!data) return
-    
-    let scrollMilestones = { 50: false, 100: false }
-    
+
+    const scrollXPKey = `scrollXP_${data.createdAt}_${Date.now()}`
+    const storedScrollXP = localStorage.getItem(scrollXPKey)
+    const scrollMilestones = storedScrollXP ? JSON.parse(storedScrollXP) : {
+      down: { 50: false, 100: false },
+      up: { 50: false, 100: false }
+    }
+
+    let lastScrollPercent = 0
+    let scrollDirection = 'down'
+
     const handleScroll = () => {
       const scrollPercent = Math.floor(
         (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
       )
-      
-      // Nur bei 50% und 100%
-      if (scrollPercent >= 50 && !scrollMilestones[50]) {
-        scrollMilestones[50] = true
-        giveXP(2, '50% gescrollt')
+
+      // Richtung ermitteln
+      if (scrollPercent > lastScrollPercent + 2) {
+        scrollDirection = 'down'
+      } else if (scrollPercent < lastScrollPercent - 2) {
+        scrollDirection = 'up'
       }
-      if (scrollPercent >= 95 && !scrollMilestones[100]) {
-        scrollMilestones[100] = true
-        giveXP(2, 'Seite komplett')
+      lastScrollPercent = scrollPercent
+
+      const milestones = scrollDirection === 'down' ? scrollMilestones.down : scrollMilestones.up
+
+      // Runterscrollen: 50% und 100%
+      if (scrollDirection === 'down') {
+        if (scrollPercent >= 50 && !milestones[50]) {
+          milestones[50] = true
+          giveXP(2, '50% gescrollt (runter)')
+          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
+        }
+        if (scrollPercent >= 95 && !milestones[100]) {
+          milestones[100] = true
+          giveXP(2, 'Seite komplett')
+          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
+        }
+      }
+      // Hochscrollen: 50% und 0% (oben)
+      else if (scrollDirection === 'up') {
+        if (scrollPercent <= 50 && scrollPercent > 5 && !milestones[50]) {
+          milestones[50] = true
+          giveXP(2, '50% gescrollt (hoch)')
+          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
+        }
+        if (scrollPercent <= 5 && !milestones[100]) {
+          milestones[100] = true
+          giveXP(2, 'Zurück nach oben')
+          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
+        }
       }
     }
-    
+
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [data])
@@ -983,11 +1019,13 @@ export default function PokemonBuddy() {
 
   // Starter wählen
   const selectStarter = async (starter) => {
+    setIsInitializing(true) // Zeige Loading-State
+
     const isShiny = Math.random() < 0.10 // 10% Shiny-Chance
-    
+
     // Initiale Moves laden
     const initialMoves = await loadInitialMoves(starter, 1)
-    
+
     const newData = {
       pokemonId: starter.id,
       baseId: starter.id,
@@ -999,10 +1037,15 @@ export default function PokemonBuddy() {
       lastVisit: Date.now(),
       createdAt: Date.now(),
     }
-    
-    setData(newData)
+
+    // Setze beide States
     setPokemonInfo(starter)
+    setData(newData)
     setMessage(isShiny ? `WOW! Ein SHINY ${starter.name}!` : `${starter.name}, ich wähle dich!`)
+
+    // Kurze Pause damit React rendern kann
+    await new Promise(r => setTimeout(r, 100))
+    setIsInitializing(false)
   }
 
   // Reset
@@ -1135,9 +1178,12 @@ export default function PokemonBuddy() {
                 <p className={`text-center mb-3 text-sm font-medium ${istDunkel ? 'text-gray-200' : 'text-gray-700'}`}>
                   Wähle dein Pokemon!
                 </p>
-                {isLoadingStarters ? (
+                {isLoadingStarters || isInitializing ? (
                   <div className="text-center py-6">
                     <div className="animate-spin text-3xl">🎮</div>
+                    <p className={`text-xs mt-2 ${istDunkel ? 'text-gray-400' : 'text-gray-500'}`}>
+                      Pokemon wird vorbereitet...
+                    </p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto">
