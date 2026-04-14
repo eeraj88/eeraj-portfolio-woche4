@@ -68,7 +68,8 @@ function Projects() {
           {gefilterteProjekte.map(projekt => (
             <div
               key={projekt.id}
-              className={`rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 group ${
+              onClick={() => openProject(projekt)}
+              className={`rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 group cursor-pointer ${
                 istDunkel
                   ? 'bg-[#112240] border border-[#233554] hover:border-[#64ffda] hover:shadow-[0_10px_40px_-10px_rgba(100,255,218,0.15)]'
                   : 'bg-white border border-[#e2e8f0] hover:border-[#0d9488] hover:shadow-xl'
@@ -77,14 +78,14 @@ function Projects() {
               {/* Project Header */}
               <div className="h-44 relative overflow-hidden">
                 {projekt.bild ? (
-                  <img 
-                    src={projekt.bild} 
+                  <img
+                    src={projekt.bild}
                     alt={projekt.titel}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 ) : (
                   <div className={`w-full h-full flex items-center justify-center ${
-                    istDunkel 
+                    istDunkel
                       ? 'bg-gradient-to-br from-[#64ffda]/20 via-[#0d9488]/20 to-[#f97316]/20'
                       : 'bg-gradient-to-br from-[#0d9488]/20 via-[#0f766e]/20 to-[#ea580c]/20'
                   }`}>
@@ -131,23 +132,24 @@ function Projects() {
                 <div className={`flex items-center justify-between pt-4 border-t ${
                   istDunkel ? 'border-[#233554]' : 'border-[#e2e8f0]'
                 }`}>
-                  <button
-                    onClick={() => openProject(projekt)}
-                    className={`text-sm font-medium transition-colors ${
-                      istDunkel
-                        ? 'text-[#64ffda] hover:text-[#64ffda]/80'
-                        : 'text-[#0d9488] hover:text-[#0f766e]'
-                    }`}
-                  >
-                    Details
-                  </button>
+                  <span className={`text-sm ${
+                    istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+                  }`}>
+                    Klicken für Details
+                  </span>
 
                   <div className="flex items-center gap-3">
+                    {/* Like Button auf Card */}
+                    <div onClick={e => e.stopPropagation()}>
+                      <LikeButton projectId={projekt.id} compact />
+                    </div>
+
                     {projekt.github && (
                       <a
                         href={projekt.github}
                         target="_blank"
                         rel="noreferrer"
+                        onClick={e => e.stopPropagation()}
                         className={`text-sm font-medium transition-colors ${
                           istDunkel
                             ? 'text-[#8892b0] hover:text-[#64ffda]'
@@ -162,13 +164,14 @@ function Projects() {
                         href={projekt.link}
                         target="_blank"
                         rel="noreferrer"
+                        onClick={e => e.stopPropagation()}
                         className={`text-sm font-medium flex items-center gap-1 transition-colors ${
                           istDunkel
                             ? 'text-[#64ffda] hover:text-[#64ffda]/80'
                             : 'text-[#0d9488] hover:text-[#0f766e]'
                         }`}
                       >
-                        Live Demo →
+                        Live →
                       </a>
                     )}
                   </div>

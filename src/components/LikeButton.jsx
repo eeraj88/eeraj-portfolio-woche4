@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { likeAPI } from '../services/api'
 
-function LikeButton({ projectId }) {
+function LikeButton({ projectId, compact = false }) {
   const [count, setCount] = useState(0)
   const [liked, setLiked] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -50,6 +50,29 @@ function LikeButton({ projectId }) {
     }
   }
 
+  // Compact Variante für Cards
+  if (compact) {
+    return (
+      <button
+        onClick={handleLike}
+        disabled={liked || loading}
+        className={`flex items-center gap-1 px-2 py-1 rounded-md font-medium transition-all duration-200 ${
+          liked
+            ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
+            : 'hover:bg-pink-50 text-pink-600 dark:text-pink-400 dark:hover:bg-pink-900/20 hover:scale-110 active:scale-95'
+        }`}
+      >
+        <span className="text-base">
+          {liked ? '❤️' : '🤍'}
+        </span>
+        <span className="text-xs">
+          {loading ? '...' : count}
+        </span>
+      </button>
+    )
+  }
+
+  // Normale Variante (Modal)
   return (
     <button
       onClick={handleLike}
