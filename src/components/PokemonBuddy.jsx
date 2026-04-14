@@ -216,59 +216,52 @@ export default function PokemonBuddy() {
     return () => clearInterval(interval)
   }, [data])
 
-  // Scroll XP - Scrollen gibt XP in beide Richtungen (aber max 4x pro Richtung)
+  // Scroll XP - Kontinuierlich XP beim Scrollen (1 XP pro 5% in beide Richtungen, max 40 pro Richtung)
   useEffect(() => {
     if (!data) return
 
     const scrollXPKey = `scrollXP_${data.createdAt}_${Date.now()}`
     const storedScrollXP = localStorage.getItem(scrollXPKey)
-    const scrollMilestones = storedScrollXP ? JSON.parse(storedScrollXP) : {
-      down: { 50: false, 100: false },
-      up: { 50: false, 100: false }
+    const scrollData = storedScrollXP ? JSON.parse(storedScrollXP) : {
+      totalDownXP: 0,
+      totalUpXP: 0,
+      lastPercent: 0
     }
 
-    let lastScrollPercent = 0
-    let scrollDirection = 'down'
+    const MAX_XP_PER_DIRECTION = 40 // Max 40 XP runter, 40 XP hoch
+    const XP_INTERVAL = 5 // Alle 5% = +1 XP
+    let lastTriggeredPercent = scrollData.lastPercent
 
     const handleScroll = () => {
       const scrollPercent = Math.floor(
         (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100
       )
 
-      // Richtung ermitteln
-      if (scrollPercent > lastScrollPercent + 2) {
-        scrollDirection = 'down'
-      } else if (scrollPercent < lastScrollPercent - 2) {
-        scrollDirection = 'up'
-      }
-      lastScrollPercent = scrollPercent
+      const diff = scrollPercent - lastTriggeredPercent
+      const absDiff = Math.abs(diff)
+      const direction = diff > 0 ? 'down' : 'up'
 
-      const milestones = scrollDirection === 'down' ? scrollMilestones.down : scrollMilestones.up
+      // Prüfen ob wir XP geben sollen (jede 5%)
+      if (absDiff >= XP_INTERVAL) {
+        const xpToGive = Math.floor(absDiff / XP_INTERVAL)
 
-      // Runterscrollen: 50% und 100%
-      if (scrollDirection === 'down') {
-        if (scrollPercent >= 50 && !milestones[50]) {
-          milestones[50] = true
-          giveXP(2, '50% gescrollt (runter)')
-          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
+        if (direction === 'down' && scrollData.totalDownXP < MAX_XP_PER_DIRECTION) {
+          const actualXP = Math.min(xpToGive, MAX_XP_PER_DIRECTION - scrollData.totalDownXP)
+          if (actualXP > 0) {
+            giveXP(actualXP, 'Scrollen (runter)')
+            scrollData.totalDownXP += actualXP
+            lastTriggeredPercent = scrollPercent
+            localStorage.setItem(scrollXPKey, JSON.stringify(scrollData))
+          }
         }
-        if (scrollPercent >= 95 && !milestones[100]) {
-          milestones[100] = true
-          giveXP(2, 'Seite komplett')
-          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
-        }
-      }
-      // Hochscrollen: 50% und 0% (oben)
-      else if (scrollDirection === 'up') {
-        if (scrollPercent <= 50 && scrollPercent > 5 && !milestones[50]) {
-          milestones[50] = true
-          giveXP(2, '50% gescrollt (hoch)')
-          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
-        }
-        if (scrollPercent <= 5 && !milestones[100]) {
-          milestones[100] = true
-          giveXP(2, 'Zurück nach oben')
-          localStorage.setItem(scrollXPKey, JSON.stringify(scrollMilestones))
+        else if (direction === 'up' && scrollData.totalUpXP < MAX_XP_PER_DIRECTION) {
+          const actualXP = Math.min(xpToGive, MAX_XP_PER_DIRECTION - scrollData.totalUpXP)
+          if (actualXP > 0) {
+            giveXP(actualXP, 'Scrollen (hoch)')
+            scrollData.totalUpXP += actualXP
+            lastTriggeredPercent = scrollPercent
+            localStorage.setItem(scrollXPKey, JSON.stringify(scrollData))
+          }
         }
       }
     }
