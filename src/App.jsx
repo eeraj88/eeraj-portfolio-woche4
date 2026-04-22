@@ -8,8 +8,8 @@ import Testimonials from './components/Testimonials'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
-import PokemonBuddy from './components/Pokemon'
-import Leaderboard from './components/Leaderboard'
+import PokemonBuddy from './components/PokemonBuddy'
+import AINewsFeed from './components/AINewsFeed'
 import { ThemeContext } from './Context/ThemeContext'
 
 function App() {
@@ -135,7 +135,7 @@ function App() {
         </div>
 
         {/* Floating Widgets */}
-        <Leaderboard />
+        <AINewsFeed />
         <PokemonBuddy />
       </div>
     </ThemeContext.Provider>

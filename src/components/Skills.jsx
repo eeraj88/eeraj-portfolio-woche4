@@ -47,6 +47,14 @@ function Skills() {
       gridClass: 'md:col-span-1', // Kleine Box
       description: 'Sales & Management'
     },
+    Automation: {
+      icon: '🤖',
+      gradient: 'from-indigo-500 to-violet-600',
+      bg: 'bg-indigo-500/10',
+      border: 'border-indigo-500/30',
+      gridClass: 'md:col-span-2', // Breite Box fuer Fokus
+      description: 'AI & Workflows'
+    },
     Tools: {
       icon: '⚡',
       gradient: 'from-yellow-500 to-amber-500',

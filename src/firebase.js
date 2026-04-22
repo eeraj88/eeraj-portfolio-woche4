@@ -55,6 +55,25 @@ export const saveTrainerData = async (trainerId, trainerData) => {
 }
 
 /**
+ * Get data for a specific trainer
+ */
+export const getTrainerData = async (trainerId) => {
+  if (!database) {
+    console.warn('Firebase not initialized')
+    return null
+  }
+  
+  try {
+    const trainerRef = ref(database, `trainers/${trainerId}`)
+    const snapshot = await get(trainerRef)
+    return snapshot.exists() ? snapshot.val() : null
+  } catch (error) {
+    console.error('Error fetching trainer data:', error)
+    return null
+  }
+}
+
+/**
  * Get top trainers from leaderboard
  */
 export const getLeaderboard = async (limit = 10) => {

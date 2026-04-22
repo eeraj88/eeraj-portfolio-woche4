@@ -14,10 +14,10 @@ function About() {
   ]
 
   const highlights = [
+    'AI & Automation',
     'Frontend Development',
-    'UI/UX Design', 
     'Digital Marketing',
-    'B2B Sales'
+    'B2B Strategie'
   ]
 
   return (
@@ -52,23 +52,20 @@ function About() {
             <h3 className={`text-2xl font-bold mb-4 ${
               istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
-              Code. Marketing. Strategie.
+              Code. Marketing. AI. Automation.
             </h3>
 
             <p className={`leading-relaxed mb-4 ${
               istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
-              Ich entwickle moderne Webanwendungen mit <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>React</strong> und 
-              gestalte intuitive User Interfaces. Clean Code und durchdachte UI/UX-Konzepte 
-              sind mein Antrieb.
+              Ich verbinde moderne Softwareentwicklung mit der Power von <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Künstlicher Intelligenz</strong> und 
+              <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}> Automatisierung</strong>. Mein Fokus liegt darauf, nicht nur Code zu schreiben, sondern intelligente Systeme zu schaffen, die echte Probleme lösen.
             </p>
 
             <p className={`leading-relaxed mb-6 ${
               istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
-              Dazu kommt fundiertes Know-how in <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Digital Marketing</strong> und 
-              mehrjaehrige Erfahrung im B2B-Vertrieb. Ich baue nicht nur Produkte — ich verstehe auch, 
-              wie man sie vermarktet.
+              Mit Tools wie <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>n8n</strong>, <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Make</strong> und <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Tally</strong> automatisiere ich komplexe Workflows. Gepaart mit fundiertem Wissen in Digital Marketing und Strategie baue ich Lösungen, die skalieren.
             </p>
 
             {/* Highlight Tags */}

@@ -139,23 +139,43 @@ const skills = [
     kategorie: "Business"
   },
 
-  // TOOLS & AUTOMATION
+  // AUTOMATION & AI
   {
     id: 22,
-    name: "KI Tools & Prompting",
+    name: "AI Agents & Prompting",
     level: 85,
-    kategorie: "Tools"
+    kategorie: "Automation"
   },
+  {
+    id: 24,
+    name: "n8n",
+    level: 75,
+    kategorie: "Automation"
+  },
+  {
+    id: 31,
+    name: "Make (Integromat)",
+    level: 75,
+    kategorie: "Automation"
+  },
+  {
+    id: 32,
+    name: "Tally Forms",
+    level: 80,
+    kategorie: "Automation"
+  },
+  {
+    id: 33,
+    name: "Zapier",
+    level: 70,
+    kategorie: "Automation"
+  },
+
+  // TOOLS
   {
     id: 23,
     name: "HubSpot",
     level: 75,
-    kategorie: "Tools"
-  },
-  {
-    id: 24,
-    name: "Zapier",
-    level: 70,
     kategorie: "Tools"
   },
   {

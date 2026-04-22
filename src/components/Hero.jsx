@@ -58,7 +58,7 @@ function Hero() {
               istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
               Digital Creative & Frontend-Entwickler. Ich verbinde kreatives Marketing 
-              mit moderner Webentwicklung — von Social Media Strategien bis React Apps.
+              mit moderner Webentwicklung — von KI-Automatisierungen bis hin zu High-Performance React Apps.
             </p>
 
             <div className="flex gap-4 justify-center md:justify-start flex-wrap">
@@ -109,7 +109,7 @@ function Hero() {
           }`}>
             Beweise dich gegen andere Recruiter und sichere dir deinen Platz im Ranking
             <span className={`ml-2 ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`}>
-              — unten rechts
+              — oben in der Leiste 🏆
             </span>
           </p>
         </div>

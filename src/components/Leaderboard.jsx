@@ -7,7 +7,7 @@ import { useState, useEffect, useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
 import { subscribeToLeaderboard } from '../firebase'
 
-export default function Leaderboard() {
+export default function Leaderboard({ isNav = false, iconOnly = false }) {
   const { istDunkel } = useContext(ThemeContext)
   const [trainers, setTrainers] = useState([])
   const [isLoading, setIsLoading] = useState(true)
@@ -55,16 +55,25 @@ export default function Leaderboard() {
     return (
       <button
         onClick={() => setIsExpanded(true)}
-        className={`fixed bottom-6 left-6 z-40 px-4 py-2 rounded-full shadow-lg transition-all hover:scale-105 flex items-center gap-2 ${
-          istDunkel 
-            ? 'bg-gray-800 text-white border border-gray-700 hover:border-orange-500' 
-            : 'bg-white text-gray-900 border border-gray-200 hover:border-orange-500'
+        className={`${
+          isNav 
+            ? `w-10 h-10 rounded-lg transition-all duration-300 hover:scale-110 flex items-center justify-center ${
+                istDunkel
+                  ? 'bg-[#112240] hover:bg-[#1d3557] border border-[#233554]'
+                  : 'bg-gray-100 hover:bg-gray-200'
+              }`
+            : 'fixed bottom-20 right-6 z-40 px-3 py-2 rounded-full shadow-lg transition-all hover:scale-105 flex items-center gap-2'
+        } ${
+          !isNav && (istDunkel
+            ? 'bg-gray-800 text-white border border-gray-700 hover:border-orange-500'
+            : 'bg-white text-gray-900 border border-gray-200 hover:border-orange-500')
         }`}
+        title="Trainer Ranking"
       >
-        <span>🏆</span>
-        <span className="text-sm font-medium">Ranking</span>
-        {trainers.length > 0 && (
-          <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+        <span className="text-xl">🏆</span>
+        {!iconOnly && <span className="text-xs font-medium">Ranking</span>}
+        {trainers.length > 0 && !iconOnly && (
+          <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
             istDunkel ? 'bg-orange-500/20 text-orange-400' : 'bg-orange-100 text-orange-600'
           }`}>
             {trainers.length}
@@ -75,8 +84,14 @@ export default function Leaderboard() {
   }
 
   return (
-    <div className="fixed bottom-6 left-6 z-40">
-      <div className={`w-72 rounded-2xl shadow-2xl overflow-hidden ${
+    <div className={`${isNav ? 'absolute right-0 top-12' : 'fixed bottom-20 right-6'} z-40`}>
+      {isNav && (
+        <div 
+          className="fixed inset-0 z-40" 
+          onClick={() => setIsExpanded(false)}
+        />
+      )}
+      <div className={`w-72 rounded-2xl shadow-2xl overflow-hidden relative z-50 ${
         istDunkel ? 'bg-gray-900 border border-gray-700' : 'bg-white border border-gray-200'
       }`}>
         {/* Header */}
