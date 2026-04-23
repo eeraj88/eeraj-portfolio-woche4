@@ -20,42 +20,42 @@ The AI News Feed will display the latest AI news, market trends, and tech insigh
 **Data source:** Supabase - ai_news_archive table
 `
 
-// Kategorie-Farben und Sortierung
+// Kategorie-Farben und Sortierung (Passend zum n8n Workflow)
 const CATEGORY_CONFIG = {
-  '⚡ DEEP IMPACT': {
+  '🟢 DEEP IMPACT': {
     bgColor: '#10b981',
     bgLight: '#ecfdf5',
     bgDark: '#064e3b',
-    priority: 2
+    priority: 1
   },
-  '🔄 EVOLUTIONARY': {
+  '🟡 EVOLUTIONARY': {
     bgColor: '#f59e0b',
     bgLight: '#fffbeb',
     bgDark: '#78350f',
-    priority: 1
+    priority: 2
   },
-  '🔥 MUST TRY': {
-    bgColor: '#ef4444',
-    bgLight: '#fef2f2',
-    bgDark: '#991b1b',
-    priority: 3
-  },
-  '🚀 BREAKTHROUGHS': {
-    bgColor: '#8b5cf6',
-    bgLight: '#f5f3ff',
-    bgDark: '#5b21b6',
-    priority: 4
-  },
-  '📚 RESEARCH': {
+  '🔵 FREE TOOL ALERT': {
     bgColor: '#3b82f6',
     bgLight: '#eff6ff',
     bgDark: '#1e40af',
+    priority: 3
+  },
+  '🚀 MUST-TRY': {
+    bgColor: '#ef4444',
+    bgLight: '#fef2f2',
+    bgDark: '#991b1b',
+    priority: 4
+  },
+  '🔌 APIs & MCPs': {
+    bgColor: '#8b5cf6',
+    bgLight: '#f5f3ff',
+    bgDark: '#5b21b6',
     priority: 5
   },
-  '🛠️ TOOLS': {
-    bgColor: '#06b6d4',
-    bgLight: '#ecfeff',
-    bgDark: '#164e63',
+  '📊 MARKET & TRENDS': {
+    bgColor: '#6366f1',
+    bgLight: '#eef2ff',
+    bgDark: '#312e81',
     priority: 6
   },
 }
@@ -66,26 +66,8 @@ export default function AINewsFeed() {
   const [newsData, setNewsData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [hasNew, setHasNew] = useState(true)
-  const [supabaseReady, setSupabaseReady] = useState(false)
+  const [supabaseReady, setSupabaseReady] = useState(!!(supabaseUrl && supabaseKey))
   const [expandedCategories, setExpandedCategories] = useState({})
-
-  useEffect(() => {
-    if (supabaseUrl && supabaseKey) {
-      try {
-        createClient(supabaseUrl, supabaseKey)
-        setSupabaseReady(true)
-      } catch (error) {
-        console.error('Supabase config error:', error)
-        setSupabaseReady(false)
-      }
-    }
-  }, [])
-
-  useEffect(() => {
-    if (isOpen && !newsData && supabaseReady) {
-      fetchNews()
-    }
-  }, [isOpen, supabaseReady])
 
   const fetchNews = async () => {
     if (!supabaseReady) {
@@ -97,10 +79,11 @@ export default function AINewsFeed() {
     try {
       const supabase = createClient(supabaseUrl, supabaseKey)
 
+      // Wir holen die News der letzten 3 Tage für maximale Aktualität
       const { data, error } = await supabase
         .from('ai_news_archive')
         .select('*')
-        .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .gte('created_at', new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
         .order('created_at', { ascending: false })
         .limit(100)
 
@@ -137,6 +120,12 @@ export default function AINewsFeed() {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isOpen && !newsData && supabaseReady) {
+      fetchNews()
+    }
+  }, [isOpen, supabaseReady])
 
   const toggleCategory = (category) => {
     setExpandedCategories(prev => ({
@@ -318,7 +307,7 @@ export default function AINewsFeed() {
                                   href={item.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-[10px font-semibold hover:underline mb-1 inline-block"
+                                  className="text-[10px] font-semibold hover:underline mb-1 inline-block"
                                   style={{ color: config.bgColor }}
                                 >
                                   Read more →
