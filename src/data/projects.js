@@ -54,7 +54,7 @@ const projects = [
     technologien: ["Next.js", "TypeScript", "Supabase", "Whisper API", "Groq/Llama 3", "Tailwind CSS"],
     link: "https://voice-to-crm-eerajjn-6530s-projects.vercel.app/dashboard",
     github: "https://github.com/eeraj88/voice-to-crm",
-    kategorie: "Fullstack",
+    kategorie: "AI & Automation",
     bild: "/voice-crm.png"
   },
 ]
