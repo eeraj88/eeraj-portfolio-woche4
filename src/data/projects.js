@@ -47,6 +47,16 @@ const projects = [
     kategorie: "Marketing",
     bild: "/performance-marketing.png"
   },
+  {
+    id: 6,
+    titel: "Voice-to-CRM KI App",
+    beschreibung: "Mobile-First PWA für Außendienstmitarbeiter. Transkribiert Sprachnachrichten via Whisper API, extrahiert strukturierte JSON-Daten per LLM (Groq/Claude) und exportiert diese an CRM-Systeme via Make.com Webhooks.",
+    technologien: ["Next.js", "TypeScript", "Supabase", "Whisper API", "Groq/Llama 3", "Tailwind CSS"],
+    link: "https://voice-to-crm-eerajjn-6530s-projects.vercel.app/dashboard",
+    github: "https://github.com/eeraj88/voice-to-crm",
+    kategorie: "Fullstack",
+    bild: "/voice-crm.png"
+  },
 ]
 
 export default projects
