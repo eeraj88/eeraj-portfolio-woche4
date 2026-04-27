@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Leaderboard from './Leaderboard'
+import { AnimatedThemeToggler } from './ui/AnimatedThemeToggler'
 
 const SPOTIFY_PLAYLIST_ID = '55f8XIuabL2aM5SANjYT9B'
 
@@ -49,7 +50,7 @@ function Header({
           <span className={`text-[10px] font-medium tracking-tighter opacity-70 hidden sm:block ${
             istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
           }`}>
-            Code • Marketing • AI • Automation • Strategie
+            Web • UI/UX • AI • Automation • Marketing
           </span>
         </div>
 
@@ -116,18 +117,8 @@ function Header({
             )}
           </div>
 
-          {/* Dark Mode Toggle */}
-          <button
-            onClick={toggleDarkMode}
-            className={`w-10 h-10 rounded-lg transition-all duration-300 hover:scale-110 flex items-center justify-center ${
-              istDunkel
-                ? 'bg-[#112240] text-[#64ffda] hover:bg-[#1d3557] border border-[#233554]'
-                : 'bg-gray-100 text-[#0d9488] hover:bg-gray-200'
-            }`}
-            aria-label={istDunkel ? 'Light Mode aktivieren' : 'Dark Mode aktivieren'}
-          >
-            <span className="text-xl">{istDunkel ? '☀️' : '🌙'}</span>
-          </button>
+          {/* Animierter Theme Toggler - NEU */}
+          <AnimatedThemeToggler variant="circle" />
 
           {/* Mobile Menu Button */}
           <button

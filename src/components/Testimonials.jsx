@@ -1,202 +1,159 @@
-import { useState, useContext } from 'react'
+import { useContext, useState, useRef } from 'react'
 import testimonials from '../data/testimonials'
 import { ThemeContext } from '../Context/ThemeContext'
 
 function Testimonials() {
   const { istDunkel } = useContext(ThemeContext)
-  const [aktuellerIndex, setAktuellerIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const containerRef = useRef(null)
 
-  const naechstes = () => {
-    setAktuellerIndex((prev) => (prev + 1) % testimonials.length)
+  const nextTestimonial = () => {
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
   }
 
-  const vorheriges = () => {
-    setAktuellerIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
+  const prevTestimonial = () => {
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
   }
 
-  // Get prev, current, next indices (wrapping around)
-  const getIndex = (offset) => {
-    return (aktuellerIndex + offset + testimonials.length) % testimonials.length
-  }
-
-  const prevTestimonial = testimonials[getIndex(-1)]
-  const currentTestimonial = testimonials[aktuellerIndex]
-  const nextTestimonial = testimonials[getIndex(1)]
-
-  // Card component for reusability
-  const TestimonialCard = ({ testimonial, position }) => {
-    const isCenter = position === 'center'
-    const isLeft = position === 'left'
-    const isRight = position === 'right'
-
+  const TestimonialCard = ({ testimonial, isActive, isAdjacent }) => {
     return (
-      <div 
-        onClick={() => {
-          if (isLeft) vorheriges()
-          if (isRight) naechstes()
-        }}
-        className={`
-          relative rounded-2xl p-6 md:p-8 transition-all duration-500 
-          ${isCenter ? 'z-20' : 'z-10 cursor-pointer'}
-          ${isCenter ? 'scale-100 opacity-100' : 'scale-[0.85] opacity-60'}
-          ${!isCenter ? 'blur-[2px] hover:blur-[1px] hover:opacity-75' : ''}
-          ${istDunkel 
-            ? 'bg-[#112240] border border-[#233554]' 
-            : 'bg-white border border-[#e2e8f0] shadow-lg'
-          }
-        `}
-        style={{
-          minWidth: isCenter ? '100%' : '280px',
-          maxWidth: isCenter ? '100%' : '320px',
-        }}
-      >
-        {/* Quote Icon - only on center */}
-        {isCenter && (
-          <div className={`absolute top-4 left-4 text-5xl opacity-30 font-serif ${
-            istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'
-          }`}>
+      <div className={`
+        relative rounded-2xl border p-6 transition-all duration-500 flex flex-col items-center
+        ${isActive ? 'w-[450px] opacity-100 scale-100' : 'w-[300px] opacity-40 scale-90 blur-sm'}
+        ${isAdjacent && !isActive ? 'hover:opacity-60 hover:blur-none' : ''}
+        ${istDunkel
+          ? 'bg-[#112240] border-[#233554] hover:border-[#64ffda]'
+          : 'bg-white border-gray-200 hover:border-[#0d9488]'
+        }
+      `}>
+        {/* Bild oben */}
+        <div className="relative shrink-0">
+          <img
+            className={`rounded-full object-cover border-2 transition-transform duration-500 hover:scale-105 ${
+              isActive ? 'w-20 h-20' : 'w-14 h-14'
+            } ${istDunkel ? 'border-[#64ffda]/30' : 'border-[#0d9488]/30'}`}
+            alt={testimonial.name}
+            src={testimonial.bild}
+            onError={(e) => { e.target.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=" + testimonial.name }}
+          />
+          <div className={`absolute -bottom-1 -right-1 rounded-full flex items-center justify-center shadow-lg ${
+            isActive ? 'w-6 h-6 text-xs' : 'w-5 h-5 text-[10px]'
+          } ${istDunkel ? 'bg-[#64ffda] text-[#0a192f]' : 'bg-[#0d9488] text-white'}`}>
             "
           </div>
-        )}
+        </div>
 
-        {/* Content */}
-        <div className="relative z-10">
-          {/* Projekt Badge */}
-          <div className="mb-4">
-            <span className={`text-xs px-3 py-1 rounded-full font-medium ${
-              istDunkel 
-                ? 'bg-[#64ffda]/10 text-[#64ffda] border border-[#64ffda]/30' 
-                : 'bg-[#0d9488]/10 text-[#0d9488] border border-[#0d9488]/30'
-            }`}>
-              {testimonial.projekt}
-            </span>
-          </div>
-
-          {/* Text - truncated for side cards */}
-          <p className={`leading-relaxed mb-6 ${
-            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-          } ${isCenter ? 'text-lg md:text-xl' : 'text-sm line-clamp-3'}`}>
-            "{isCenter ? testimonial.text : testimonial.text.slice(0, 100) + '...'}"
+        {/* Name + Rolle */}
+        <div className="text-center mt-3">
+          <figcaption className={`font-bold ${isActive ? 'text-lg' : 'text-sm'} ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
+            {testimonial.name}
+          </figcaption>
+          <p className={`font-medium ${isActive ? 'text-xs' : 'text-[10px]'} ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`}>
+            {testimonial.rolle}
           </p>
+        </div>
 
-          {/* Author */}
-          <div className="flex items-center gap-3">
-            <img 
-              src={testimonial.bild} 
-              alt={testimonial.name}
-              className={`rounded-full object-cover border-2 ${
-                istDunkel ? 'border-[#64ffda]' : 'border-[#0d9488]'
-              } ${isCenter ? 'w-14 h-14' : 'w-10 h-10'}`}
-            />
-            <div className="flex-1 min-w-0">
-              <h4 className={`font-bold truncate ${
-                istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-              } ${isCenter ? 'text-lg' : 'text-sm'}`}>
-                {testimonial.name}
-              </h4>
-              <p className={`truncate ${
-                istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-              } ${isCenter ? 'text-sm' : 'text-xs'}`}>
-                {testimonial.rolle}
-              </p>
-            </div>
+        {/* Sterne */}
+        <div className={`flex gap-1 mt-3 ${isActive ? '' : 'scale-75'}`}>
+          {[...Array(5)].map((_, i) => (
+            <svg key={i} className={`w-4 h-4 ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`} viewBox="0 0 20 20" fill="currentColor">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+            </svg>
+          ))}
+        </div>
 
-            {/* Stars - only on center */}
-            {isCenter && (
-              <div className="flex gap-0.5">
-                {[...Array(testimonial.bewertung)].map((_, i) => (
-                  <span key={i} className={`text-lg ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`}>★</span>
-                ))}
-              </div>
-            )}
-          </div>
+        {/* Text unten */}
+        <blockquote className={`mt-4 leading-relaxed italic text-center ${isActive ? 'text-sm' : 'text-xs line-clamp-3'} ${istDunkel ? 'text-[#ccd6f6]' : 'text-gray-600'}`}>
+          "{testimonial.text}"
+        </blockquote>
+
+        {/* Projekt Tag */}
+        <div className="mt-4">
+          <span className={`text-[9px] uppercase tracking-[0.15em] font-black px-3 py-1.5 rounded-full border ${
+            istDunkel ? 'border-[#233554] text-[#8892b0]' : 'border-gray-100 text-gray-400'
+          }`}>
+            {testimonial.projekt}
+          </span>
         </div>
       </div>
     )
   }
 
   return (
-    <section id="testimonials" className="py-20 px-4 overflow-hidden">
-      <div className="max-w-6xl mx-auto">
-        <h2 className={`text-3xl font-bold mb-2 text-center ${
+    <section id="testimonials" className="py-20 px-4">
+      <div className="max-w-6xl mx-auto mb-12 text-center">
+        <h2 className={`text-3xl font-bold mb-2 ${
           istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
         }`}>
-          Was <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Kunden</span> sagen
+          Kunden<span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>stimmen</span>
         </h2>
-
-        <p className={`text-center mb-12 ${
-          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-        }`}>
-          Vertrauen von Weltklasse-Persoenlichkeiten
+        <p className={`${istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}`}>
+          Was Kunden über meine Arbeit sagen.
         </p>
+      </div>
 
-        {/* 3-Card Carousel */}
-        <div className="relative flex items-center justify-center gap-4 md:gap-6">
-          
-          {/* Left Card (Previous) - Hidden on mobile */}
-          <div className="hidden md:block flex-shrink-0 w-72">
-            <TestimonialCard testimonial={prevTestimonial} position="left" />
-          </div>
+      <div className="relative max-w-5xl mx-auto">
+        {/* Links Button */}
+        <button
+          onClick={prevTestimonial}
+          className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+            istDunkel
+              ? 'bg-[#112240] border border-[#233554] text-[#64ffda] hover:border-[#64ffda] hover:shadow-[0_0_20px_rgba(100,255,218,0.3)]'
+              : 'bg-white border border-gray-200 text-[#0d9488] hover:border-[#0d9488] hover:shadow-xl'
+          }`}
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
 
-          {/* Center Card (Current) */}
-          <div className="w-full max-w-2xl flex-shrink-0">
-            <TestimonialCard testimonial={currentTestimonial} position="center" />
-          </div>
-
-          {/* Right Card (Next) - Hidden on mobile */}
-          <div className="hidden md:block flex-shrink-0 w-72">
-            <TestimonialCard testimonial={nextTestimonial} position="right" />
-          </div>
-
-          {/* Navigation Arrows - Visible on mobile */}
-          <button
-            onClick={vorheriges}
-            className={`md:hidden absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-30 ${
-              istDunkel 
-                ? 'bg-[#112240] hover:bg-[#64ffda] text-[#ccd6f6] hover:text-[#0a192f] border border-[#233554]' 
-                : 'bg-white hover:bg-[#0d9488] text-[#0a192f] hover:text-white border border-[#e2e8f0] shadow-lg'
-            }`}
-            aria-label="Vorheriges Testimonial"
+        {/* Cards Container */}
+        <div className="flex items-center justify-center gap-6 py-12" ref={containerRef}>
+          {/* Linke Karte */}
+          <div
+            onClick={prevTestimonial}
+            className="cursor-pointer"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-
-          <button
-            onClick={naechstes}
-            className={`md:hidden absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 z-30 ${
-              istDunkel 
-                ? 'bg-[#112240] hover:bg-[#64ffda] text-[#ccd6f6] hover:text-[#0a192f] border border-[#233554]' 
-                : 'bg-white hover:bg-[#0d9488] text-[#0a192f] hover:text-white border border-[#e2e8f0] shadow-lg'
-            }`}
-            aria-label="Naechstes Testimonial"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </button>
-        </div>
-
-        {/* Dots Indicator */}
-        <div className="flex justify-center gap-2 mt-8">
-          {testimonials.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setAktuellerIndex(index)}
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
-                index === aktuellerIndex
-                  ? istDunkel 
-                    ? 'bg-[#64ffda] w-7' 
-                    : 'bg-[#0d9488] w-7'
-                  : istDunkel 
-                    ? 'bg-[#233554] hover:bg-[#8892b0]' 
-                    : 'bg-[#e2e8f0] hover:bg-[#cbd5e1]'
-              }`}
-              aria-label={`Testimonial ${index + 1}`}
+            <TestimonialCard
+              testimonial={testimonials[(currentIndex - 1 + testimonials.length) % testimonials.length]}
+              isActive={false}
+              isAdjacent={true}
             />
-          ))}
+          </div>
+
+          {/* Mitte Karte (aktiv) */}
+          <TestimonialCard
+            testimonial={testimonials[currentIndex]}
+            isActive={true}
+            isAdjacent={false}
+          />
+
+          {/* Rechte Karte */}
+          <div
+            onClick={nextTestimonial}
+            className="cursor-pointer"
+          >
+            <TestimonialCard
+              testimonial={testimonials[(currentIndex + 1) % testimonials.length]}
+              isActive={false}
+              isAdjacent={true}
+            />
+          </div>
         </div>
+
+        {/* Rechts Button */}
+        <button
+          onClick={nextTestimonial}
+          className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
+            istDunkel
+              ? 'bg-[#112240] border border-[#233554] text-[#64ffda] hover:border-[#64ffda] hover:shadow-[0_0_20px_rgba(100,255,218,0.3)]'
+              : 'bg-white border border-gray-200 text-[#0d9488] hover:border-[#0d9488] hover:shadow-xl'
+          }`}
+        >
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
     </section>
   )

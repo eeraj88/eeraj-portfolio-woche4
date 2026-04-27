@@ -52,20 +52,19 @@ function About() {
             <h3 className={`text-2xl font-bold mb-4 ${
               istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
             }`}>
-              Code. Marketing. AI. Automation.
+              Sales trifft Tech.
             </h3>
 
             <p className={`leading-relaxed mb-4 ${
               istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
-              Ich verbinde moderne Softwareentwicklung mit der Power von <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Künstlicher Intelligenz</strong> und 
-              <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}> Automatisierung</strong>. Mein Fokus liegt darauf, nicht nur Code zu schreiben, sondern intelligente Systeme zu schaffen, die echte Probleme lösen.
+              <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Jahrelang als Sales & Account Manager</strong> + <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Consultant</strong> in der Automotive-Branche. Weiterentwicklung zum Profi für digitale Lösungen. Ich spreche beide Sprachen: Business und Code.
             </p>
 
             <p className={`leading-relaxed mb-6 ${
               istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
             }`}>
-              Mit Tools wie <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>n8n</strong>, <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Make</strong> und <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Tally</strong> automatisiere ich komplexe Workflows. Gepaart mit fundiertem Wissen in Digital Marketing und Strategie baue ich Lösungen, die skalieren.
+              Fokus aktuell: <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Webentwicklung</strong>, <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>UI & UX</strong>, <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Automation</strong> und <strong className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Marketing</strong>. Mit Tools wie n8n, Make und Tally baue ich Workflows, die echte Business-Probleme lösen.
             </p>
 
             {/* Highlight Tags */}

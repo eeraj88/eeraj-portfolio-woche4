@@ -1,29 +1,29 @@
 import { useState, useEffect } from 'react'
-import { visitorAPI } from '../services/api'
+import { updateVisitorCount, subscribeToVisitors } from '../firebase'
 
 function VisitorCounter() {
   const [count, setCount] = useState(0)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Besucher registrieren und Count laden
-    const loadVisitorCount = async () => {
-      try {
-        // Zuerst registrieren
-        await visitorAPI.register()
-        // Dann Count abrufen
-        const data = await visitorAPI.getCount()
-        setCount(data.count)
-      } catch (error) {
-        console.error('Fehler beim Laden der Besucherzahl:', error)
-        // Fallback auf 0 bei Fehler
-        setCount(0)
-      } finally {
-        setLoading(false)
+    // Besucher registrieren (einmalig pro Session)
+    const registerVisit = async () => {
+      const hasVisited = sessionStorage.getItem('portfolio_visited')
+      if (!hasVisited) {
+        await updateVisitorCount()
+        sessionStorage.setItem('portfolio_visited', 'true')
       }
     }
 
-    loadVisitorCount()
+    registerVisit()
+
+    // Real-time Update abonnieren
+    const unsubscribe = subscribeToVisitors((newCount) => {
+      setCount(newCount)
+      setLoading(false)
+    })
+
+    return () => unsubscribe()
   }, [])
 
   if (loading) {

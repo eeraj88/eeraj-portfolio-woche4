@@ -5,7 +5,7 @@ function Hero() {
   const { istDunkel } = useContext(ThemeContext)
 
   return (
-    <section className="pt-28 pb-20 px-4 relative overflow-hidden">
+    <section className="pt-28 pb-20 px-4 relative overflow-hidden flex items-center justify-center min-h-[70vh]">
       {/* Animierter Hintergrund */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl animate-blob ${
@@ -14,12 +14,9 @@ function Hero() {
         <div className={`absolute top-40 right-10 w-96 h-96 rounded-full blur-3xl animate-blob animation-delay-2000 ${
           istDunkel ? 'bg-orange-500/10' : 'bg-orange-400/10'
         }`}></div>
-        <div className={`absolute bottom-10 left-1/3 w-80 h-80 rounded-full blur-3xl animate-blob animation-delay-4000 ${
-          istDunkel ? 'bg-cyan-400/5' : 'bg-teal-400/5'
-        }`}></div>
       </div>
 
-      <div className="max-w-5xl mx-auto relative z-10">
+      <div className="max-w-5xl mx-auto relative z-10 w-full">
         <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16">
           
           {/* Foto */}
@@ -32,15 +29,11 @@ function Hero() {
                   istDunkel ? 'border-[#64ffda]' : 'border-[#0d9488]'
                 }`}
               />
-              {/* Dekorativer Ring */}
-              <div className={`absolute inset-0 rounded-full border-2 opacity-50 scale-110 ${
-                istDunkel ? 'border-[#64ffda]' : 'border-[#0d9488]'
-              }`}></div>
             </div>
           </div>
 
           {/* Text */}
-          <div className="text-center md:text-left">
+          <div className="text-center md:text-left flex-1">
             <p className={`text-sm font-semibold uppercase tracking-widest mb-3 ${
               istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'
             }`}>
@@ -102,7 +95,7 @@ function Hero() {
           </div>
         </div>
 
-        {/* Dezenter Game Hinweis */}
+        {/* Ranking Hinweis - WIEDER DA */}
         <div className="mt-12 text-center">
           <p className={`text-sm ${
             istDunkel ? 'text-[#8892b0]' : 'text-gray-500'

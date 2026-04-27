@@ -4,6 +4,7 @@ import { ThemeContext } from '../Context/ThemeContext'
 import { giveXP } from './PokemonBuddy'
 import LikeButton from './LikeButton'
 import Comments from './Comments'
+import { BorderBeam } from './ui/BorderBeam'
 
 function Projects() {
   const { istDunkel } = useContext(ThemeContext)
@@ -69,12 +70,22 @@ function Projects() {
             <div
               key={projekt.id}
               onClick={() => openProject(projekt)}
-              className={`rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 group cursor-pointer ${
+              className={`relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 group cursor-pointer ${
                 istDunkel
-                  ? 'bg-[#112240] border border-[#233554] hover:border-[#64ffda] hover:shadow-[0_10px_40px_-10px_rgba(100,255,218,0.15)]'
-                  : 'bg-white border border-[#e2e8f0] hover:border-[#0d9488] hover:shadow-xl'
+                  ? 'bg-[#112240] border border-[#233554]'
+                  : 'bg-white border border-[#e2e8f0] shadow-sm hover:shadow-xl'
               }`}
             >
+              {/* Magic UI Border Beam - Nur sichtbar bei Group Hover */}
+              <BorderBeam 
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                size={250} 
+                duration={12} 
+                delay={0} 
+                colorFrom={istDunkel ? "#64ffda" : "#0d9488"} 
+                colorTo={istDunkel ? "#f97316" : "#ea580c"}
+              />
+
               {/* Project Header */}
               <div className="h-44 relative overflow-hidden">
                 {projekt.bild ? (
@@ -99,7 +110,7 @@ function Projects() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </div>
 
-              <div className="p-6">
+              <div className="p-6 relative z-10">
                 <h3 className={`text-lg font-bold mb-2 ${
                   istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
                 }`}>

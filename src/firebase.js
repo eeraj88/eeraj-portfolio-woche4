@@ -178,3 +178,102 @@ export const calculateTrainerScore = (trainerData) => {
 }
 
 export { database }
+
+// ============================================
+// LIKE & COMMENT FUNCTIONS
+// ============================================
+
+/**
+ * Get likes for a project
+ */
+export const getLikes = (projectId, callback) => {
+  if (!database) return () => {}
+  const likesRef = ref(database, `likes/${projectId}`)
+  return onValue(likesRef, (snapshot) => {
+    const data = snapshot.val() || {}
+    callback(Object.keys(data).length)
+  })
+}
+
+/**
+ * Add a like to a project
+ */
+export const addLike = async (projectId, userId) => {
+  if (!database) return false
+  try {
+    const likeRef = ref(database, `likes/${projectId}/${userId}`)
+    await set(likeRef, Date.now())
+    return true
+  } catch (error) {
+    console.error('Error adding like:', error)
+    return false
+  }
+}
+
+/**
+ * Get comments for a project
+ */
+export const getComments = (projectId, callback) => {
+  if (!database) return () => {}
+  const commentsRef = ref(database, `comments/${projectId}`)
+  return onValue(commentsRef, (snapshot) => {
+    const data = snapshot.val() || {}
+    const commentsList = Object.entries(data).map(([id, comment]) => ({
+      id,
+      ...comment
+    }))
+    callback(commentsList.sort((a, b) => b.timestamp - a.timestamp))
+  })
+}
+
+/**
+ * Add a comment to a project
+ */
+export const addComment = async (projectId, commentData) => {
+  if (!database) return false
+  try {
+    const newCommentRef = ref(database, `comments/${projectId}/${Date.now()}`)
+    await set(newCommentRef, {
+      ...commentData,
+      timestamp: Date.now()
+    })
+    return true
+  } catch (error) {
+    console.error('Error adding comment:', error)
+    return false
+  }
+}
+
+// ============================================
+// VISITOR FUNCTIONS
+// ============================================
+
+/**
+ * Update and get total visitor count
+ */
+export const updateVisitorCount = async () => {
+  if (!database) return 0
+  try {
+    const visitorRef = ref(database, 'stats/visitors')
+    const snapshot = await get(visitorRef)
+    const currentCount = snapshot.val() || 0
+    const newCount = currentCount + 1
+    await set(visitorRef, newCount)
+    return newCount
+  } catch (error) {
+    console.error('Error updating visitor count:', error)
+    return 0
+  }
+}
+
+/**
+ * Get visitor count (real-time)
+ */
+export const subscribeToVisitors = (callback) => {
+  if (!database) return () => {}
+  const visitorRef = ref(database, 'stats/visitors')
+  return onValue(visitorRef, (snapshot) => {
+    callback(snapshot.val() || 0)
+  })
+}
+

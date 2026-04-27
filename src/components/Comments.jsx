@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { commentAPI } from '../services/api'
+import { getComments, addComment } from '../firebase'
 
 function Comments({ projectId }) {
   const [comments, setComments] = useState([])
@@ -9,20 +9,15 @@ function Comments({ projectId }) {
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
 
-  // Kommentare laden
+  // Kommentare laden (Real-time)
   useEffect(() => {
-    const loadComments = async () => {
-      try {
-        const data = await commentAPI.getComments(projectId)
-        setComments(data)
-      } catch (error) {
-        console.error('Fehler beim Laden der Kommentare:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+    setLoading(true)
+    const unsubscribe = getComments(projectId, (newComments) => {
+      setComments(newComments)
+      setLoading(false)
+    })
 
-    loadComments()
+    return () => unsubscribe()
   }, [projectId])
 
   const handleSubmit = async (e) => {
@@ -37,10 +32,13 @@ function Comments({ projectId }) {
     setError('')
 
     try {
-      const newComment = await commentAPI.addComment(projectId, name, message)
-      setComments([newComment, ...comments])
-      setName('')
-      setMessage('')
+      const success = await addComment(projectId, { name, message })
+      if (success) {
+        setName('')
+        setMessage('')
+      } else {
+        setError('Fehler beim Senden des Kommentars')
+      }
     } catch (error) {
       setError('Fehler beim Senden des Kommentars')
       console.error(error)
@@ -50,6 +48,7 @@ function Comments({ projectId }) {
   }
 
   const formatTimestamp = (timestamp) => {
+    if (!timestamp) return ''
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now - date
@@ -58,8 +57,8 @@ function Comments({ projectId }) {
     const diffDays = Math.floor(diffMs / 86400000)
 
     if (diffMins < 1) return 'gerade eben'
-    if (diffMins < 60) return `vor ${diffMins} Min${diffMins > 1 ? '.' : '.'}`
-    if (diffHours < 24) return `vor ${diffHours} Std${diffHours > 1 ? '.' : '.'}`
+    if (diffMins < 60) return `vor ${diffMins} Min.`
+    if (diffHours < 24) return `vor ${diffHours} Std.`
     if (diffDays < 7) return `vor ${diffDays} Tag${diffDays > 1 ? 'en' : ''}`
 
     return date.toLocaleDateString('de-DE', {

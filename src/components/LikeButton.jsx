@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react'
-import { likeAPI } from '../services/api'
+import { getLikes, addLike } from '../firebase'
 
 function LikeButton({ projectId, compact = false }) {
   const [count, setCount] = useState(0)
   const [liked, setLiked] = useState(false)
   const [loading, setLoading] = useState(true)
+
+  // User ID generieren oder aus localStorage laden
+  const [userId] = useState(() => {
+    let id = localStorage.getItem('portfolio_user_id')
+    if (!id) {
+      id = 'user_' + Math.random().toString(36).substring(2, 15)
+      localStorage.setItem('portfolio_user_id', id)
+    }
+    return id
+  })
 
   // Prüfen, ob bereits geliked (localStorage)
   useEffect(() => {
@@ -13,37 +23,25 @@ function LikeButton({ projectId, compact = false }) {
     setLiked(hasLiked)
   }, [projectId])
 
-  // Like-Count laden
+  // Like-Count laden (Real-time)
   useEffect(() => {
-    const loadLikeCount = async () => {
-      try {
-        const data = await likeAPI.getCount(projectId)
-        setCount(data.count)
-      } catch (error) {
-        console.error('Fehler beim Laden der Likes:', error)
-      } finally {
-        setLoading(false)
-      }
-    }
+    setLoading(true)
+    const unsubscribe = getLikes(projectId, (newCount) => {
+      setCount(newCount)
+      setLoading(false)
+    })
 
-    loadLikeCount()
+    return () => unsubscribe()
   }, [projectId])
 
   const handleLike = async () => {
     if (liked || loading) return
 
     try {
-      const data = await likeAPI.addLike(projectId)
-
-      if (data.success) {
-        setCount(data.count)
+      const success = await addLike(projectId, userId)
+      if (success) {
         setLiked(true)
-        // Im localStorage speichern
         localStorage.setItem(`liked_project_${projectId}`, 'true')
-      } else {
-        // Falls bereits geliked (z.B. von anderem Gerät), State aktualisieren
-        setLiked(true)
-        setCount(data.count)
       }
     } catch (error) {
       console.error('Fehler beim Liken:', error)
