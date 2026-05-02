@@ -57,6 +57,16 @@ const projects = [
     kategorie: "AI & Automation",
     bild: "/voice-crm.png"
   },
+  {
+    id: 7,
+    titel: "NovaTech GmbH Landingpage",
+    beschreibung: "AI-powered Unternehmens-Landingpage mit n8n Integration. Features: KI-Chatbot mit RAG (Qdrant + OpenRouter), automatisches Lead-Scoring (0-10), Google Sheets Sync, Premium UI mit Dark Mode.",
+    technologien: ["HTML5", "CSS3", "JavaScript", "Node.js", "Express", "n8n", "OpenRouter", "Qdrant"],
+    link: "https://novatech-landingpage.vercel.app",
+    github: "https://github.com/eeraj88/novatech-landingpage",
+    kategorie: "Full-Stack",
+    bild: "/NOVATECH1.jpg"
+  },
 ]
 
 export default projects
