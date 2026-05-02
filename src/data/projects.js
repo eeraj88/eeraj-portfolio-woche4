@@ -6,7 +6,7 @@ const projects = [
     technologien: ["React", "React Router", "OpenWeatherMap API", "Vite", "CSS3"],
     link: "https://wetter-app-router.vercel.app",
     github: "https://github.com/eeraj88/wetter-app-router",
-    kategorie: "React",
+    kategorie: ["React", "Frontend"],
     bild: "/wetter-app.png"
   },
   {
@@ -16,7 +16,7 @@ const projects = [
     technologien: ["HTML5", "CSS3", "Bootstrap 5", "EmailJS"],
     link: "https://morphos-kaffee.vercel.app",
     github: "https://github.com/eeraj88/Morphos-Kaffee",
-    kategorie: "Frontend",
+    kategorie: ["Frontend"],
     bild: "/morphos-kaffee.png"
   },
   {
@@ -26,7 +26,7 @@ const projects = [
     technologien: ["React", "useState", "localStorage"],
     link: "https://bookmark-manager-nine-chi.vercel.app",
     github: "https://github.com/eeraj88/bookmark-manager",
-    kategorie: "React",
+    kategorie: ["React", "Frontend"],
     bild: "/bookmark-manager.png"
   },
   {
@@ -35,7 +35,7 @@ const projects = [
     beschreibung: "Komplette Social Media Marketing Strategie fuer die Streetwear-Marke Wu-Wear. Inklusive Zielgruppenanalyse, Content-Planung und Kampagnen-Konzept.",
     technologien: ["Social Media", "Marketing Strategie", "Canva", "Content Planning"],
     link: "https://www.canva.com/design/DAHA0QYi_qM/K-so9fFSZp113HYVZO9hvQ/view",
-    kategorie: "Marketing",
+    kategorie: ["Marketing"],
     bild: "/wu-wear.png"
   },
   {
@@ -44,7 +44,7 @@ const projects = [
     beschreibung: "Strategische Performance Marketing Analyse mit Fokus auf ROI-Optimierung, Zielgruppen-Targeting und datengetriebene Entscheidungsfindung.",
     technologien: ["Performance Marketing", "Analytics", "Canva", "KPI Tracking"],
     link: "https://www.canva.com/design/DAGwISguOLQ/ZdTzFgYE5JA5HnyVtVyrGQ/view",
-    kategorie: "Marketing",
+    kategorie: ["Marketing"],
     bild: "/performance-marketing.png"
   },
   {
@@ -54,7 +54,7 @@ const projects = [
     technologien: ["Next.js", "TypeScript", "Supabase", "Whisper API", "Groq/Llama 3", "Tailwind CSS"],
     link: "https://voice-to-crm-eerajjn-6530s-projects.vercel.app/",
     github: "https://github.com/eeraj88/voice-to-crm",
-    kategorie: "AI & Automation",
+    kategorie: ["AI & Automation", "Full-Stack"],
     bild: "/voice-crm.png"
   },
   {
@@ -64,7 +64,7 @@ const projects = [
     technologien: ["HTML5", "CSS3", "JavaScript", "Node.js", "Express", "n8n", "OpenRouter", "Qdrant"],
     link: "https://novatech-landingpage.vercel.app",
     github: "https://github.com/eeraj88/novatech-landingpage",
-    kategorie: "Full-Stack",
+    kategorie: ["AI & Automation", "Full-Stack"],
     bild: "/NOVATECH1.jpg"
   },
 ]

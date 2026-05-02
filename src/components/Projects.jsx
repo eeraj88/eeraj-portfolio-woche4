@@ -12,11 +12,16 @@ function Projects() {
   const [aktivesProjekt, setAktivesProjekt] = useState(null)
   const [viewedProjects, setViewedProjects] = useState(new Set())
 
-  const kategorien = ['Alle', ...new Set(projects.map(p => p.kategorie))]
+  // Kategorien sammeln (aus Arrays flattens)
+  const alleKategorien = projects.flatMap(p => Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie])
+  const kategorien = ['Alle', ...new Set(alleKategorien)]
 
   const gefilterteProjekte = aktiverFilter === 'Alle'
     ? projects
-    : projects.filter(p => p.kategorie === aktiverFilter)
+    : projects.filter(p => {
+        const kats = Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie]
+        return kats.includes(aktiverFilter)
+      })
 
   // Projekt öffnen und XP geben (nur beim ersten Mal)
   const openProject = (projekt) => {
@@ -252,7 +257,7 @@ function Projects() {
             </div>
 
             <p className={`text-sm mb-6 ${istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}`}>
-              Kategorie: {aktivesProjekt.kategorie}
+              Kategorie: {Array.isArray(aktivesProjekt.kategorie) ? aktivesProjekt.kategorie.join(', ') : aktivesProjekt.kategorie}
             </p>
 
             <div className="flex flex-wrap gap-4">
