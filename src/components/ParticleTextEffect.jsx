@@ -308,8 +308,8 @@ export default function ParticleTextEffect() {
       try {
         const container = canvas.parentElement
         if (container) {
-          canvas.width = container.clientWidth
-          canvas.height = container.clientHeight
+          canvas.width = Math.max(container.clientWidth, 800)
+          canvas.height = Math.max(container.clientHeight, 200)
         }
       } catch (e) {
         console.error("Error resizing canvas:", e)

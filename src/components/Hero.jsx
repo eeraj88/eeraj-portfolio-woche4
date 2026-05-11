@@ -23,30 +23,24 @@ function Hero() {
         </span>
       </div>
 
-      {/* Main Headline */}
+      {/* Main Headline - 3 Zeilen, linksbündig */}
       <div
-        className="relative z-30 text-center px-4 mb-4"
+        className="relative z-30 text-left px-4 md:px-8 max-w-4xl mb-8"
         style={{ opacity: showContent ? 1 : 0, transform: showContent ? 'translateY(0)' : 'translateY(-30px)', transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s' }}
       >
-        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white leading-tight" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
-          HI ICH BIN
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
+          HI
         </h1>
-        <h1
-          className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight mt-2"
-          style={{
-            fontFamily: 'Space Grotesk, system-ui, sans-serif',
-            background: 'linear-gradient(135deg, #ffffff 0%, #dc2626 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text'
-          }}
-        >
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mt-1" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
+          ICH BIN
+        </h1>
+        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mt-1" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
           EERAJ JAN
         </h1>
       </div>
 
-      {/* Canvas Particle Effect - Skills */}
-      <div className="relative z-20 w-full max-w-5xl h-24 md:h-32 mx-4">
+      {/* Canvas Particle Effect - Skills mit Abstand */}
+      <div className="relative z-20 w-full max-w-5xl h-32 md:h-40 mx-auto mt-8 mb-8">
         <ParticleTextEffect />
       </div>
 
