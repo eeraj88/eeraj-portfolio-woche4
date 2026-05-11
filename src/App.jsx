@@ -21,7 +21,7 @@ function App() {
 
   const [istDunkel, setIstDunkel] = useState(() => {
     const saved = localStorage.getItem('darkMode')
-    return saved === null ? true : saved === 'true' // Default: Dark Mode
+    return saved === null ? true : saved === 'true'
   })
 
   useEffect(() => {
@@ -43,31 +43,19 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
-      {/* Main Container */}
-      <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${
-        istDunkel
-          ? 'bg-black text-white'
-          : 'bg-[#fafafa] text-[#171717]'
-      }`}>
-        
-        {/* Modern Background Effects */}
+      <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${istDunkel ? 'bg-black text-white' : 'bg-[#fafafa] text-[#171717]'}`}>
+
         {istDunkel && (
           <>
-            {/* Floating Orbs */}
             <div className="orb-cyan" style={{ top: '10%', left: '5%' }}></div>
             <div className="orb-orange" style={{ top: '60%', right: '10%' }}></div>
             <div className="orb-purple" style={{ bottom: '20%', left: '15%' }}></div>
             <div className="orb-cyan" style={{ top: '40%', right: '20%', width: '200px', height: '200px' }}></div>
-
-            {/* Grid Pattern Overlay */}
             <div className="grid-pattern"></div>
-
-            {/* Noise Texture */}
             <div className="noise-overlay"></div>
           </>
         )}
 
-        {/* Content */}
         <div className="relative z-10">
           <ScrollIndikator />
 
@@ -82,48 +70,40 @@ function App() {
             scrollToSection={scrollToSection}
           />
 
-          {/* Hero - Full Screen Black */}
           <div className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
             <Hero />
           </div>
 
-          {/* About - Secondary Background */}
-          <div ref={aboutRef} className={`${istDunkel ? 'bg-black' : 'bg-white'}`}>
-            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
+          <div ref={aboutRef} className={istDunkel ? 'bg-black' : 'bg-white'}>
+            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
             <About />
           </div>
 
-          {/* Skills - Primary Background */}
           <div ref={skillsRef} className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
-            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
+            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
             <Skills />
           </div>
 
-          {/* Projects - Secondary Background */}
-          <div ref={projectsRef} className={`${istDunkel ? 'bg-black' : 'bg-white'}>
-            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
+          <div ref={projectsRef} className={istDunkel ? 'bg-black' : 'bg-white'}>
+            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
             <Projects />
           </div>
 
-          {/* Testimonials - Tertiary Background */}
-          <div ref={testimonialsRef} className={`${istDunkel ? 'bg-zinc-900' : 'bg-[#f5f5f5]'}`}>
-            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
+          <div ref={testimonialsRef} className={istDunkel ? 'bg-zinc-900' : 'bg-[#f5f5f5]'}>
+            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
             <Testimonials />
           </div>
 
-          {/* Contact - Primary Background */}
           <div ref={contactsRef} className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
-            <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
+            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
             <Contact />
           </div>
 
-          {/* Footer - Secondary Background */}
-          <div className={`${istDunkel ? 'bg-zinc-900' : 'bg-white'}`}>
+          <div className={istDunkel ? 'bg-zinc-900' : 'bg-white'}>
             <Footer />
           </div>
         </div>
 
-        {/* Floating Widgets */}
         <AINewsFeed />
         <PokemonBuddy />
       </div>
