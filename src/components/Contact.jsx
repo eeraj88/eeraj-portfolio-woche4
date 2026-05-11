@@ -87,21 +87,21 @@ function Contact() {
 
   const inputClass = (field) => `w-full px-4 py-3 rounded-lg border transition-all duration-300 outline-none focus:ring-2 ${
     istDunkel
-      ? `bg-[#112240] border-[#233554] text-[#ccd6f6] placeholder-[#8892b0] focus:border-[#64ffda] focus:ring-[#64ffda]/30`
-      : `bg-white border-[#e2e8f0] text-[#0a192f] placeholder-[#94a3b8] focus:border-[#0d9488] focus:ring-[#0d9488]/30`
+      ? `bg-[#262626] border-[#404040] text-[#f5f5f5] placeholder-[#a3a3a3] focus:border-[#b91c1c] focus:ring-[#b91c1c]/30`
+      : `bg-white border-[#e5e5e5] text-[#171717] placeholder-neutral-400 focus:border-[#dc2626] focus:ring-[#dc2626]/30`
   } ${fehler[field] ? 'border-red-500 focus:ring-red-500/30' : ''}`
 
   return (
     <section id="contact" className="py-20 px-4">
       <div className="max-w-2xl mx-auto">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
+          istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
         }`}>
           <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Kontakt</span>
         </h2>
 
         <p className={`text-center mb-10 ${
-          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+          istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
         }`}>
           Schreib mir eine Nachricht - ich freue mich von dir zu hoeren!
         </p>
@@ -109,9 +109,9 @@ function Contact() {
         {/* Success Message */}
         {istGesendet && (
           <div className={`mb-8 p-4 rounded-xl text-center font-medium ${
-            istDunkel 
-              ? 'bg-[#64ffda]/10 border border-[#64ffda]/30 text-[#64ffda]'
-              : 'bg-[#0d9488]/10 border border-[#0d9488]/30 text-[#0d9488]'
+            istDunkel
+              ? 'bg-[#b91c1c]/10 border border-[#b91c1c]/30 text-[#b91c1c]'
+              : 'bg-[#dc2626]/10 border border-[#dc2626]/30 text-[#dc2626]'
           }`}>
             Nachricht erfolgreich gesendet! Ich melde mich bald.
           </div>
@@ -128,7 +128,7 @@ function Contact() {
           {/* Name */}
           <div>
             <label htmlFor="name" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
+              istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
             }`}>
               Name
             </label>

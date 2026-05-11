@@ -37,13 +37,13 @@ function Projects() {
     <section id="projects" className="py-20 px-4">
       <div className="max-w-6xl mx-auto">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
+          istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
         }`}>
           Meine <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Projekte</span>
         </h2>
 
         <p className={`text-center mb-8 ${
-          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+          istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
         }`}>
           Eine Auswahl meiner bisherigen Arbeiten
         </p>
@@ -56,12 +56,12 @@ function Projects() {
               onClick={() => setAktiverFilter(kategorie)}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 aktiverFilter === kategorie
-                  ? istDunkel 
-                    ? 'bg-[#64ffda] text-[#0a192f]'
-                    : 'bg-[#0d9488] text-white'
+                  ? istDunkel
+                    ? 'bg-[#b91c1c] text-[#f5f5f5]'
+                    : 'bg-[#dc2626] text-white'
                   : istDunkel
-                    ? 'bg-[#112240] text-[#8892b0] border border-[#233554] hover:text-[#64ffda] hover:border-[#64ffda]'
-                    : 'bg-white text-[#475569] border border-[#e2e8f0] hover:text-[#0d9488] hover:border-[#0d9488]'
+                    ? 'bg-[#262626] text-[#a3a3a3] border border-[#404040] hover:text-[#b91c1c] hover:border-[#b91c1c]'
+                    : 'bg-white text-[#525252] border border-[#e5e5e5] hover:text-[#dc2626] hover:border-[#dc2626]'
               }`}
             >
               {kategorie}
@@ -77,18 +77,18 @@ function Projects() {
               onClick={() => openProject(projekt)}
               className={`relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 group cursor-pointer ${
                 istDunkel
-                  ? 'bg-[#112240] border border-[#233554]'
-                  : 'bg-white border border-[#e2e8f0] shadow-sm hover:shadow-xl'
+                  ? 'bg-[#262626] border border-[#404040]'
+                  : 'bg-white border border-[#e5e5e5] shadow-sm hover:shadow-xl'
               }`}
             >
               {/* Magic UI Border Beam - Nur sichtbar bei Group Hover */}
-              <BorderBeam 
+              <BorderBeam
                 className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                size={250} 
-                duration={12} 
-                delay={0} 
-                colorFrom={istDunkel ? "#64ffda" : "#0d9488"} 
-                colorTo={istDunkel ? "#f97316" : "#ea580c"}
+                size={250}
+                duration={12}
+                delay={0}
+                colorFrom={istDunkel ? "#b91c1c" : "#dc2626"}
+                colorTo={istDunkel ? "#dc2626" : "#b91c1c"}
               />
 
               {/* Project Header */}

@@ -45,9 +45,9 @@ function App() {
     <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
       {/* Main Container */}
       <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${
-        istDunkel 
-          ? 'bg-[#0a192f] text-[#ccd6f6]' 
-          : 'bg-white text-[#0a192f]'
+        istDunkel
+          ? 'bg-[#171717] text-[#f5f5f5]'
+          : 'bg-[#fafafa] text-[#171717]'
       }`}>
         
         {/* Modern Background Effects */}
@@ -99,42 +99,42 @@ function App() {
           />
 
           {/* Hero - Primary Background */}
-          <div className={istDunkel ? 'bg-[#0a192f]' : 'bg-white'}>
+          <div className={istDunkel ? 'bg-[#171717]' : 'bg-[#fafafa]'}>
             <Hero />
           </div>
 
           {/* About - Secondary Background */}
-          <div ref={aboutRef} className={`${istDunkel ? 'bg-[#112240]' : 'bg-[#f8fafc]'}`}>
+          <div ref={aboutRef} className={`${istDunkel ? 'bg-[#262626]' : 'bg-white'}`}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <About />
           </div>
 
           {/* Skills - Primary Background */}
-          <div ref={skillsRef} className={istDunkel ? 'bg-[#0a192f]' : 'bg-white'}>
+          <div ref={skillsRef} className={istDunkel ? 'bg-[#171717]' : 'bg-[#fafafa]'}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Skills />
           </div>
 
           {/* Projects - Secondary Background */}
-          <div ref={projectsRef} className={`${istDunkel ? 'bg-[#112240]' : 'bg-[#f8fafc]'}`}>
+          <div ref={projectsRef} className={`${istDunkel ? 'bg-[#262626]' : 'bg-white'}`}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Projects />
           </div>
 
           {/* Testimonials - Tertiary Background */}
-          <div ref={testimonialsRef} className={`${istDunkel ? 'bg-[#1d3557]' : 'bg-[#f1f5f9]'}`}>
+          <div ref={testimonialsRef} className={`${istDunkel ? 'bg-[#404040]' : 'bg-[#f5f5f5]'}`}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Testimonials />
           </div>
 
           {/* Contact - Primary Background */}
-          <div ref={contactsRef} className={istDunkel ? 'bg-[#0a192f]' : 'bg-white'}>
+          <div ref={contactsRef} className={istDunkel ? 'bg-[#171717]' : 'bg-[#fafafa]'}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Contact />
           </div>
 
           {/* Footer - Secondary Background */}
-          <div className={`${istDunkel ? 'bg-[#112240]' : 'bg-[#f8fafc]'}`}>
+          <div className={`${istDunkel ? 'bg-[#262626]' : 'bg-white'}`}>
             <Footer />
           </div>
         </div>

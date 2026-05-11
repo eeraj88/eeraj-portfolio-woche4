@@ -40,13 +40,13 @@ function Skills() {
     <section id="skills" className="py-24 px-4 relative overflow-hidden">
       <div className="max-w-6xl mx-auto relative z-10">
         <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
+          istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
         }`}>
           Meine <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Skills</span>
         </h2>
 
         <p className={`text-center mb-12 ${
-          istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+          istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
         }`}>
           Technologien und Tools, die ich benutze
         </p>
@@ -64,16 +64,16 @@ function Skills() {
                   group relative overflow-hidden rounded-2xl p-5
                   transition-all duration-300 hover:scale-[1.02] hover:-translate-y-1
                   ${config.gridClass}
-                  ${istDunkel 
-                    ? 'bg-[#112240] border border-[#233554] hover:border-[#64ffda]/50' 
-                    : 'bg-white border border-[#e2e8f0] shadow-sm hover:shadow-lg'
+                  ${istDunkel
+                    ? 'bg-[#262626] border border-[#404040] hover:border-[#b91c1c]/50'
+                    : 'bg-white border border-[#e5e5e5] shadow-sm hover:shadow-lg'
                   }
                 `}
               >
                 <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 bg-gradient-to-br ${config.gradient}`} />
                 <div className="relative z-10 mb-3 text-lg font-bold flex items-center gap-2">
                   <span>{config.icon}</span>
-                  <h3 className={istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'}>{kategorie}</h3>
+                  <h3 className={istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'}>{kategorie}</h3>
                 </div>
                 <div className="relative z-10 flex flex-wrap gap-1.5">
                   {katSkills.map(skill => (

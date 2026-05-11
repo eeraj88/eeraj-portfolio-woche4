@@ -24,15 +24,15 @@ function Header({
 
   const navLinkClass = `text-sm font-medium transition-all duration-300 hover:scale-105 ${
     istDunkel
-      ? 'text-[#8892b0] hover:text-[#64ffda]'
-      : 'text-[#475569] hover:text-[#0d9488]'
+      ? 'text-[#a3a3a3] hover:text-[#b91c1c]'
+      : 'text-[#525252] hover:text-[#dc2626]'
   }`
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       istDunkel
-        ? 'bg-[#0a192f]/95 border-b border-[#233554]'
-        : 'bg-white/95 border-b border-gray-200'
+        ? 'bg-[#171717]/95 border-b border-[#404040]'
+        : 'bg-[#fafafa]/95 border-b border-[#e5e5e5]'
     } backdrop-blur-md`}>
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         
@@ -41,14 +41,14 @@ function Header({
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className={`text-xl font-bold transition-colors leading-tight ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
+              istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
             }`}
           >
             <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Eeraj</span>
-            <span className={istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}>.dev</span>
+            <span className={istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'}>.dev</span>
           </button>
           <span className={`text-[10px] font-medium tracking-tighter opacity-70 hidden sm:block ${
-            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+            istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
           }`}>
             Web • UI/UX • AI • Automation • Marketing
           </span>
@@ -84,8 +84,8 @@ function Header({
               onClick={() => setSpotifyOpen(!spotifyOpen)}
               className={`w-10 h-10 rounded-lg transition-all duration-300 hover:scale-110 flex items-center justify-center ${
                 istDunkel
-                  ? 'bg-[#112240] hover:bg-[#1d3557] border border-[#233554]'
-                  : 'bg-gray-100 hover:bg-gray-200'
+                  ? 'bg-[#262626] hover:bg-[#404040] border border-[#404040]'
+                  : 'bg-white hover:bg-neutral-100'
               }`}
               title="Meine Musik"
             >
@@ -102,7 +102,7 @@ function Header({
                   onClick={() => setSpotifyOpen(false)}
                 />
                 <div className={`absolute right-0 top-12 w-80 rounded-xl shadow-2xl overflow-hidden z-50 ${
-                  istDunkel ? 'bg-[#112240] border border-[#233554]' : 'bg-white border border-gray-200'
+                  istDunkel ? 'bg-[#262626] border border-[#404040]' : 'bg-white border border-[#e5e5e5]'
                 }`}>
                   <iframe
                     src={`https://open.spotify.com/embed/playlist/${SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
@@ -125,8 +125,8 @@ function Header({
             onClick={() => setMenuOffen(!menuOffen)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
               istDunkel
-                ? 'bg-[#112240] text-[#ccd6f6] hover:bg-[#1d3557] border border-[#233554]'
-                : 'bg-gray-100 text-[#0a192f] hover:bg-gray-200'
+                ? 'bg-[#262626] text-[#f5f5f5] hover:bg-[#404040] border border-[#404040]'
+                : 'bg-white text-[#171717] hover:bg-neutral-100'
             }`}
             aria-label="Menu oeffnen"
           >
@@ -138,7 +138,7 @@ function Header({
       {/* Mobile Menu */}
       {menuOffen && (
         <div className={`md:hidden px-4 pb-4 ${
-          istDunkel ? 'bg-[#0a192f]/98' : 'bg-white/98'
+          istDunkel ? 'bg-[#171717]/98' : 'bg-[#fafafa]/98'
         } backdrop-blur-md`}>
           <nav className="flex flex-col gap-2">
             {[
@@ -153,8 +153,8 @@ function Header({
                 onClick={() => handleNavigation(ref)}
                 className={`text-left px-4 py-3 rounded-lg transition-colors ${
                   istDunkel
-                    ? 'text-[#8892b0] hover:bg-[#112240] hover:text-[#64ffda]'
-                    : 'text-[#475569] hover:bg-gray-100 hover:text-[#0d9488]'
+                    ? 'text-[#a3a3a3] hover:bg-[#262626] hover:text-[#b91c1c]'
+                    : 'text-[#525252] hover:bg-neutral-100 hover:text-[#dc2626]'
                 }`}
               >
                 {label}

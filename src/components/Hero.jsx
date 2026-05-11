@@ -9,10 +9,10 @@ function Hero() {
       {/* Animierter Hintergrund */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute top-20 left-10 w-72 h-72 rounded-full blur-3xl animate-blob ${
-          istDunkel ? 'bg-cyan-500/10' : 'bg-teal-500/10'
+          istDunkel ? 'bg-red-700/10' : 'bg-red-600/10'
         }`}></div>
         <div className={`absolute top-40 right-10 w-96 h-96 rounded-full blur-3xl animate-blob animation-delay-2000 ${
-          istDunkel ? 'bg-orange-500/10' : 'bg-orange-400/10'
+          istDunkel ? 'bg-red-800/10' : 'bg-red-700/10'
         }`}></div>
       </div>
 
@@ -26,7 +26,7 @@ function Hero() {
                 src="/foto.jpg"
                 alt="Eeraj - Digital Creative & Developer"
                 className={`w-48 h-48 md:w-64 md:h-64 rounded-full object-cover border-4 shadow-2xl ${
-                  istDunkel ? 'border-[#64ffda]' : 'border-[#0d9488]'
+                  istDunkel ? 'border-[#b91c1c]' : 'border-[#dc2626]'
                 }`}
               />
             </div>
@@ -35,20 +35,20 @@ function Hero() {
           {/* Text */}
           <div className="text-center md:text-left flex-1">
             <p className={`text-sm font-semibold uppercase tracking-widest mb-3 ${
-              istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'
+              istDunkel ? 'text-[#b91c1c]' : 'text-[#dc2626]'
             }`}>
               Willkommen auf meinem Portfolio
             </p>
 
             <h1 className={`text-4xl md:text-6xl font-bold mb-4 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
+              istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
             }`}>
               Hi, ich bin{' '}
               <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Eeraj</span>
             </h1>
 
             <p className={`text-lg md:text-xl mb-8 max-w-xl ${
-              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
+              istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
             }`}>
               Digital Creative & Frontend-Entwickler. Ich verbinde kreatives Marketing 
               mit moderner Webentwicklung — von KI-Automatisierungen bis hin zu High-Performance React Apps.
@@ -58,9 +58,9 @@ function Hero() {
               <a
                 href="#projects"
                 className={`px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:scale-105 ${
-                  istDunkel 
-                    ? 'bg-[#64ffda] text-[#0a192f] hover:shadow-[0_0_20px_rgba(100,255,218,0.4)]' 
-                    : 'bg-[#0d9488] text-white hover:bg-[#0f766e] hover:shadow-lg'
+                  istDunkel
+                    ? 'bg-[#b91c1c] text-[#f5f5f5] hover:shadow-[0_0_20px_rgba(185,28,28,0.4)]'
+                    : 'bg-[#dc2626] text-white hover:bg-[#b91c1c] hover:shadow-lg'
                 }`}
               >
                 Meine Projekte
@@ -70,8 +70,8 @@ function Hero() {
                 href="#contact"
                 className={`px-6 py-3 rounded-lg font-semibold border-2 transition-all duration-300 hover:scale-105 ${
                   istDunkel
-                    ? 'border-[#64ffda] text-[#64ffda] hover:bg-[#64ffda]/10'
-                    : 'border-[#0d9488] text-[#0d9488] hover:bg-[#0d9488]/10'
+                    ? 'border-[#b91c1c] text-[#b91c1c] hover:bg-[#b91c1c]/10'
+                    : 'border-[#dc2626] text-[#dc2626] hover:bg-[#dc2626]/10'
                 }`}
               >
                 Kontakt aufnehmen
@@ -82,8 +82,8 @@ function Hero() {
                 download="Eeraj_Lebenslauf.pdf"
                 className={`px-6 py-3 rounded-lg font-semibold border-2 transition-all duration-300 hover:scale-105 flex items-center gap-2 ${
                   istDunkel
-                    ? 'border-[#233554] text-[#8892b0] hover:border-[#64ffda] hover:text-[#64ffda]'
-                    : 'border-gray-300 text-[#475569] hover:border-[#0d9488] hover:text-[#0d9488]'
+                    ? 'border-[#404040] text-[#a3a3a3] hover:border-[#b91c1c] hover:text-[#b91c1c]'
+                    : 'border-[#e5e5e5] text-[#525252] hover:border-[#dc2626] hover:text-[#dc2626]'
                 }`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,10 +98,10 @@ function Hero() {
         {/* Ranking Hinweis - WIEDER DA */}
         <div className="mt-12 text-center">
           <p className={`text-sm ${
-            istDunkel ? 'text-[#8892b0]' : 'text-gray-500'
+            istDunkel ? 'text-[#a3a3a3]' : 'text-neutral-500'
           }`}>
             Beweise dich gegen andere Recruiter und sichere dir deinen Platz im Ranking
-            <span className={`ml-2 ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`}>
+            <span className={`ml-2 ${istDunkel ? 'text-[#b91c1c]' : 'text-[#dc2626]'}`}>
               — oben in der Leiste 🏆
             </span>
           </p>

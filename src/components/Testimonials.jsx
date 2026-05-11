@@ -22,8 +22,8 @@ function Testimonials() {
         ${isActive ? 'w-[450px] opacity-100 scale-100' : 'w-[300px] opacity-40 scale-90 blur-sm'}
         ${isAdjacent && !isActive ? 'hover:opacity-60 hover:blur-none' : ''}
         ${istDunkel
-          ? 'bg-[#112240] border-[#233554] hover:border-[#64ffda]'
-          : 'bg-white border-gray-200 hover:border-[#0d9488]'
+          ? 'bg-[#262626] border-[#404040] hover:border-[#b91c1c]'
+          : 'bg-white border-neutral-200 hover:border-[#dc2626]'
         }
       `}>
         {/* Bild oben */}
@@ -31,14 +31,14 @@ function Testimonials() {
           <img
             className={`rounded-full object-cover border-2 transition-transform duration-500 hover:scale-105 ${
               isActive ? 'w-20 h-20' : 'w-14 h-14'
-            } ${istDunkel ? 'border-[#64ffda]/30' : 'border-[#0d9488]/30'}`}
+            } ${istDunkel ? 'border-[#b91c1c]/30' : 'border-[#dc2626]/30'}`}
             alt={testimonial.name}
             src={testimonial.bild}
             onError={(e) => { e.target.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=" + testimonial.name }}
           />
           <div className={`absolute -bottom-1 -right-1 rounded-full flex items-center justify-center shadow-lg ${
             isActive ? 'w-6 h-6 text-xs' : 'w-5 h-5 text-[10px]'
-          } ${istDunkel ? 'bg-[#64ffda] text-[#0a192f]' : 'bg-[#0d9488] text-white'}`}>
+          } ${istDunkel ? 'bg-[#b91c1c] text-[#f5f5f5]' : 'bg-[#dc2626] text-white'}`}>
             "
           </div>
         </div>
@@ -48,7 +48,7 @@ function Testimonials() {
           <figcaption className={`font-bold ${isActive ? 'text-lg' : 'text-sm'} ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
             {testimonial.name}
           </figcaption>
-          <p className={`font-medium ${isActive ? 'text-xs' : 'text-[10px]'} ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`}>
+          <p className={`font-medium ${isActive ? 'text-xs' : 'text-[10px]'} ${istDunkel ? 'text-[#b91c1c]' : 'text-[#dc2626]'}`}>
             {testimonial.rolle}
           </p>
         </div>
@@ -56,21 +56,21 @@ function Testimonials() {
         {/* Sterne */}
         <div className={`flex gap-1 mt-3 ${isActive ? '' : 'scale-75'}`}>
           {[...Array(5)].map((_, i) => (
-            <svg key={i} className={`w-4 h-4 ${istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}`} viewBox="0 0 20 20" fill="currentColor">
+            <svg key={i} className={`w-4 h-4 ${istDunkel ? 'text-[#b91c1c]' : 'text-[#dc2626]'}`} viewBox="0 0 20 20" fill="currentColor">
               <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
             </svg>
           ))}
         </div>
 
         {/* Text unten */}
-        <blockquote className={`mt-4 leading-relaxed italic text-center ${isActive ? 'text-sm' : 'text-xs line-clamp-3'} ${istDunkel ? 'text-[#ccd6f6]' : 'text-gray-600'}`}>
+        <blockquote className={`mt-4 leading-relaxed italic text-center ${isActive ? 'text-sm' : 'text-xs line-clamp-3'} ${istDunkel ? 'text-[#f5f5f5]' : 'text-neutral-600'}`}>
           "{testimonial.text}"
         </blockquote>
 
         {/* Projekt Tag */}
         <div className="mt-4">
           <span className={`text-[9px] uppercase tracking-[0.15em] font-black px-3 py-1.5 rounded-full border ${
-            istDunkel ? 'border-[#233554] text-[#8892b0]' : 'border-gray-100 text-gray-400'
+            istDunkel ? 'border-[#404040] text-[#a3a3a3]' : 'border-neutral-100 text-neutral-400'
           }`}>
             {testimonial.projekt}
           </span>
