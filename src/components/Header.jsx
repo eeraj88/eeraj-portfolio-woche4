@@ -24,34 +24,29 @@ function Header({
 
   const navLinkClass = `text-sm font-medium transition-all duration-300 hover:scale-105 ${
     istDunkel
-      ? 'text-[#a3a3a3] hover:text-[#b91c1c]'
-      : 'text-[#525252] hover:text-[#dc2626]'
+      ? 'text-gray-400 hover:text-red-500'
+      : 'text-gray-600 hover:text-red-600'
   }`
 
   return (
     <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${
       istDunkel
-        ? 'bg-[#171717]/95 border-b border-[#404040]'
-        : 'bg-[#fafafa]/95 border-b border-[#e5e5e5]'
+        ? 'bg-black/80 border-b border-white/10'
+        : 'bg-white/95 border-b border-gray-200'
     } backdrop-blur-md`}>
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-        
-        {/* Logo & Slogan */}
+
+        {/* Logo */}
         <div className="flex flex-col">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             className={`text-xl font-bold transition-colors leading-tight ${
-              istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
+              istDunkel ? 'text-white' : 'text-black'
             }`}
+            style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
           >
-            <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Eeraj</span>
-            <span className={istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'}>.dev</span>
+            <span className="text-red-500">E</span>eraj
           </button>
-          <span className={`text-[10px] font-medium tracking-tighter opacity-70 hidden sm:block ${
-            istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
-          }`}>
-            Web • UI/UX • AI • Automation • Marketing
-          </span>
         </div>
 
         {/* Desktop Navigation */}
@@ -84,8 +79,8 @@ function Header({
               onClick={() => setSpotifyOpen(!spotifyOpen)}
               className={`w-10 h-10 rounded-lg transition-all duration-300 hover:scale-110 flex items-center justify-center ${
                 istDunkel
-                  ? 'bg-[#262626] hover:bg-[#404040] border border-[#404040]'
-                  : 'bg-white hover:bg-neutral-100'
+                  ? 'bg-white/5 hover:bg-white/10 border border-white/10'
+                  : 'bg-gray-100 hover:bg-gray-200'
               }`}
               title="Meine Musik"
             >
@@ -97,12 +92,12 @@ function Header({
             {/* Spotify Dropdown */}
             {spotifyOpen && (
               <>
-                <div 
-                  className="fixed inset-0 z-40" 
+                <div
+                  className="fixed inset-0 z-40"
                   onClick={() => setSpotifyOpen(false)}
                 />
                 <div className={`absolute right-0 top-12 w-80 rounded-xl shadow-2xl overflow-hidden z-50 ${
-                  istDunkel ? 'bg-[#262626] border border-[#404040]' : 'bg-white border border-[#e5e5e5]'
+                  istDunkel ? 'bg-white/5 border border-white/10' : 'bg-white border border-gray-200'
                 }`}>
                   <iframe
                     src={`https://open.spotify.com/embed/playlist/${SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
@@ -117,7 +112,7 @@ function Header({
             )}
           </div>
 
-          {/* Animierter Theme Toggler - NEU */}
+          {/* Animierter Theme Toggler */}
           <AnimatedThemeToggler variant="circle" />
 
           {/* Mobile Menu Button */}
@@ -125,8 +120,8 @@ function Header({
             onClick={() => setMenuOffen(!menuOffen)}
             className={`md:hidden p-2 rounded-lg transition-colors ${
               istDunkel
-                ? 'bg-[#262626] text-[#f5f5f5] hover:bg-[#404040] border border-[#404040]'
-                : 'bg-white text-[#171717] hover:bg-neutral-100'
+                ? 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
+                : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
             aria-label="Menu oeffnen"
           >
@@ -138,7 +133,7 @@ function Header({
       {/* Mobile Menu */}
       {menuOffen && (
         <div className={`md:hidden px-4 pb-4 ${
-          istDunkel ? 'bg-[#171717]/98' : 'bg-[#fafafa]/98'
+          istDunkel ? 'bg-black/98' : 'bg-white/98'
         } backdrop-blur-md`}>
           <nav className="flex flex-col gap-2">
             {[
@@ -153,8 +148,8 @@ function Header({
                 onClick={() => handleNavigation(ref)}
                 className={`text-left px-4 py-3 rounded-lg transition-colors ${
                   istDunkel
-                    ? 'text-[#a3a3a3] hover:bg-[#262626] hover:text-[#b91c1c]'
-                    : 'text-[#525252] hover:bg-neutral-100 hover:text-[#dc2626]'
+                    ? 'text-gray-400 hover:bg-white/5 hover:text-red-500'
+                    : 'text-gray-600 hover:bg-gray-100 hover:text-red-600'
                 }`}
               >
                 {label}

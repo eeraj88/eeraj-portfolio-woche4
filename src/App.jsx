@@ -46,7 +46,7 @@ function App() {
       {/* Main Container */}
       <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${
         istDunkel
-          ? 'bg-[#171717] text-[#f5f5f5]'
+          ? 'bg-black text-white'
           : 'bg-[#fafafa] text-[#171717]'
       }`}>
         
@@ -58,28 +58,12 @@ function App() {
             <div className="orb-orange" style={{ top: '60%', right: '10%' }}></div>
             <div className="orb-purple" style={{ bottom: '20%', left: '15%' }}></div>
             <div className="orb-cyan" style={{ top: '40%', right: '20%', width: '200px', height: '200px' }}></div>
-            
+
             {/* Grid Pattern Overlay */}
             <div className="grid-pattern"></div>
-            
+
             {/* Noise Texture */}
             <div className="noise-overlay"></div>
-            
-            {/* Particle Animation */}
-            <div className="particles">
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-              <div className="particle"></div>
-            </div>
           </>
         )}
 
@@ -98,43 +82,43 @@ function App() {
             scrollToSection={scrollToSection}
           />
 
-          {/* Hero - Primary Background */}
-          <div className={istDunkel ? 'bg-[#171717]' : 'bg-[#fafafa]'}>
+          {/* Hero - Full Screen Black */}
+          <div className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
             <Hero />
           </div>
 
           {/* About - Secondary Background */}
-          <div ref={aboutRef} className={`${istDunkel ? 'bg-[#262626]' : 'bg-white'}`}>
+          <div ref={aboutRef} className={`${istDunkel ? 'bg-black' : 'bg-white'}`}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <About />
           </div>
 
           {/* Skills - Primary Background */}
-          <div ref={skillsRef} className={istDunkel ? 'bg-[#171717]' : 'bg-[#fafafa]'}>
+          <div ref={skillsRef} className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Skills />
           </div>
 
           {/* Projects - Secondary Background */}
-          <div ref={projectsRef} className={`${istDunkel ? 'bg-[#262626]' : 'bg-white'}`}>
+          <div ref={projectsRef} className={`${istDunkel ? 'bg-black' : 'bg-white'}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Projects />
           </div>
 
           {/* Testimonials - Tertiary Background */}
-          <div ref={testimonialsRef} className={`${istDunkel ? 'bg-[#404040]' : 'bg-[#f5f5f5]'}`}>
+          <div ref={testimonialsRef} className={`${istDunkel ? 'bg-zinc-900' : 'bg-[#f5f5f5]'}`}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Testimonials />
           </div>
 
           {/* Contact - Primary Background */}
-          <div ref={contactsRef} className={istDunkel ? 'bg-[#171717]' : 'bg-[#fafafa]'}>
+          <div ref={contactsRef} className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
             <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'}`} />
             <Contact />
           </div>
 
           {/* Footer - Secondary Background */}
-          <div className={`${istDunkel ? 'bg-[#262626]' : 'bg-white'}`}>
+          <div className={`${istDunkel ? 'bg-zinc-900' : 'bg-white'}`}>
             <Footer />
           </div>
         </div>
