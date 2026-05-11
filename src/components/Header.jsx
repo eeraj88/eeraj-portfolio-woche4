@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Leaderboard from './Leaderboard'
 import { AnimatedThemeToggler } from './ui/AnimatedThemeToggler'
 
