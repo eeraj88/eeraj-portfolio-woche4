@@ -1,41 +1,57 @@
 import { useContext, useEffect, useState } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
-import ParticleTextEffect from './ParticleTextEffect'
 
 function Hero() {
   const { istDunkel } = useContext(ThemeContext)
-  const [showContent, setShowContent] = useState(false)
+  const [currentSkillIndex, setCurrentSkillIndex] = useState(0)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const skills = [
+    "SALES & CONSULTAT",
+    "DIGITAL MARKETING",
+    "E-COMMERCE",
+    "WEB ENTWICKLUNG",
+    "UI UX DESIGN",
+    "AI & AUTOMATION"
+  ]
 
   useEffect(() => {
-    setShowContent(true)
+    setIsVisible(true)
+    const interval = setInterval(() => {
+      setCurrentSkillIndex(prev => (prev + 1) % skills.length)
+    }, 3000)
+    return () => clearInterval(interval)
   }, [])
 
   return (
-    <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+
+      {/* Animated Background Gradient */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-600/20 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-orange-600/10 rounded-full blur-[100px] animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
 
       {/* Portfolio Badge */}
       <div
         className="absolute top-8 left-1/2 transform -translate-x-1/2 z-30"
-        style={{ opacity: showContent ? 1 : 0, transition: 'opacity 0.6s ease-out 0.5s' }}
+        style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.6s ease-out 0.5s' }}
       >
         <span className="text-xs md:text-sm uppercase tracking-[0.3em] text-red-500 font-medium px-4 py-2 border border-red-500/30 rounded-full" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
           Portfolio
         </span>
       </div>
 
-      {/* Main Headline - Static */}
+      {/* Main Headline */}
       <div
-        className="relative z-30 text-center px-4 mb-8"
-        style={{ opacity: showContent ? 1 : 0, transform: showContent ? 'translateY(0)' : 'translateY(-30px)', transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s' }}
+        className="relative z-30 text-center px-4 mb-12"
+        style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateY(0)' : 'translateY(-30px)', transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s' }}
       >
-        <h1
-          className="text-6xl md:text-8xl lg:text-9xl font-bold text-white leading-tight"
-          style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
-        >
+        <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold text-white leading-tight" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
           HI ICH BIN
         </h1>
         <h1
-          className="text-6xl md:text-8xl lg:text-9xl font-bold text-white leading-tight mt-2"
+          className="text-6xl md:text-8xl lg:text-9xl font-bold leading-tight mt-2"
           style={{
             fontFamily: 'Space Grotesk, system-ui, sans-serif',
             background: 'linear-gradient(135deg, #ffffff 0%, #dc2626 100%)',
@@ -48,15 +64,40 @@ function Hero() {
         </h1>
       </div>
 
-      {/* Canvas Particle Text Effect - Skills */}
-      <div className="relative z-20 w-full max-w-4xl h-32 md:h-40">
-        <ParticleTextEffect />
+      {/* Skills Carousel */}
+      <div
+        className="relative z-30 text-center mb-16 px-4"
+        style={{ opacity: isVisible ? 1 : 0, transition: 'opacity 0.8s ease-out 0.8s' }}
+      >
+        <div
+          className="text-3xl md:text-5xl lg:text-6xl font-bold text-white transition-all duration-500"
+          style={{
+            fontFamily: 'Space Grotesk, system-ui, sans-serif',
+            textShadow: '0 0 40px rgba(220, 38, 38, 0.5)'
+          }}
+        >
+          {skills[currentSkillIndex]}
+        </div>
+
+        {/* Progress Indicators */}
+        <div className="flex justify-center gap-2 mt-6">
+          {skills.map((_, index) => (
+            <div
+              key={index}
+              className="h-1 rounded-full transition-all duration-300"
+              style={{
+                width: currentSkillIndex === index ? '24px' : '8px',
+                backgroundColor: currentSkillIndex === index ? '#dc2626' : 'rgba(255,255,255,0.2)'
+              }}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* CTA Buttons - Seitlich rechts/unten */}
+      {/* CTA Buttons - Seitlich */}
       <div
         className="absolute bottom-12 right-8 md:right-16 flex flex-col gap-3 z-30"
-        style={{ opacity: showContent ? 1 : 0, transform: showContent ? 'translateX(0)' : 'translateX(30px)', transition: 'all 0.8s ease-out 1s' }}
+        style={{ opacity: isVisible ? 1 : 0, transform: isVisible ? 'translateX(0)' : 'translateX(30px)', transition: 'all 0.8s ease-out 1s' }}
       >
         <a
           href="#projects"
@@ -92,9 +133,9 @@ function Hero() {
         </a>
       </div>
 
-      {/* Floating Particles Overlay */}
+      {/* Floating Particles */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(20)].map((_, i) => (
           <div
             key={i}
             className="absolute rounded-full"
