@@ -31,6 +31,8 @@ function Header({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  const navLinkClass = `text-sm font-medium transition-all duration-300 hover:scale-105 relative group`
+
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -80,25 +82,21 @@ function Header({
             <button
               key={label}
               onClick={() => handleNavigation(ref)}
-              className={`relative text-sm font-medium transition-all duration-300 hover:scale-105 px-3 py-1 ${
-                istDunkel
-                  ? 'text-gray-400 hover:text-white'
-                  : 'text-gray-600 hover:text-black'
-              }`}
+              className={navLinkClass}
               style={{ fontFamily: 'JetBrains Mono, monospace' }}
             >
-              {label}
-              <span className={`absolute bottom-0 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full`}></span>
+              <span className={istDunkel ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}>
+                {label}
+              </span>
+              <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full`}></span>
             </button>
           ))}
         </nav>
 
         {/* Controls */}
         <div className="flex items-center gap-3">
-          {/* Ranking */}
           <Leaderboard isNav={true} iconOnly={true} />
 
-          {/* Spotify */}
           <div className="relative">
             <button
               onClick={() => setSpotifyOpen(!spotifyOpen)}
@@ -133,10 +131,8 @@ function Header({
             )}
           </div>
 
-          {/* Theme Toggler */}
           <AnimatedThemeToggler variant="circle" />
 
-          {/* Mobile Menu Button */}
           <button
             onClick={() => setMenuOffen(!menuOffen)}
             className={`lg:hidden p-2 rounded-lg transition-colors ${

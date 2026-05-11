@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 
 class Particle {
   constructor() {
@@ -118,9 +118,9 @@ export default function ParticleTextEffect() {
   const isWaitingForLoopRef = useRef(false)
 
   const words = [
-    "ICH BIN EERAJ JAN",
     "SALES & CONSULTAT",
     "DIGITAL MARKETING",
+    "E-COMMERCE",
     "WEB ENTWICKLUNG",
     "UI UX DESIGN",
     "AI & AUTOMATION"
@@ -130,111 +130,112 @@ export default function ParticleTextEffect() {
   const drawAsPoints = true
 
   const nextWord = (word, canvas, isFirstWord = false) => {
-    const offscreenCanvas = document.createElement("canvas")
-    offscreenCanvas.width = canvas.width
-    offscreenCanvas.height = canvas.height
-    const offscreenCtx = offscreenCanvas.getContext("2d")
+    try {
+      const offscreenCanvas = document.createElement("canvas")
+      offscreenCanvas.width = canvas.width
+      offscreenCanvas.height = canvas.height
+      const offscreenCtx = offscreenCanvas.getContext("2d")
 
-    offscreenCtx.fillStyle = "white"
-    offscreenCtx.font = "bold 180px Space Grotesk, Arial, sans-serif"
-    offscreenCtx.textAlign = "center"
-    offscreenCtx.textBaseline = "middle"
-    offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 2)
+      if (!offscreenCtx) return
 
-    const imageData = offscreenCtx.getImageData(0, 0, canvas.width, canvas.height)
-    const pixels = imageData.data
+      offscreenCtx.fillStyle = "white"
+      offscreenCtx.font = "bold 120px Space Grotesk, Arial, sans-serif"
+      offscreenCtx.textAlign = "center"
+      offscreenCtx.textBaseline = "middle"
+      offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 2.5)
 
-    const newColor = {
-      r: 220,
-      g: 38,
-      b: 38,
-    }
+      const imageData = offscreenCtx.getImageData(0, 0, canvas.width, canvas.height)
+      const pixels = imageData.data
 
-    const particles = particlesRef.current
-    const targetCoords = []
+      const newColor = { r: 220, g: 38, b: 38 }
+      const particles = particlesRef.current
+      const targetCoords = []
 
-    for (let i = 0; i < pixels.length; i += pixelSteps * 4) {
-      const alpha = pixels[i + 3]
-      if (alpha > 0) {
-        const x = (i / 4) % canvas.width
-        const y = Math.floor(i / 4 / canvas.width)
-        targetCoords.push({ x, y })
-      }
-    }
-
-    for (let i = targetCoords.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1))
-      const temp = targetCoords[i]
-      targetCoords[i] = targetCoords[j]
-      targetCoords[j] = temp
-    }
-
-    const neededParticles = targetCoords.length
-
-    if (isFirstWord) {
-      particles.length = 0
-      for (let i = 0; i < neededParticles; i++) {
-        const particle = new Particle()
-        const targetX = targetCoords[i].x
-        const targetY = targetCoords[i].y
-        const angleToTarget = Math.atan2(targetY - canvas.height / 2, targetX - canvas.width / 2)
-        const startDistance = (canvas.width + canvas.height) / 2
-        particle.pos.x = targetX - Math.cos(angleToTarget) * startDistance
-        particle.pos.y = targetY - Math.sin(angleToTarget) * startDistance
-        particle.maxSpeed = Math.random() * 12 + 10
-        particle.maxForce = particle.maxSpeed * 0.08
-        particle.particleSize = Math.random() * 6 + 6
-        particle.colorBlendRate = Math.random() * 0.04 + 0.01
-        particle.startColor = { r: 0, g: 0, b: 0 }
-        particle.targetColor = newColor
-        particle.colorWeight = 0
-        particle.target.x = targetX
-        particle.target.y = targetY
-        particles.push(particle)
-      }
-    } else {
-      for (let i = 0; i < Math.max(particles.length, neededParticles); i++) {
-        if (i < neededParticles) {
-          let particle
-          if (i < particles.length) {
-            particle = particles[i]
-            particle.isKilled = false
-          } else {
-            particle = new Particle()
-            const sourceParticle = particles[Math.floor(Math.random() * particles.length)]
-            particle.pos.x = sourceParticle ? sourceParticle.pos.x : canvas.width / 2
-            particle.pos.y = sourceParticle ? sourceParticle.pos.y : canvas.height / 3
-            particle.maxSpeed = Math.random() * 6 + 4
-            particle.maxForce = particle.maxSpeed * 0.05
-            particle.particleSize = Math.random() * 6 + 6
-            particle.colorBlendRate = Math.random() * 0.0275 + 0.0025
-            particles.push(particle)
-          }
-
-          particle.startColor = {
-            r: particle.startColor.r + (particle.targetColor.r - particle.startColor.r) * particle.colorWeight,
-            g: particle.startColor.g + (particle.targetColor.g - particle.startColor.g) * particle.colorWeight,
-            b: particle.startColor.b + (particle.targetColor.b - particle.startColor.b) * particle.colorWeight,
-          }
-          particle.targetColor = newColor
-          particle.colorWeight = 0
-          particle.target.x = targetCoords[i].x
-          particle.target.y = targetCoords[i].y
-        } else if (i < particles.length) {
-          const particle = particles[i]
-          const randomTarget = targetCoords[Math.floor(Math.random() * targetCoords.length)]
-          particle.target.x = randomTarget.x + (Math.random() - 0.5) * 20
-          particle.target.y = randomTarget.y + (Math.random() - 0.5) * 20
-          particle.isKilled = false
-          particle.startColor = {
-            r: particle.startColor.r + (particle.targetColor.r - particle.startColor.r) * particle.colorWeight,
-            g: particle.startColor.g + (particle.targetColor.g - particle.startColor.g) * particle.colorWeight,
-            b: particle.startColor.b + (particle.targetColor.b - particle.startColor.b) * particle.colorWeight,
-          }
-          particle.targetColor = newColor
-          particle.colorWeight = 0
+      for (let i = 0; i < pixels.length; i += pixelSteps * 4) {
+        const alpha = pixels[i + 3]
+        if (alpha > 0) {
+          const x = (i / 4) % canvas.width
+          const y = Math.floor(i / 4 / canvas.width)
+          targetCoords.push({ x, y })
         }
       }
+
+      for (let i = targetCoords.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        const temp = targetCoords[i]
+        targetCoords[i] = targetCoords[j]
+        targetCoords[j] = temp
+      }
+
+      const neededParticles = targetCoords.length
+
+      if (isFirstWord) {
+        particles.length = 0
+        for (let i = 0; i < neededParticles; i++) {
+          const particle = new Particle()
+          const targetX = targetCoords[i].x
+          const targetY = targetCoords[i].y
+          const angleToTarget = Math.atan2(targetY - canvas.height / 2.5, targetX - canvas.width / 2)
+          const startDistance = (canvas.width + canvas.height) / 2
+          particle.pos.x = targetX - Math.cos(angleToTarget) * startDistance
+          particle.pos.y = targetY - Math.sin(angleToTarget) * startDistance
+          particle.maxSpeed = Math.random() * 12 + 10
+          particle.maxForce = particle.maxSpeed * 0.08
+          particle.particleSize = Math.random() * 6 + 6
+          particle.colorBlendRate = Math.random() * 0.04 + 0.01
+          particle.startColor = { r: 0, g: 0, b: 0 }
+          particle.targetColor = newColor
+          particle.colorWeight = 0
+          particle.target.x = targetX
+          particle.target.y = targetY
+          particles.push(particle)
+        }
+      } else {
+        for (let i = 0; i < Math.max(particles.length, neededParticles); i++) {
+          if (i < neededParticles) {
+            let particle
+            if (i < particles.length) {
+              particle = particles[i]
+              particle.isKilled = false
+            } else {
+              particle = new Particle()
+              const sourceParticle = particles[Math.floor(Math.random() * particles.length)]
+              particle.pos.x = sourceParticle?.pos.x || canvas.width / 2
+              particle.pos.y = sourceParticle?.pos.y || canvas.height / 3
+              particle.maxSpeed = Math.random() * 6 + 4
+              particle.maxForce = particle.maxSpeed * 0.05
+              particle.particleSize = Math.random() * 6 + 6
+              particle.colorBlendRate = Math.random() * 0.0275 + 0.0025
+              particles.push(particle)
+            }
+
+            particle.startColor = {
+              r: particle.startColor.r + (particle.targetColor.r - particle.startColor.r) * particle.colorWeight,
+              g: particle.startColor.g + (particle.targetColor.g - particle.startColor.g) * particle.colorWeight,
+              b: particle.startColor.b + (particle.targetColor.b - particle.startColor.b) * particle.colorWeight,
+            }
+            particle.targetColor = newColor
+            particle.colorWeight = 0
+            particle.target.x = targetCoords[i].x
+            particle.target.y = targetCoords[i].y
+          } else if (i < particles.length) {
+            const particle = particles[i]
+            const randomTarget = targetCoords[Math.floor(Math.random() * targetCoords.length)]
+            particle.target.x = randomTarget.x + (Math.random() - 0.5) * 20
+            particle.target.y = randomTarget.y + (Math.random() - 0.5) * 20
+            particle.isKilled = false
+            particle.startColor = {
+              r: particle.startColor.r + (particle.targetColor.r - particle.startColor.r) * particle.colorWeight,
+              g: particle.startColor.g + (particle.targetColor.g - particle.startColor.g) * particle.colorWeight,
+              b: particle.startColor.b + (particle.targetColor.b - particle.startColor.b) * particle.colorWeight,
+            }
+            particle.targetColor = newColor
+            particle.colorWeight = 0
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error in nextWord:", error)
     }
   }
 
@@ -243,6 +244,8 @@ export default function ParticleTextEffect() {
     if (!canvas) return
 
     const ctx = canvas.getContext("2d")
+    if (!ctx) return
+
     const particles = particlesRef.current
 
     ctx.fillStyle = "rgba(0, 0, 0, 0.15)"
@@ -284,7 +287,11 @@ export default function ParticleTextEffect() {
         wordIndexRef.current = nextIndex
         nextWord(words[wordIndexRef.current], canvas, false)
       } else if (nextIndex === words.length) {
-        particles.forEach(particle => particle.kill(canvas.width, canvas.height))
+        particles.forEach(particle => {
+          try {
+            particle.kill(canvas.width, canvas.height)
+          } catch (e) {}
+        })
         isWaitingForLoopRef.current = true
         loopDelayCounterRef.current = 0
       }
@@ -298,20 +305,36 @@ export default function ParticleTextEffect() {
     if (!canvas) return
 
     const resizeCanvas = () => {
-      const container = canvas.parentElement
-      if (container) {
-        canvas.width = container.clientWidth
-        canvas.height = container.clientHeight
+      try {
+        const container = canvas.parentElement
+        if (container) {
+          canvas.width = container.clientWidth
+          canvas.height = container.clientHeight
+        }
+      } catch (e) {
+        console.error("Error resizing canvas:", e)
       }
     }
 
     resizeCanvas()
-    nextWord(words[0], canvas, true)
-    animate()
+
+    // Delay initial word generation
+    const initTimer = setTimeout(() => {
+      try {
+        nextWord(words[0], canvas, true)
+        animate()
+      } catch (e) {
+        console.error("Error initializing particles:", e)
+      }
+    }, 100)
 
     const handleResize = () => {
       resizeCanvas()
-      nextWord(words[wordIndexRef.current], canvas)
+      try {
+        nextWord(words[wordIndexRef.current], canvas)
+      } catch (e) {
+        console.error("Error on resize:", e)
+      }
     }
 
     window.addEventListener("resize", handleResize)
@@ -319,6 +342,9 @@ export default function ParticleTextEffect() {
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
+      }
+      if (initTimer) {
+        clearTimeout(initTimer)
       }
       window.removeEventListener("resize", handleResize)
     }
@@ -329,7 +355,7 @@ export default function ParticleTextEffect() {
       <canvas
         ref={canvasRef}
         className="w-full h-full"
-        style={{ background: "#000000" }}
+        style={{ background: "transparent" }}
       />
     </div>
   )
