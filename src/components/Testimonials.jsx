@@ -139,15 +139,20 @@ function Testimonials() {
       {/* Marquee stage */}
       <div style={{
         position: 'relative',
+        overflow: 'hidden',
         WebkitMaskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)',
         maskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)',
-        overflow: 'hidden',
+        WebkitTransform: 'translateZ(0)',
+        transform: 'translateZ(0)',
       }}>
         {/* Row 1 — left scroll */}
         <div style={{
           display: 'flex', gap: '22px',
           width: 'max-content', padding: '12px 0',
           animation: 'testiMarquee 70s linear infinite',
+          WebkitTransform: 'translateZ(0)',
+          transform: 'translateZ(0)',
+          willChange: 'transform',
         }}>
           {half1.map((t, i) => <TestiCard key={`r1-${i}`} t={t} />)}
         </div>

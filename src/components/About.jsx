@@ -10,7 +10,7 @@ function About() {
   const stats = [
     { value: '5+', label: 'Projekte' },
     { value: '20+', label: 'Skills' },
-    { value: '3+', label: 'Jahre Sales' }
+    { value: '9+', label: 'Jahre Sales' }
   ]
 
   const highlights = [
