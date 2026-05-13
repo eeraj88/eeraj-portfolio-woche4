@@ -1,67 +1,90 @@
 import { useState, useRef, useEffect } from 'react'
 import Header from './components/Header'
-import Hero from './components/Hero'
-import About from './components/About'
-import Skills from './components/Skills'
-import Projects from './components/Projects'
-import Testimonials from './components/Testimonials'
+import ScrollIndikator from './components/ScrollIndikator'
+import HeroNew from './components/HeroNew'
+import AboutNew from './components/AboutNew'
+import SkillsNew from './components/SkillsNew'
+import ProjectsNew from './components/ProjectsNew'
+import TestimonialsNew from './components/TestimonialsNew'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
-import ScrollIndikator from './components/ScrollIndikator'
 import PokemonBuddy from './components/PokemonBuddy'
 import AINewsFeed from './components/AINewsFeed'
 import { ThemeContext } from './Context/ThemeContext'
+import './styles/cyberpunk.css'
 
 function App() {
+  const [istDunkel] = useState(true) // Cyberpunk ist immer dark
   const aboutRef = useRef(null)
   const skillsRef = useRef(null)
   const projectsRef = useRef(null)
   const testimonialsRef = useRef(null)
   const contactsRef = useRef(null)
 
-  const [istDunkel, setIstDunkel] = useState(() => {
-    const saved = localStorage.getItem('darkMode')
-    return saved === null ? true : saved === 'true'
-  })
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
 
+  // Scroll Progress
   useEffect(() => {
-    localStorage.setItem('darkMode', istDunkel)
-    if (istDunkel) {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const pct = max > 0 ? window.scrollY / max : 0
+      const bar = document.getElementById('scroll-progress')
+      if (bar) bar.style.transform = `scaleX(${pct})`
     }
-  }, [istDunkel])
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
-  const toggleDarkMode = () => {
-    setIstDunkel(prev => !prev)
-  }
+  // Reveal Observer
+  useEffect(() => {
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(en => {
+        if (en.isIntersecting) {
+          en.target.classList.add('in')
+          io.unobserve(en.target)
+        }
+      })
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' })
+
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el))
+    return () => io.disconnect()
+  }, [])
+
+  // Cursor Glow
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePos({ x: e.clientX, y: e.clientY })
+      const cursor = document.getElementById('cursor-glow')
+      if (cursor) {
+        cursor.style.left = e.clientX + 'px'
+        cursor.style.top = e.clientY + 'px'
+      }
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+    return () => window.removeEventListener('mousemove', handleMouseMove)
+  }, [])
 
   const scrollToSection = (ref) => {
     ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
-      <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${istDunkel ? 'bg-black text-white' : 'bg-[#fafafa] text-[#171717]'}`}>
+    <ThemeContext.Provider value={{ istDunkel, toggleDarkMode: () => {} }}>
+      <div className="min-h-screen">
+        {/* FX Layers */}
+        <div className="fx-grid"></div>
+        <div className="fx-vignette"></div>
+        <div className="fx-cursor" id="cursor-glow"></div>
 
-        {istDunkel && (
-          <>
-            <div className="orb-cyan" style={{ top: '10%', left: '5%' }}></div>
-            <div className="orb-orange" style={{ top: '60%', right: '10%' }}></div>
-            <div className="orb-purple" style={{ bottom: '20%', left: '15%' }}></div>
-            <div className="orb-cyan" style={{ top: '40%', right: '20%', width: '200px', height: '200px' }}></div>
-            <div className="grid-pattern"></div>
-            <div className="noise-overlay"></div>
-          </>
-        )}
+        {/* Scroll Progress */}
+        <div id="scroll-progress"></div>
 
+        {/* Content */}
         <div className="relative z-10">
           <ScrollIndikator />
-
           <Header
             istDunkel={istDunkel}
-            toggleDarkMode={toggleDarkMode}
+            toggleDarkMode={() => {}}
             aboutRef={aboutRef}
             skillsRef={skillsRef}
             projectsRef={projectsRef}
@@ -69,41 +92,34 @@ function App() {
             contactsRef={contactsRef}
             scrollToSection={scrollToSection}
           />
+          <main>
+            <HeroNew />
 
-          <div className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
-            <Hero />
-          </div>
+            <div ref={aboutRef}>
+              <AboutNew />
+            </div>
 
-          <div ref={aboutRef} className={istDunkel ? 'bg-black' : 'bg-white'}>
-            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
-            <About />
-          </div>
+            <div ref={skillsRef}>
+              <SkillsNew />
+            </div>
 
-          <div ref={skillsRef} className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
-            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
-            <Skills />
-          </div>
+            <div ref={projectsRef}>
+              <ProjectsNew />
+            </div>
 
-          <div ref={projectsRef} className={istDunkel ? 'bg-black' : 'bg-white'}>
-            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
-            <Projects />
-          </div>
+            <div ref={testimonialsRef}>
+              <TestimonialsNew />
+            </div>
 
-          <div ref={testimonialsRef} className={istDunkel ? 'bg-zinc-900' : 'bg-[#f5f5f5]'}>
-            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
-            <Testimonials />
-          </div>
+            <div ref={contactsRef}>
+              <Contact />
+            </div>
 
-          <div ref={contactsRef} className={istDunkel ? 'bg-black' : 'bg-[#fafafa]'}>
-            <div className={istDunkel ? 'section-divider-dark' : 'section-divider-light'}></div>
-            <Contact />
-          </div>
-
-          <div className={istDunkel ? 'bg-zinc-900' : 'bg-white'}>
             <Footer />
-          </div>
+          </main>
         </div>
 
+        {/* Overlays */}
         <AINewsFeed />
         <PokemonBuddy />
       </div>
