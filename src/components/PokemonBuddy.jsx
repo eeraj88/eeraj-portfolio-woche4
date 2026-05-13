@@ -1128,87 +1128,135 @@ export default function PokemonBuddy() {
           0% { opacity: 1; transform: translateY(0); }
           100% { opacity: 0; transform: translateY(-30px); }
         }
+        @keyframes pokeBtn {
+          0%,100% { box-shadow: 0 0 8px rgba(34,211,238,0.25), 0 0 0 1px rgba(34,211,238,0.12); border-color: rgba(34,211,238,0.22); }
+          50%     { box-shadow: 0 0 22px rgba(34,211,238,0.55), 0 0 0 2px rgba(34,211,238,0.2); border-color: rgba(34,211,238,0.6); }
+        }
         .wiggle-animation { animation: wiggle 2s ease-in-out infinite; }
         .evolving { animation: evolve-glow 0.5s ease-in-out infinite; }
         .shiny-sparkle { filter: drop-shadow(0 0 8px gold) drop-shadow(0 0 15px yellow); }
         .xp-popup { animation: xp-float 2s ease-out forwards; }
+        .poke-btn { animation: pokeBtn 2.5s ease-in-out infinite; }
+        .poke-btn:hover { animation: none !important; border-color: rgba(34,211,238,0.55) !important; box-shadow: 0 0 28px rgba(34,211,238,0.6), 0 0 50px rgba(34,211,238,0.2) !important; transform: translateY(-3px) !important; }
       `}</style>
       
       {/* XP Popup */}
       {xpPopup && (
-        <div className="fixed bottom-24 right-8 z-50 xp-popup">
-          <div className="bg-green-500 text-white px-3 py-1 rounded-full font-bold text-sm shadow-lg">
+        <div style={{ position: 'fixed', bottom: '100px', right: '32px', zIndex: 50 }} className="xp-popup">
+          <div style={{
+            background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(34,211,238,0.55)',
+            color: '#22d3ee', padding: '5px 14px', borderRadius: '9999px',
+            fontFamily: "'JetBrains Mono', monospace", fontSize: '12px', fontWeight: 700,
+            boxShadow: '0 0 16px rgba(34,211,238,0.3)',
+          }}>
             +{xpPopup.amount} XP
           </div>
         </div>
       )}
-      
+
       {/* Floating Button */}
-      <div className="fixed bottom-6 right-6 z-50">
+      <div style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 50 }}>
         <button
           onClick={() => {
             setIsOpen(!isOpen)
             if (!data && starterList.length === 0) loadStarters()
           }}
-          className={`w-12 h-12 rounded-full shadow-lg transition-all duration-300 hover:scale-110 flex items-center justify-center overflow-hidden ${
-            isAnimating ? 'animate-bounce' : 'wiggle-animation'
-          } ${
-            istDunkel
-              ? 'bg-gradient-to-br from-red-500 to-red-700 shadow-red-500/30'
-              : 'bg-gradient-to-br from-red-400 to-red-600 shadow-red-400/30'
-          }`}
-          style={{ boxShadow: '0 0 15px rgba(239, 68, 68, 0.4)' }}
+          className={`poke-btn${isEvolving ? ' evolving' : isAnimating ? ' wiggle-animation' : ''}`}
+          style={{
+            width: '50px', height: '50px', borderRadius: '14px',
+            background: '#111111',
+            border: '1px solid rgba(34,211,238,0.22)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            overflow: 'hidden', cursor: 'pointer',
+            transition: 'all 0.25s cubic-bezier(0.22, 0.61, 0.36, 1)',
+            position: 'relative',
+          }}
         >
           {pokemonInfo ? (
             <img
               src={data?.isShiny ? pokemonInfo.shinySprite : (pokemonInfo.sprite || pokemonInfo.spriteStatic)}
               alt={pokemonInfo.name}
-              className={`w-10 h-10 object-contain ${data?.isShiny ? 'shiny-sparkle' : ''} ${isEvolving ? 'evolving' : ''}`}
+              className={data?.isShiny ? 'shiny-sparkle' : ''}
+              style={{ width: '40px', height: '40px', objectFit: 'contain' }}
             />
           ) : (
-            <span className="text-2xl">🎮</span>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="9.5" stroke="#22d3ee" strokeWidth="1.5"/>
+              <line x1="2.5" y1="12" x2="21.5" y2="12" stroke="#22d3ee" strokeWidth="1.5"/>
+              <circle cx="12" cy="12" r="2.8" fill="none" stroke="#22d3ee" strokeWidth="1.5"/>
+              <path d="M9.2 12 A2.8 2.8 0 0 1 14.8 12" fill="rgba(34,211,238,0.12)"/>
+            </svg>
           )}
         </button>
-        
-        {/* Benachrichtigung Badge für neue Attacke */}
+
         {pendingMoveChoice && (
           <button
             onClick={() => setShowMoveSelect(true)}
-            className="absolute -top-1 -right-1 w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center animate-bounce shadow-lg"
+            style={{
+              position: 'absolute', top: '-4px', right: '-4px',
+              width: '20px', height: '20px', borderRadius: '50%',
+              background: '#fbbf24', border: '2px solid #111111',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              cursor: 'pointer', fontSize: '11px',
+            }}
+            className="animate-bounce"
             title="Neue Attacke verfügbar!"
-          >
-            <span className="text-sm">🔔</span>
-          </button>
+          >🔔</button>
         )}
       </div>
 
       {/* Panel */}
       {isOpen && (
-        <div className={`fixed bottom-24 right-6 z-50 w-72 rounded-2xl shadow-2xl overflow-hidden ${
-          istDunkel ? 'bg-gray-900/95 border border-gray-700' : 'bg-white/95 border border-gray-200'
-        }`}>
+        <div style={{
+          position: 'fixed', bottom: '88px', right: '24px', zIndex: 50,
+          width: '288px', borderRadius: '20px', overflow: 'hidden',
+          background: '#0a0a0a',
+          border: '1px solid rgba(34,211,238,0.22)',
+          boxShadow: '0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(34,211,238,0.06)',
+        }}>
+          {/* Cyan top accent */}
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, #22d3ee, transparent)', flexShrink: 0 }} />
+
           {/* Header */}
-          <div className="bg-gradient-to-r from-red-500 to-red-700 p-3 text-white">
-            <div className="flex justify-between items-center">
-              <div className="flex flex-col">
-                <h3 className="font-bold flex items-center gap-2">
-                  Pokemon Buddy
-                  {data?.isShiny && <span className="text-yellow-300 text-xs">✨</span>}
-                </h3>
-                {isSyncing && <span className="text-[9px] animate-pulse opacity-80">☁️ Syncing...</span>}
+          <div style={{
+            padding: '14px 16px 12px',
+            borderBottom: '1px solid rgba(255,255,255,0.05)',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', color: '#22d3ee', textTransform: 'uppercase', marginBottom: '3px' }}>
+                // Pokémon Buddy
               </div>
-              <div className="flex items-center gap-2">
-                {/* Glocke für neue Attacke */}
-                {pendingMoveChoice && (
-                  <button 
-                    onClick={() => setShowMoveSelect(true)}
-                    className="bg-yellow-500 text-black px-2 py-0.5 rounded-full text-xs font-bold animate-pulse flex items-center gap-1"
-                  >
-                    🔔
-                  </button>
-                )}
-                <button onClick={() => setIsOpen(false)} className="text-white/80 hover:text-white">×</button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>
+                  {data?.trainerName?.split(' ').slice(0, 2).join(' ') || 'Trainer'}
+                </span>
+                {data?.isShiny && <span style={{ fontSize: '11px' }}>✨</span>}
               </div>
+              {isSyncing && (
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '9px', color: '#71717a' }}>☁️ Syncing...</span>
+              )}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {pendingMoveChoice && (
+                <button
+                  onClick={() => setShowMoveSelect(true)}
+                  style={{
+                    background: '#fbbf24', color: '#000', padding: '2px 8px',
+                    borderRadius: '9999px', fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '10px', fontWeight: 700, border: 'none', cursor: 'pointer',
+                  }}
+                >🔔</button>
+              )}
+              <button
+                onClick={() => setIsOpen(false)}
+                style={{
+                  width: '26px', height: '26px', borderRadius: '7px',
+                  background: '#161616', border: '1px solid rgba(34,211,238,0.22)',
+                  color: '#a1a1aa', cursor: 'pointer', fontSize: '14px',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >✕</button>
             </div>
           </div>
 

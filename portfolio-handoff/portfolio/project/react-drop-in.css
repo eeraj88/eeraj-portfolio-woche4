@@ -1,0 +1,219 @@
+/* ============================================================
+   EERAJ PORTFOLIO — Dark Cyan Cyberpunk Theme
+   Drop-in for your existing React project (eeraj-portfolio-woche4)
+   
+   USAGE:
+   1. Copy this file to src/cyberpunk.css
+   2. In src/main.jsx (or App.jsx), add:  import './cyberpunk.css'
+   3. Keep Tailwind — these vars override the dark palette.
+   4. Optional: swap the body font-family of your Tailwind config
+      to "Inter, system-ui, sans-serif" and add Space Grotesk for
+      display headings.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* === Override the existing dark palette === */
+  --dark-bg-primary: #0a0a0a;
+  --dark-bg-secondary: #111111;
+  --dark-bg-tertiary: #161616;
+  --dark-text-primary: #ffffff;
+  --dark-text-secondary: #a1a1aa;
+  --accent-cyan: #22d3ee;
+  --accent-cyan-dim: rgba(34, 211, 238, 0.45);
+  --accent-orange: #22d3ee; /* repurpose orange -> cyan for monochrome accent */
+
+  /* === New tokens for cyberpunk theme === */
+  --cyber-cyan: #22d3ee;
+  --cyber-cyan-bright: #00fff5;
+  --cyber-glow: rgba(34, 211, 238, 0.45);
+  --cyber-border: rgba(34, 211, 238, 0.22);
+  --cyber-border-strong: rgba(34, 211, 238, 0.55);
+  --cyber-magenta: #ff2bd6;
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* === Body / base === */
+html.dark, body.dark, html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  background: #0a0a0a;
+  color: #e4e4e7;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--cyber-cyan); color: #050505; }
+
+/* === Scrollbar === */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #050505; }
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #222, #111);
+  border-radius: 4px; border: 2px solid #050505;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--cyber-cyan); }
+
+/* === Headings → Space Grotesk + tighter tracking === */
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* === Tailwind class augmentations (works alongside your existing JSX) === */
+
+/* Cyan replaces orange in dark mode accents */
+.dark .text-orange-500,
+.text-orange-500 { color: var(--cyber-cyan) !important; }
+.dark .bg-orange-500,
+.bg-orange-500 { background-color: var(--cyber-cyan) !important; color: #050505 !important; }
+.dark .border-orange-500,
+.border-orange-500 { border-color: var(--cyber-cyan) !important; }
+
+/* Cyan glow utilities */
+.glow-cyan {
+  box-shadow: 0 0 16px var(--cyber-glow),
+              0 0 40px rgba(34, 211, 238, 0.18);
+}
+.glow-text-cyan {
+  text-shadow: 0 0 12px var(--cyber-glow), 0 0 28px rgba(34,211,238,0.25);
+}
+
+/* === Card upgrade (matches Brittany Chiang vibe + cyan border) === */
+.card-dark,
+[class*="bg-[#112240]"],
+[class*="bg-[#0a192f]"] {
+  background: #111111 !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
+  border-radius: 16px !important;
+  transition: all 0.35s cubic-bezier(0.22, 0.61, 0.36, 1) !important;
+}
+.card-dark:hover,
+[class*="bg-[#112240]"]:hover {
+  transform: translateY(-4px);
+  border-color: var(--cyber-border-strong) !important;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 24px rgba(34,211,238,0.15);
+}
+
+/* === Buttons (primary cyan) === */
+button[class*="bg-cyan"],
+a[class*="bg-cyan"] {
+  background: var(--cyber-cyan) !important;
+  color: #050505 !important;
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: all 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  box-shadow: 0 4px 20px rgba(34,211,238,0.25);
+}
+button[class*="bg-cyan"]:hover,
+a[class*="bg-cyan"]:hover {
+  background: var(--cyber-cyan-bright) !important;
+  box-shadow: 0 0 32px var(--cyber-glow), 0 0 60px rgba(34,211,238,0.25);
+  transform: translateY(-2px);
+}
+
+/* === Nav blur + scroll state === */
+header.fixed,
+nav.fixed {
+  background: rgba(10, 10, 10, 0.55) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: all 0.3s;
+}
+
+/* === Inputs (form fields) === */
+input[type="text"], input[type="email"], textarea {
+  background: #0a0a0a !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  color: white !important;
+  border-radius: 10px !important;
+  font-family: var(--font-body);
+  transition: all 0.25s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+input[type="text"]:focus,
+input[type="email"]:focus,
+textarea:focus {
+  outline: none !important;
+  border-color: var(--cyber-cyan) !important;
+  box-shadow: 0 0 0 3px rgba(34,211,238,0.15), 0 0 12px var(--cyber-glow) !important;
+}
+
+/* === Scroll progress bar (drop in <div id="scroll-progress"> in App.jsx) === */
+#scroll-progress {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--cyber-cyan), var(--cyber-cyan-bright));
+  transform-origin: left; transform: scaleX(0);
+  z-index: 100;
+  box-shadow: 0 0 12px var(--cyber-glow);
+}
+
+/* === Grid background (replaces blob/orbs in App.css) === */
+.bg-grid-cyan {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.04) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 80%);
+          mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 80%);
+}
+
+/* === Animations === */
+@keyframes ping-cyan {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.6); opacity: 0.6; }
+}
+@keyframes caret-blink { 50% { opacity: 0; } }
+@keyframes grid-drift { to { background-position: 64px 64px; } }
+@keyframes ring-pulse {
+  0% { transform: scale(1); opacity: 0.8; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+@keyframes orb-float {
+  to { transform: translate(60px, -40px) scale(1.1); }
+}
+
+/* === Reveal on scroll (add IntersectionObserver in main.jsx) === */
+.reveal {
+  opacity: 0; transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.22, 0.61, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* === Reduced motion === */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   MINIMAL JS SNIPPETS TO ADD (in App.jsx useEffect):
+   ============================================================
+
+   useEffect(() => {
+     // Scroll progress
+     const onScroll = () => {
+       const max = document.documentElement.scrollHeight - window.innerHeight;
+       const pct = max > 0 ? window.scrollY / max : 0;
+       const bar = document.getElementById('scroll-progress');
+       if (bar) bar.style.transform = `scaleX(${pct})`;
+     };
+     window.addEventListener('scroll', onScroll, { passive: true });
+
+     // Reveal observer
+     const io = new IntersectionObserver(entries => {
+       entries.forEach(en => {
+         if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+       });
+     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+     return () => window.removeEventListener('scroll', onScroll);
+   }, []);
+*/

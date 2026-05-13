@@ -5,59 +5,22 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 
-const FALLBACK_MESSAGE = `# AI News Feed
+const C = {
+  cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)',
+  cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)',
+  bg0: '#050505', bg1: '#0a0a0a', bg2: '#111111',
+  text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a',
+}
+const fontMono = "'JetBrains Mono', ui-monospace, monospace"
+const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
 
-## Currently Loading...
-
-The AI News Feed will display the latest AI news, market trends, and tech insights once the aggregator has generated data.
-
-**To populate the feed:**
-1. Run the Python aggregator from: \`C:\\Users\\eeraj\\Downloads\\ai-pulse-aggregator\`
-2. Execute: \`python src\\main.py\`
-3. The data will be stored in Supabase automatically
-4. Refresh this page
-
-**Data source:** Supabase - ai_news_archive table
-`
-
-// Kategorie-Farben und Sortierung (Passend zum n8n Workflow)
 const CATEGORY_CONFIG = {
-  '🟢 DEEP IMPACT': {
-    bgColor: '#10b981',
-    bgLight: '#ecfdf5',
-    bgDark: '#064e3b',
-    priority: 1
-  },
-  '🟡 EVOLUTIONARY': {
-    bgColor: '#f59e0b',
-    bgLight: '#fffbeb',
-    bgDark: '#78350f',
-    priority: 2
-  },
-  '🔵 FREE TOOL ALERT': {
-    bgColor: '#3b82f6',
-    bgLight: '#eff6ff',
-    bgDark: '#1e40af',
-    priority: 3
-  },
-  '🚀 MUST-TRY': {
-    bgColor: '#ef4444',
-    bgLight: '#fef2f2',
-    bgDark: '#991b1b',
-    priority: 4
-  },
-  '🔌 APIs & MCPs': {
-    bgColor: '#8b5cf6',
-    bgLight: '#f5f3ff',
-    bgDark: '#5b21b6',
-    priority: 5
-  },
-  '📊 MARKET & TRENDS': {
-    bgColor: '#6366f1',
-    bgLight: '#eef2ff',
-    bgDark: '#312e81',
-    priority: 6
-  },
+  '🟢 DEEP IMPACT':     { color: '#10b981', priority: 1 },
+  '🟡 EVOLUTIONARY':    { color: '#f59e0b', priority: 2 },
+  '🔵 FREE TOOL ALERT': { color: '#3b82f6', priority: 3 },
+  '🚀 MUST-TRY':        { color: '#ef4444', priority: 4 },
+  '🔌 APIs & MCPs':     { color: '#8b5cf6', priority: 5 },
+  '📊 MARKET & TRENDS': { color: '#6366f1', priority: 6 },
 }
 
 export default function AINewsFeed() {
@@ -66,263 +29,245 @@ export default function AINewsFeed() {
   const [newsData, setNewsData] = useState(null)
   const [loading, setLoading] = useState(false)
   const [hasNew, setHasNew] = useState(true)
-  const [supabaseReady, setSupabaseReady] = useState(!!(supabaseUrl && supabaseKey))
+  const [supabaseReady] = useState(!!(supabaseUrl && supabaseKey))
   const [expandedCategories, setExpandedCategories] = useState({})
 
   const fetchNews = async () => {
-    if (!supabaseReady) {
-      setNewsData({ error: 'Supabase credentials not found' })
-      return
-    }
-
+    if (!supabaseReady) { setNewsData({ error: true }); return }
     setLoading(true)
     try {
       const supabase = createClient(supabaseUrl, supabaseKey)
-
-      // Wir holen die News der letzten 3 Tage für maximale Aktualität
       const { data, error } = await supabase
         .from('ai_news_archive')
         .select('*')
         .gte('created_at', new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
         .order('created_at', { ascending: false })
         .limit(100)
-
       if (error) throw new Error(error.message)
-      if (!data || data.length === 0) {
-        setNewsData(null)
-        return
-      }
-
+      if (!data || data.length === 0) { setNewsData(null); return }
       const grouped = {}
       data.forEach(item => {
         const cat = item.category || 'General'
         if (!grouped[cat]) grouped[cat] = []
         grouped[cat].push(item)
       })
-
-      const sortedCategories = Object.entries(grouped).sort((a, b) => {
-        const priorityA = CATEGORY_CONFIG[a[0]]?.priority || 999
-        const priorityB = CATEGORY_CONFIG[b[0]]?.priority || 999
-        return priorityA - priorityB
-      })
-
-      setNewsData(sortedCategories)
-
-      if (sortedCategories.length > 0) {
-        setExpandedCategories({ [sortedCategories[0][0]]: true })
-      }
-
+      const sorted = Object.entries(grouped).sort((a, b) =>
+        (CATEGORY_CONFIG[a[0]]?.priority || 999) - (CATEGORY_CONFIG[b[0]]?.priority || 999)
+      )
+      setNewsData(sorted)
+      if (sorted.length > 0) setExpandedCategories({ [sorted[0][0]]: true })
       setHasNew(false)
-    } catch (error) {
-      console.error('Failed to fetch news:', error)
-      setNewsData({ error: error.message })
+    } catch (e) {
+      console.error(e)
+      setNewsData({ error: true })
     } finally {
       setLoading(false)
     }
   }
 
   useEffect(() => {
-    if (isOpen && !newsData && supabaseReady) {
-      fetchNews()
-    }
+    if (isOpen && !newsData && supabaseReady) fetchNews()
   }, [isOpen, supabaseReady])
 
-  const toggleCategory = (category) => {
-    setExpandedCategories(prev => ({
-      ...prev,
-      [category]: !prev[category]
-    }))
-  }
-
-  const bgColor = istDunkel ? '#0f172a' : '#f1f5f9'
-  const textColor = istDunkel ? '#e2e8f0' : '#1e293b'
-  const mutedColor = istDunkel ? '#94a3b8' : '#64748b'
-  const borderColor = istDunkel ? '#334155' : '#e2e8f0'
+  const toggleCategory = (cat) =>
+    setExpandedCategories(prev => ({ ...prev, [cat]: !prev[cat] }))
 
   return (
     <>
       <style>{`
-        @keyframes neon-glow {
-          0%, 100% { 
-            text-shadow: 0 0 4px #10b981, 0 0 10px #10b981, 0 0 15px #10b981;
-            opacity: 1;
-          }
-          50% { 
-            text-shadow: 0 0 2px #10b981, 0 0 5px #10b981, 0 0 8px #10b981;
-            opacity: 0.8;
-          }
+        @keyframes newsGlow {
+          0%,100% { text-shadow: 0 0 6px ${C.cyanGlow}, 0 0 14px ${C.cyanGlow}; opacity: 1; }
+          50%      { text-shadow: 0 0 3px ${C.cyanGlow}, 0 0 7px ${C.cyanGlow};  opacity: 0.75; }
         }
-        .news-glow {
-          animation: neon-glow 2s ease-in-out infinite;
+        @keyframes tabPulse {
+          0%,100% { box-shadow: 4px 0 20px rgba(34,211,238,0.18), 0 0 0 0 rgba(34,211,238,0); }
+          50%     { box-shadow: 4px 0 32px rgba(34,211,238,0.45), 0 0 0 3px rgba(34,211,238,0.08); }
         }
+        .news-glow-text { animation: newsGlow 2s ease-in-out infinite; }
+        .news-tab-btn { animation: tabPulse 2.5s ease-in-out infinite; }
+        .news-tab-btn:hover { animation: none !important; box-shadow: 0 4px 24px rgba(34,211,238,0.5) !important; background: #161616 !important; }
       `}</style>
 
-      {/* Tab Button - HORIZONTAL an der LINKEN SEITE */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="fixed left-0 z-40 flex items-center justify-center gap-2 px-4 py-2 transition-all hover:px-5"
-        style={{
-          top: '15%',
-          display: isOpen ? 'none' : 'flex',
-          backgroundColor: istDunkel ? '#1e293b' : '#ffffff',
-          borderRight: `2px solid #10b981`, // Green border for the neon look
-          borderTop: `2px solid #10b981`,
-          borderBottom: `2px solid #10b981`,
-          borderRadius: '0 12px 12px 0',
-          boxShadow: istDunkel ? '0 0 15px rgba(16, 185, 129, 0.3)' : '4px 0 12px rgba(0,0,0,0.1)',
-        }}
-        title="AI News Feed"
-      >
-        {hasNew && (
-          <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: '#10b981' }} />
-        )}
-        <span
-          className="text-xs font-black tracking-widest news-glow"
+      {/* Tab button — left edge */}
+      {!isOpen && (
+        <button
+          onClick={() => setIsOpen(true)}
+          title="AI News Feed"
+          className="news-tab-btn"
           style={{
-            color: '#10b981',
-            fontSize: '13px',
-            letterSpacing: '3px',
-            textTransform: 'uppercase',
+            position: 'fixed', left: 0, top: '66px', zIndex: 55,
+            display: 'flex', alignItems: 'center', gap: '8px',
+            padding: '7px 16px 7px 10px',
+            background: '#111111',
+            borderRight: `1px solid ${C.cyanBorder}`,
+            borderBottom: `2px solid ${C.cyan}`,
+            borderTop: 'none',
+            borderLeft: 'none',
+            borderRadius: '0 0 12px 0',
+            cursor: 'pointer',
+            transition: 'background 0.2s',
           }}
         >
-          News
-        </span>
-      </button>
+          <span style={{
+            width: '6px', height: '6px', borderRadius: '50%',
+            background: C.cyan,
+            boxShadow: `0 0 10px ${C.cyanGlow}, 0 0 20px rgba(34,211,238,0.3)`,
+            display: 'inline-block',
+            flexShrink: 0,
+            animation: 'heroPing 1.8s ease-in-out infinite',
+          }} />
+          <span
+            className="news-glow-text"
+            style={{
+              fontFamily: fontMono, fontSize: '10px', fontWeight: 700,
+              letterSpacing: '0.2em', textTransform: 'uppercase', color: C.cyan,
+            }}
+          >
+            AI NEWS
+          </span>
+        </button>
+      )}
 
       {/* Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+          style={{ position: 'fixed', inset: 0, zIndex: 54, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
           onClick={() => setIsOpen(false)}
         />
       )}
 
-      {/* Panel - VERTIKALES DESIGN an der LINKEN SEITE */}
+      {/* Panel */}
       <div
-        className="fixed top-0 left-0 h-full z-50 flex flex-col transition-transform duration-300 ease-in-out"
         style={{
-          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+          position: 'fixed', top: 0, left: 0, height: '100%', zIndex: 56,
           width: '380px',
-          backgroundColor: bgColor,
-          borderRight: `2px solid ${borderColor}`,
-          boxShadow: '12px 0 40px rgba(0,0,0,0.2)',
+          background: C.bg1,
+          borderRight: `1px solid ${C.cyanBorder}`,
+          boxShadow: isOpen ? `12px 0 50px rgba(0,0,0,0.5), 0 0 40px rgba(34,211,238,0.06)` : 'none',
+          transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
+          transition: 'transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)',
+          display: 'flex', flexDirection: 'column',
         }}
       >
+        {/* Cyan top accent */}
+        <div style={{ height: '1px', background: `linear-gradient(90deg, ${C.cyan}, rgba(34,211,238,0.3))`, flexShrink: 0 }} />
+
         {/* Header */}
-        <div
-          style={{
-            background: 'linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #8b5cf6 100%)',
-            padding: '16px',
-          }}
-          className="flex justify-between items-start flex-shrink-0"
-        >
+        <div style={{
+          padding: '20px 20px 16px',
+          borderBottom: `1px solid rgba(255,255,255,0.05)`,
+          display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
+          flexShrink: 0,
+        }}>
           <div>
-            <h2 className="text-white font-black text-lg mb-1">AI NEWS</h2>
-            <p className="text-xs text-blue-100">
-              {newsData && newsData.length > 0
-                ? `${newsData.reduce((sum, [, items]) => sum + items.length, 0)} Stories`
+            <div style={{ fontFamily: fontMono, fontSize: '10px', letterSpacing: '0.18em', color: C.cyan, textTransform: 'uppercase', marginBottom: '4px' }}>
+              // AI News Daily
+            </div>
+            <div style={{ fontFamily: fontDisplay, fontSize: '20px', fontWeight: 600, color: C.text0 }}>
+              AI NEWS
+            </div>
+            <div style={{ fontFamily: fontMono, fontSize: '11px', color: C.text3, marginTop: '2px' }}>
+              {newsData && Array.isArray(newsData)
+                ? `${newsData.reduce((s, [, items]) => s + items.length, 0)} Stories`
                 : 'Loading...'}
-            </p>
+            </div>
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="text-white hover:bg-white/20 rounded-lg w-8 h-8 flex items-center justify-center transition flex-shrink-0 font-bold text-xl"
-          >
-            ×
-          </button>
+            style={{
+              width: '30px', height: '30px', borderRadius: '8px',
+              background: C.bg2, border: `1px solid ${C.cyanBorder}`,
+              color: C.text2, cursor: 'pointer', fontSize: '16px',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0,
+            }}
+          >✕</button>
         </div>
 
-        {/* Content - VERTIKALES LAYOUT */}
-        <div className="flex-1 overflow-y-auto p-3">
+        {/* Content */}
+        <div style={{ flex: 1, overflowY: 'auto', padding: '12px' }}>
           {loading ? (
-            <div className="flex flex-col items-center justify-center h-full">
-              <div className="w-10 h-10 border-2 border-gray-300 border-t-green-500 rounded-full animate-spin" />
-              <p className="text-xs mt-2" style={{ color: mutedColor }}>
-                Loading...
-              </p>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', gap: '12px' }}>
+              <div style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                border: `2px solid rgba(34,211,238,0.2)`,
+                borderTopColor: C.cyan,
+                animation: 'contactSpin 0.8s linear infinite',
+              }} />
+              <span style={{ fontFamily: fontMono, fontSize: '11px', color: C.text3 }}>Lade News...</span>
             </div>
-          ) : newsData && newsData.length > 0 ? (
-            <div className="space-y-2">
+          ) : newsData && Array.isArray(newsData) ? (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               {newsData.map(([category, items]) => {
-                const config = CATEGORY_CONFIG[category] || {
-                  bgColor: '#64748b',
-                  bgLight: '#f1f5f9',
-                  bgDark: '#1e293b',
-                }
-                const isExpanded = expandedCategories[category]
-
+                const cfg = CATEGORY_CONFIG[category] || { color: '#64748b' }
+                const expanded = expandedCategories[category]
                 return (
-                  <div
-                    key={category}
-                    className="rounded-lg overflow-hidden transition-all hover:shadow-md"
-                    style={{
-                      backgroundColor: istDunkel ? config.bgDark : config.bgLight,
-                      border: `1px solid ${config.bgColor}40`,
-                    }}
-                  >
-                    {/* Category Header */}
+                  <div key={category} style={{
+                    borderRadius: '10px', overflow: 'hidden',
+                    border: `1px solid ${cfg.color}30`,
+                    background: C.bg2,
+                  }}>
+                    {/* Category header */}
                     <div
                       onClick={() => toggleCategory(category)}
-                      className="flex items-center justify-between px-3 py-2 cursor-pointer hover:opacity-90 transition"
                       style={{
-                        backgroundColor: config.bgColor,
+                        padding: '9px 12px', cursor: 'pointer',
+                        background: `${cfg.color}18`,
+                        borderBottom: expanded ? `1px solid ${cfg.color}20` : 'none',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
                       }}
                     >
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-white flex-shrink-0" />
-                        <h3 className="font-bold text-xs text-white">
-                          {category}
-                        </h3>
-                        <span className="text-[10px] px-1.5 py-0.5 rounded-full font-medium bg-white/20 text-white">
-                          {items.length}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: cfg.color, flexShrink: 0, display: 'inline-block' }} />
+                        <span style={{ fontFamily: fontMono, fontSize: '10px', fontWeight: 700, color: cfg.color, letterSpacing: '0.06em' }}>{category}</span>
+                        <span style={{
+                          fontFamily: fontMono, fontSize: '9px', padding: '1px 6px',
+                          borderRadius: '9999px', background: `${cfg.color}25`, color: cfg.color,
+                        }}>{items.length}</span>
+                      </div>
+                      {items.length > 1 && (
+                        <span style={{ fontFamily: fontMono, fontSize: '9px', color: C.text3 }}>
+                          {expanded ? '▲' : '▼'}
                         </span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        {items.length > 1 && (
-                          <span className="text-[10px] text-white">
-                            {isExpanded ? '▲' : '▼'}
-                          </span>
-                        )}
-                      </div>
+                      )}
                     </div>
 
-                    {/* News Items - VERTIKAL */}
-                    <div className="divide-y" style={{ borderColor: config.bgColor + '30' }}>
-                      {(isExpanded ? items : [items[0]]).map((item, idx) => (
-                        <div
-                          key={item.id || idx}
-                          className="p-3 hover:bg-black/5 transition"
-                        >
-                          <div className="flex items-start gap-2">
-                            <div
-                              className="w-0.5 h-full rounded-full flex-shrink-0 mt-1"
-                              style={{ backgroundColor: config.bgColor }}
-                            />
-                            <div className="flex-1 min-w-0">
-                              <h4 className="font-semibold text-xs mb-1 leading-snug" style={{ color: textColor }}>
+                    {/* Items */}
+                    <div>
+                      {(expanded ? items : [items[0]]).map((item, idx) => (
+                        <div key={item.id || idx} style={{
+                          padding: '10px 12px',
+                          borderBottom: idx < (expanded ? items : [items[0]]).length - 1 ? `1px solid rgba(255,255,255,0.04)` : 'none',
+                        }}>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <div style={{ width: '2px', borderRadius: '2px', background: cfg.color, flexShrink: 0, alignSelf: 'stretch', minHeight: '14px' }} />
+                            <div style={{ flex: 1, minWidth: 0 }}>
+                              <div style={{ fontFamily: fontDisplay, fontSize: '12px', fontWeight: 600, color: C.text1, marginBottom: '4px', lineHeight: 1.4 }}>
                                 {item.title}
-                              </h4>
+                              </div>
                               {item.url && (
                                 <a
                                   href={item.url}
                                   target="_blank"
                                   rel="noopener noreferrer"
-                                  className="text-[10px] font-semibold hover:underline mb-1 inline-block"
-                                  style={{ color: config.bgColor }}
+                                  style={{
+                                    fontFamily: fontMono, fontSize: '10px', color: cfg.color,
+                                    textDecoration: 'none', display: 'inline-block', marginBottom: '4px',
+                                  }}
+                                  onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+                                  onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
                                 >
-                                  Read more →
+                                  Weiterlesen →
                                 </a>
                               )}
                               {item.summary && (
-                                <p className="text-[10px] leading-relaxed mb-1" style={{ color: mutedColor }}>
+                                <p style={{ fontFamily: fontMono, fontSize: '10px', color: C.text3, lineHeight: 1.5, marginBottom: '4px' }}>
                                   {item.summary}
                                 </p>
                               )}
-                              <div className="flex items-center gap-2 text-[10px]" style={{ color: mutedColor }}>
+                              <div style={{ fontFamily: fontMono, fontSize: '10px', color: C.text3, display: 'flex', gap: '6px' }}>
                                 <span>{item.source || 'Unknown'}</span>
-                                {item.business_impact && (
-                                  <span>• {item.business_impact}</span>
-                                )}
+                                {item.business_impact && <><span>·</span><span>{item.business_impact}</span></>}
                               </div>
                             </div>
                           </div>
@@ -334,36 +279,32 @@ export default function AINewsFeed() {
               })}
             </div>
           ) : (
-            <div className="p-6 text-center">
-              <div className="text-3xl mb-2">📰</div>
-              <p className="text-sm font-medium mb-2" style={{ color: textColor }}>
-                No news available yet
-              </p>
-              <p className="text-xs" style={{ color: mutedColor }}>
-                Run the aggregator to populate the feed
-              </p>
+            <div style={{ textAlign: 'center', padding: '48px 24px' }}>
+              <div style={{ fontFamily: fontMono, fontSize: '12px', color: C.text2, marginBottom: '8px' }}>Keine News verfügbar</div>
+              <div style={{ fontFamily: fontMono, fontSize: '11px', color: C.text3 }}>Aggregator starten um Feed zu befüllen</div>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div
-          className="flex justify-between items-center px-3 py-2 flex-shrink-0 text-[10px]"
-          style={{
-            borderTop: `1px solid ${borderColor}`,
-            backgroundColor: istDunkel ? '#1e293b' : '#ffffff'
-          }}
-        >
-          <span style={{ color: mutedColor }}>
-            Daily AI News
-          </span>
+        <div style={{
+          padding: '10px 16px', flexShrink: 0,
+          borderTop: `1px solid rgba(255,255,255,0.05)`,
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          background: C.bg2,
+        }}>
+          <span style={{ fontFamily: fontMono, fontSize: '10px', color: C.text3 }}>Daily AI News</span>
           <button
             onClick={fetchNews}
             disabled={loading || !supabaseReady}
-            className="px-2 py-1 rounded font-semibold hover:opacity-90 transition disabled:opacity-50"
             style={{
-              backgroundColor: '#10b981',
-              color: '#ffffff',
+              fontFamily: fontMono, fontSize: '11px', fontWeight: 600,
+              padding: '5px 12px', borderRadius: '8px',
+              background: loading || !supabaseReady ? 'rgba(34,211,238,0.1)' : 'rgba(34,211,238,0.15)',
+              border: `1px solid ${C.cyanBorder}`,
+              color: loading || !supabaseReady ? C.text3 : C.cyan,
+              cursor: loading || !supabaseReady ? 'not-allowed' : 'pointer',
+              transition: 'all 0.2s',
             }}
           >
             Refresh

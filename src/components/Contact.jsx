@@ -2,10 +2,26 @@ import { useState, useContext, useRef } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
 import emailjs from '@emailjs/browser'
 
-// EmailJS Configuration
 const EMAILJS_SERVICE_ID = 'service_tvlk6dj'
 const EMAILJS_TEMPLATE_ID = 'template_ygcl039'
 const EMAILJS_PUBLIC_KEY = 'Mk2_ZRMHb-UvIL-5M'
+
+const C = {
+  cyan: '#22d3ee',
+  cyanGlow: 'rgba(34,211,238,0.45)',
+  cyanBorder: 'rgba(34,211,238,0.22)',
+  cyanFocus: 'rgba(34,211,238,0.15)',
+  bg0: '#050505',
+  bg1: '#0a0a0a',
+  bg2: '#111111',
+  text0: '#ffffff',
+  text1: '#e4e4e7',
+  text2: '#a1a1aa',
+  text3: '#71717a',
+}
+const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
+const fontMono = "'JetBrains Mono', ui-monospace, monospace"
+const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
 
 function Contact() {
   const { istDunkel } = useContext(ThemeContext)
@@ -16,208 +32,304 @@ function Contact() {
   const [istGesendet, setIstGesendet] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [sendError, setSendError] = useState(null)
+  const [focusedField, setFocusedField] = useState(null)
 
   const handleChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({ ...prev, [name]: value }))
-    // Fehler entfernen wenn User tippt
-    if (fehler[name]) {
-      setFehler(prev => ({ ...prev, [name]: null }))
-    }
-    // Reset states
+    if (fehler[name]) setFehler(prev => ({ ...prev, [name]: null }))
     setSendError(null)
     setIstGesendet(false)
   }
 
   const validiere = () => {
-    const neueFehler = {}
-
-    if (formData.name.trim().length < 3) {
-      neueFehler.name = 'Name muss mindestens 3 Zeichen haben'
-    }
-    if (!formData.email.includes('@') || !formData.email.includes('.')) {
-      neueFehler.email = 'Bitte gueltige E-Mail eingeben'
-    }
-    if (formData.nachricht.trim().length < 10) {
-      neueFehler.nachricht = 'Nachricht muss mindestens 10 Zeichen haben'
-    }
-
-    return neueFehler
+    const f = {}
+    if (formData.name.trim().length < 3) f.name = 'Mindestens 3 Zeichen'
+    if (!formData.email.includes('@') || !formData.email.includes('.')) f.email = 'Gültige E-Mail eingeben'
+    if (formData.nachricht.trim().length < 10) f.nachricht = 'Mindestens 10 Zeichen'
+    return f
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const validierungsFehler = validiere()
-
-    if (Object.keys(validierungsFehler).length > 0) {
-      setFehler(validierungsFehler)
-      setIstGesendet(false)
-      return
-    }
-
+    const vf = validiere()
+    if (Object.keys(vf).length > 0) { setFehler(vf); return }
     setFehler({})
     setIsLoading(true)
     setSendError(null)
-
     try {
-      // EmailJS template parameters
-      const templateParams = {
+      await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
         from_name: formData.name,
         from_email: formData.email,
         message: formData.nachricht,
         to_name: 'Eeraj',
-      }
-
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        templateParams,
-        EMAILJS_PUBLIC_KEY
-      )
-
+      }, EMAILJS_PUBLIC_KEY)
       setIstGesendet(true)
       setFormData({ name: '', email: '', nachricht: '' })
-    } catch (error) {
-      console.error('EmailJS Error:', error)
-      setSendError('Nachricht konnte nicht gesendet werden. Bitte versuche es später erneut.')
+    } catch (err) {
+      console.error('EmailJS Error:', err)
+      setSendError('Konnte nicht gesendet werden. Bitte später erneut versuchen.')
     } finally {
       setIsLoading(false)
     }
   }
 
-  const inputClass = (field) => `w-full px-4 py-3 rounded-lg border transition-all duration-300 outline-none focus:ring-2 ${
-    istDunkel
-      ? `bg-[#262626] border-[#404040] text-[#f5f5f5] placeholder-[#a3a3a3] focus:border-[#b91c1c] focus:ring-[#b91c1c]/30`
-      : `bg-white border-[#e5e5e5] text-[#171717] placeholder-neutral-400 focus:border-[#dc2626] focus:ring-[#dc2626]/30`
-  } ${fehler[field] ? 'border-red-500 focus:ring-red-500/30' : ''}`
+  const inputStyle = (field) => ({
+    width: '100%',
+    padding: '13px 16px',
+    background: C.bg1,
+    border: `1px solid ${fehler[field] ? '#ef4444' : focusedField === field ? C.cyan : 'rgba(255,255,255,0.08)'}`,
+    borderRadius: '10px',
+    color: C.text0,
+    fontFamily: fontMono,
+    fontSize: '14px',
+    outline: 'none',
+    boxSizing: 'border-box',
+    boxShadow: focusedField === field
+      ? (fehler[field] ? '0 0 0 3px rgba(239,68,68,0.15)' : `0 0 0 3px ${C.cyanFocus}`)
+      : 'none',
+    transition: `border-color 0.2s ${ease}, box-shadow 0.2s ${ease}`,
+    resize: field === 'nachricht' ? 'vertical' : undefined,
+  })
 
   return (
-    <section id="contact" className="py-20 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
-        }`}>
-          <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Kontakt</span>
-        </h2>
+    <section
+      id="contact"
+      style={{ padding: '96px 0', background: istDunkel ? C.bg2 : '#ffffff', position: 'relative' }}
+    >
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
 
-        <p className={`text-center mb-10 ${
-          istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
-        }`}>
-          Schreib mir eine Nachricht - ich freue mich von dir zu hoeren!
-        </p>
+        {/* Section head */}
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: '56px' }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '8px',
+            fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: C.cyan,
+          }}>
+            <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
+            06 — Kontakt
+          </span>
+          <h2 style={{
+            fontFamily: fontDisplay,
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05,
+            margin: '16px 0 12px',
+            color: istDunkel ? C.text0 : '#171717',
+          }}>
+            <em style={{ fontStyle: 'normal', color: C.cyan, textShadow: istDunkel ? `0 0 24px ${C.cyanGlow}` : 'none' }}>Kontakt</em>
+          </h2>
+          <p style={{ color: istDunkel ? C.text2 : '#525252', fontSize: '16px', maxWidth: '480px', margin: '0 auto' }}>
+            Schreib mir eine Nachricht — ich freue mich von dir zu hören!
+          </p>
+        </div>
 
-        {/* Success Message */}
-        {istGesendet && (
-          <div className={`mb-8 p-4 rounded-xl text-center font-medium ${
-            istDunkel
-              ? 'bg-[#b91c1c]/10 border border-[#b91c1c]/30 text-[#b91c1c]'
-              : 'bg-[#dc2626]/10 border border-[#dc2626]/30 text-[#dc2626]'
-          }`}>
-            Nachricht erfolgreich gesendet! Ich melde mich bald.
-          </div>
-        )}
+        {/* Contact shell */}
+        <div
+          className="reveal"
+          style={{
+            maxWidth: '640px',
+            margin: '0 auto',
+            background: C.bg2,
+            border: `1px solid rgba(255,255,255,0.05)`,
+            borderRadius: '24px',
+            padding: '48px',
+            position: 'relative',
+            overflow: 'hidden',
+          }}
+        >
+          {/* Cyan top-line */}
+          <div style={{
+            position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+            background: `linear-gradient(90deg, transparent, ${C.cyan}, transparent)`,
+            opacity: 0.6,
+          }} />
 
-        {/* Error Message */}
-        {sendError && (
-          <div className="mb-8 p-4 rounded-xl bg-red-500/20 border border-red-500/50 text-red-400 text-center font-medium">
-            {sendError}
-          </div>
-        )}
+          {/* Success */}
+          {istGesendet && (
+            <div style={{
+              marginBottom: '28px',
+              padding: '14px 20px',
+              background: 'rgba(34,211,238,0.07)',
+              border: `1px solid ${C.cyanBorder}`,
+              borderRadius: '10px',
+              color: C.cyan,
+              fontFamily: fontMono,
+              fontSize: '13px',
+              letterSpacing: '0.04em',
+            }}>
+              ✓ Nachricht gesendet — ich melde mich bald.
+            </div>
+          )}
 
-        <form ref={formRef} onSubmit={handleSubmit} className="space-y-6" noValidate>
-          {/* Name */}
-          <div>
-            <label htmlFor="name" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
-            }`}>
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              placeholder="Dein Name"
-              className={inputClass('name')}
+          {/* Error */}
+          {sendError && (
+            <div style={{
+              marginBottom: '28px',
+              padding: '14px 20px',
+              background: 'rgba(239,68,68,0.08)',
+              border: '1px solid rgba(239,68,68,0.35)',
+              borderRadius: '10px',
+              color: '#f87171',
+              fontFamily: fontMono,
+              fontSize: '13px',
+            }}>
+              {sendError}
+            </div>
+          )}
+
+          <form ref={formRef} onSubmit={handleSubmit} noValidate>
+            {/* Name */}
+            <div style={{ marginBottom: '24px' }}>
+              <label
+                htmlFor="cf-name"
+                style={{
+                  display: 'block', marginBottom: '8px',
+                  fontFamily: fontMono, fontSize: '12px',
+                  color: C.text2, letterSpacing: '0.06em',
+                }}
+              >
+                <span style={{ color: C.cyan }}>{'> '}</span>Name
+              </label>
+              <input
+                type="text"
+                id="cf-name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('name')}
+                onBlur={() => setFocusedField(null)}
+                placeholder="Dein Name"
+                disabled={isLoading}
+                style={inputStyle('name')}
+              />
+              {fehler.name && (
+                <p style={{ fontFamily: fontMono, fontSize: '11px', color: '#f87171', marginTop: '6px' }}>{fehler.name}</p>
+              )}
+            </div>
+
+            {/* Email */}
+            <div style={{ marginBottom: '24px' }}>
+              <label
+                htmlFor="cf-email"
+                style={{
+                  display: 'block', marginBottom: '8px',
+                  fontFamily: fontMono, fontSize: '12px',
+                  color: C.text2, letterSpacing: '0.06em',
+                }}
+              >
+                <span style={{ color: C.cyan }}>{'> '}</span>E-Mail
+              </label>
+              <input
+                type="email"
+                id="cf-email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('email')}
+                onBlur={() => setFocusedField(null)}
+                placeholder="deine@email.de"
+                disabled={isLoading}
+                style={inputStyle('email')}
+              />
+              {fehler.email && (
+                <p style={{ fontFamily: fontMono, fontSize: '11px', color: '#f87171', marginTop: '6px' }}>{fehler.email}</p>
+              )}
+            </div>
+
+            {/* Message */}
+            <div style={{ marginBottom: '32px' }}>
+              <label
+                htmlFor="cf-msg"
+                style={{
+                  display: 'block', marginBottom: '8px',
+                  fontFamily: fontMono, fontSize: '12px',
+                  color: C.text2, letterSpacing: '0.06em',
+                }}
+              >
+                <span style={{ color: C.cyan }}>{'> '}</span>Nachricht
+              </label>
+              <textarea
+                id="cf-msg"
+                name="nachricht"
+                rows={5}
+                value={formData.nachricht}
+                onChange={handleChange}
+                onFocus={() => setFocusedField('nachricht')}
+                onBlur={() => setFocusedField(null)}
+                placeholder="Deine Nachricht..."
+                disabled={isLoading}
+                style={inputStyle('nachricht')}
+              />
+              {fehler.nachricht && (
+                <p style={{ fontFamily: fontMono, fontSize: '11px', color: '#f87171', marginTop: '6px' }}>{fehler.nachricht}</p>
+              )}
+            </div>
+
+            {/* Submit */}
+            <button
+              type="submit"
               disabled={isLoading}
-            />
-            {fehler.name && (
-              <p className="text-red-500 text-sm mt-1">{fehler.name}</p>
-            )}
-          </div>
-
-          {/* Email */}
-          <div>
-            <label htmlFor="email" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-            }`}>
-              E-Mail
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="deine@email.de"
-              className={inputClass('email')}
-              disabled={isLoading}
-            />
-            {fehler.email && (
-              <p className="text-red-500 text-sm mt-1">{fehler.email}</p>
-            )}
-          </div>
-
-          {/* Message */}
-          <div>
-            <label htmlFor="nachricht" className={`block text-sm font-medium mb-2 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-            }`}>
-              Nachricht
-            </label>
-            <textarea
-              id="nachricht"
-              name="nachricht"
-              rows="5"
-              value={formData.nachricht}
-              onChange={handleChange}
-              placeholder="Deine Nachricht..."
-              className={`${inputClass('nachricht')} resize-none`}
-              disabled={isLoading}
-            />
-            {fehler.nachricht && (
-              <p className="text-red-500 text-sm mt-1">{fehler.nachricht}</p>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full py-3 rounded-lg font-semibold transition-all duration-300 ${
-              isLoading 
-                ? 'opacity-70 cursor-not-allowed' 
-                : 'hover:scale-[1.02]'
-            } ${
-              istDunkel 
-                ? 'bg-[#64ffda] text-[#0a192f] hover:shadow-[0_0_20px_rgba(100,255,218,0.4)]'
-                : 'bg-[#0d9488] text-white hover:bg-[#0f766e] hover:shadow-lg'
-            }`}
-          >
-            {isLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Wird gesendet...
-              </span>
-            ) : (
-              'Nachricht senden'
-            )}
-          </button>
-        </form>
+              style={{
+                width: '100%',
+                padding: '14px 24px',
+                borderRadius: '10px',
+                background: isLoading ? 'rgba(34,211,238,0.5)' : C.cyan,
+                border: 'none',
+                color: C.bg0,
+                fontFamily: fontMono,
+                fontSize: '13px',
+                fontWeight: 600,
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                boxShadow: isLoading ? 'none' : `0 4px 20px rgba(34,211,238,0.25)`,
+                transition: `all 0.3s ${ease}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+              }}
+              onMouseEnter={e => {
+                if (!isLoading) {
+                  e.currentTarget.style.background = '#00fff5'
+                  e.currentTarget.style.boxShadow = '0 0 32px rgba(34,211,238,0.55), 0 0 60px rgba(34,211,238,0.25)'
+                  e.currentTarget.style.transform = 'translateY(-2px)'
+                }
+              }}
+              onMouseLeave={e => {
+                if (!isLoading) {
+                  e.currentTarget.style.background = C.cyan
+                  e.currentTarget.style.boxShadow = `0 4px 20px rgba(34,211,238,0.25)`
+                  e.currentTarget.style.transform = 'none'
+                }
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ animation: 'contactSpin 1s linear infinite' }}>
+                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.25"/>
+                    <path d="M21 12a9 9 0 00-9-9"/>
+                  </svg>
+                  Wird gesendet...
+                </>
+              ) : (
+                <>
+                  Nachricht senden
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M13 6l6 6-6 6"/>
+                  </svg>
+                </>
+              )}
+            </button>
+          </form>
+        </div>
       </div>
+
+      <style>{`
+        @keyframes contactSpin { to { transform: rotate(360deg); } }
+        #contact input::placeholder,
+        #contact textarea::placeholder { color: #52525b; }
+      `}</style>
     </section>
   )
 }

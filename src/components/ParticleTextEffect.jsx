@@ -117,11 +117,12 @@ export default function ParticleTextEffect() {
   const loopDelayCounterRef = useRef(0)
   const isWaitingForLoopRef = useRef(false)
 
+  // Kürzere Wörter für bessere Lesbarkeit
   const words = [
-    "SALES & CONSULTAT",
+    "SALES & CONSULTING",
     "DIGITAL MARKETING",
     "E-COMMERCE",
-    "WEB ENTWICKLUNG",
+    "WEB DEVELOPMENT",
     "UI UX DESIGN",
     "AI & AUTOMATION"
   ]
@@ -139,10 +140,10 @@ export default function ParticleTextEffect() {
       if (!offscreenCtx) return
 
       offscreenCtx.fillStyle = "white"
-      offscreenCtx.font = "bold 120px Space Grotesk, Arial, sans-serif"
+      offscreenCtx.font = "bold 80px Space Grotesk, Arial, sans-serif"
       offscreenCtx.textAlign = "center"
       offscreenCtx.textBaseline = "middle"
-      offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 2.5)
+      offscreenCtx.fillText(word, canvas.width / 2, canvas.height / 2)
 
       const imageData = offscreenCtx.getImageData(0, 0, canvas.width, canvas.height)
       const pixels = imageData.data
@@ -175,7 +176,7 @@ export default function ParticleTextEffect() {
           const particle = new Particle()
           const targetX = targetCoords[i].x
           const targetY = targetCoords[i].y
-          const angleToTarget = Math.atan2(targetY - canvas.height / 2.5, targetX - canvas.width / 2)
+          const angleToTarget = Math.atan2(targetY - canvas.height / 2, targetX - canvas.width / 2)
           const startDistance = (canvas.width + canvas.height) / 2
           particle.pos.x = targetX - Math.cos(angleToTarget) * startDistance
           particle.pos.y = targetY - Math.sin(angleToTarget) * startDistance
@@ -227,7 +228,7 @@ export default function ParticleTextEffect() {
             particle.startColor = {
               r: particle.startColor.r + (particle.targetColor.r - particle.startColor.r) * particle.colorWeight,
               g: particle.startColor.g + (particle.targetColor.g - particle.startColor.g) * particle.colorWeight,
-              b: particle.startColor.b + (particle.targetColor.b - particle.startColor.b) * particle.colorWeight,
+              b: particle.startColor.b + (particle.targetColor.b - this.startColor.b) * particle.colorWeight,
             }
             particle.targetColor = newColor
             particle.colorWeight = 0
@@ -308,8 +309,8 @@ export default function ParticleTextEffect() {
       try {
         const container = canvas.parentElement
         if (container) {
-          canvas.width = Math.max(container.clientWidth, 800)
-          canvas.height = Math.max(container.clientHeight, 200)
+          canvas.width = Math.max(container.clientWidth, 1000)
+          canvas.height = Math.max(container.clientHeight, 250)
         }
       } catch (e) {
         console.error("Error resizing canvas:", e)
@@ -318,7 +319,6 @@ export default function ParticleTextEffect() {
 
     resizeCanvas()
 
-    // Delay initial word generation
     const initTimer = setTimeout(() => {
       try {
         nextWord(words[0], canvas, true)

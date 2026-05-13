@@ -1,107 +1,375 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, useRef } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
-import ParticleTextEffect from './ParticleTextEffect'
 
 function Hero() {
   const { istDunkel } = useContext(ThemeContext)
-  const [showContent, setShowContent] = useState(false)
+  const [heroStage, setHeroStage] = useState(0) // 0=before, 1=typing, 2=done
+  const [line1, setLine1] = useState('')
+  const [line2, setLine2] = useState('')
+  const [line3, setLine3] = useState('')
+  const [currentRole, setCurrentRole] = useState(0)
+  const [roleText, setRoleText] = useState('')
+  const [roleTyping, setRoleTyping] = useState(false)
+  const heroTimers = useRef([])
+  const photoBgRef = useRef(null)
 
+  const roles = ['Digital Creative.', 'Frontend Developer.', 'Sales & Consultant.', 'AI Automation.', 'Marketing Strategist.', 'Problem Solver.']
+
+  // Typewriter sequence — runs once on mount ([] deps avoids cleanup killing timers)
   useEffect(() => {
-    setShowContent(true)
+    const timers = heroTimers.current
+    const add = (fn, ms) => {
+      const t = setTimeout(fn, ms)
+      timers.push(t)
+    }
+    const clearAll = () => {
+      timers.forEach(clearTimeout)
+      heroTimers.current = []
+    }
+
+    setHeroStage(1)
+
+    const typeText = (setter, text, delay, onDone) => {
+      let i = 0
+      const step = () => {
+        if (i <= text.length) {
+          setter(text.slice(0, i) + (i < text.length ? '_' : ''))
+          i++
+          add(step, delay)
+        } else {
+          setter(text)
+          if (onDone) add(onDone, 350)
+        }
+      }
+      step()
+    }
+
+    add(() => {
+      typeText(setLine1, 'HI', 140, () => {
+        add(() => {
+          typeText(setLine2, 'ICH BIN', 95, () => {
+            if (photoBgRef.current) photoBgRef.current.classList.add('photo-in')
+            typeText(setLine3, 'EERAJ JAN', 95, () => {
+              setHeroStage(2)
+            })
+          })
+        }, 100)
+      })
+    }, 900)
+
+    return clearAll
   }, [])
 
+  // Role typewriter after hero done
+  useEffect(() => {
+    if (heroStage !== 2) return
+    let cancelled = false
+
+    const typeRole = (roleIdx) => {
+      const text = roles[roleIdx]
+      let i = 0
+      setRoleText('')
+      setRoleTyping(true)
+
+      const type = () => {
+        if (cancelled) return
+        if (i <= text.length) {
+          setRoleText(text.slice(0, i) + (i < text.length ? '▌' : ''))
+          i++
+          setTimeout(type, 60)
+        } else {
+          setRoleText(text)
+          setRoleTyping(false)
+          // Wait 2.5s then erase
+          setTimeout(() => {
+            if (cancelled) return
+            let j = text.length
+            const erase = () => {
+              if (cancelled) return
+              if (j >= 0) {
+                setRoleText(text.slice(0, j) + (j > 0 ? '▌' : ''))
+                j--
+                setTimeout(erase, 35)
+              } else {
+                const next = (roleIdx + 1) % roles.length
+                setCurrentRole(next)
+                setTimeout(() => typeRole(next), 400)
+              }
+            }
+            erase()
+          }, 2500)
+        }
+      }
+      type()
+    }
+
+    typeRole(currentRole)
+    return () => { cancelled = true }
+  }, [heroStage])
+
+  const c = {
+    cyan: '#22d3ee',
+    cyanGlow: 'rgba(34,211,238,0.45)',
+    cyanBorder: 'rgba(34,211,238,0.22)',
+    cyanBorderStrong: 'rgba(34,211,238,0.55)',
+    cyanBg: 'rgba(34,211,238,0.06)',
+    bg0: '#050505',
+    bg1: '#0a0a0a',
+    bg2: '#111111',
+    text0: '#ffffff',
+    text1: '#e4e4e7',
+    text2: '#a1a1aa',
+    text3: '#71717a',
+  }
+
+  const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
+  const fontMono = "'JetBrains Mono', ui-monospace, monospace"
+  const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
+
   return (
-    <section className="relative h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+    <section style={{
+      position: 'relative',
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      overflow: 'hidden',
+      background: istDunkel ? c.bg1 : '#fafafa',
+    }}>
+      {/* Grid Background */}
+      {istDunkel && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0,
+          backgroundImage: `linear-gradient(rgba(34,211,238,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.06) 1px, transparent 1px)`,
+          backgroundSize: '64px 64px',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 80%)',
+          maskImage: 'radial-gradient(ellipse 80% 60% at 50% 50%, black 0%, transparent 80%)',
+          pointerEvents: 'none',
+        }} />
+      )}
 
-      {/* Portfolio Badge */}
-      <div
-        className="absolute top-8 left-1/2 transform -translate-x-1/2 z-30"
-        style={{ opacity: showContent ? 1 : 0, transition: 'opacity 0.6s ease-out 0.5s' }}
-      >
-        <span className="text-xs md:text-sm uppercase tracking-[0.3em] text-red-500 font-medium px-4 py-2 border border-red-500/30 rounded-full" style={{ fontFamily: 'JetBrains Mono, monospace' }}>
-          Portfolio
-        </span>
-      </div>
+      {/* Orbs */}
+      {istDunkel && (
+        <>
+          <div style={{
+            position: 'absolute', top: '-200px', right: '-150px',
+            width: '600px', height: '600px', borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(34,211,238,0.18) 0%, transparent 60%)',
+            filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
+          }} />
+          <div style={{
+            position: 'absolute', bottom: '-250px', left: '-200px',
+            width: '700px', height: '700px', borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(34,211,238,0.10) 0%, transparent 60%)',
+            filter: 'blur(80px)', pointerEvents: 'none', zIndex: 0,
+          }} />
+        </>
+      )}
 
-      {/* Main Headline - 3 Zeilen, linksbündig */}
-      <div
-        className="relative z-30 text-left px-4 md:px-8 max-w-4xl mb-8"
-        style={{ opacity: showContent ? 1 : 0, transform: showContent ? 'translateY(0)' : 'translateY(-30px)', transition: 'all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.3s' }}
-      >
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
-          HI
-        </h1>
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mt-1" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
-          ICH BIN
-        </h1>
-        <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white leading-tight mt-1" style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}>
-          EERAJ JAN
-        </h1>
-      </div>
-
-      {/* Canvas Particle Effect - Skills mit Abstand */}
-      <div className="relative z-20 w-full max-w-5xl h-32 md:h-40 mx-auto mt-8 mb-8">
-        <ParticleTextEffect />
-      </div>
-
-      {/* CTA Buttons */}
-      <div
-        className="absolute bottom-12 right-8 md:right-16 flex flex-col gap-3 z-30"
-        style={{ opacity: showContent ? 1 : 0, transform: showContent ? 'translateX(0)' : 'translateX(30px)', transition: 'all 0.8s ease-out 1s' }}
-      >
-        <a
-          href="#projects"
-          className="group relative px-8 py-3 bg-red-600 text-white font-semibold rounded-lg overflow-hidden transition-all hover:scale-105 hover:bg-red-700 whitespace-nowrap"
-          style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
+      {/* Faded hero photo bg — uses same foto.jpg, large + masked */}
+      {istDunkel && (
+        <div
+          ref={photoBgRef}
+          style={{
+            position: 'absolute', top: '-120px', right: '0%', bottom: 0,
+            width: '58%', maxWidth: '900px', zIndex: 1,
+            pointerEvents: 'none',
+            opacity: 0,
+            transform: 'translateX(40px) scale(1.04)',
+            transition: 'opacity 1.4s ease, transform 2s ease',
+          }}
+          className="photo-bg"
         >
-          <span className="relative z-10 flex items-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 012-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-            </svg>
-            PROJEKTE
-          </span>
-        </a>
-
-        <a
-          href="#contact"
-          className="px-8 py-3 border-2 border-red-600 text-red-500 font-semibold rounded-lg hover:bg-red-600/10 transition-all hover:scale-105 whitespace-nowrap"
-          style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
-        >
-          KONTAKT
-        </a>
-
-        <a
-          href="/lebenslauf.pdf"
-          download="Eeraj_Lebenslauf.pdf"
-          className="px-8 py-3 border-2 border-white/20 text-white/60 font-semibold rounded-lg hover:border-white/40 hover:text-white/80 transition-all hover:scale-105 whitespace-nowrap flex items-center gap-2"
-          style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          CV
-        </a>
-      </div>
-
-      {/* Floating Particles */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full"
+          <img
+            src="/foto.jpg"
+            alt=""
+            aria-hidden="true"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${2 + Math.random() * 3}px`,
-              height: `${2 + Math.random() * 3}px`,
-              background: `rgba(220, 38, 38, ${0.3 + Math.random() * 0.4})`,
-              animation: `float ${4 + Math.random() * 4}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 3}s`,
-              boxShadow: '0 0 10px rgba(220, 38, 38, 0.5)'
+              width: '100%', height: '100%',
+              objectFit: 'cover', objectPosition: 'top center',
+              filter: 'grayscale(15%) contrast(1.05) brightness(0.88)',
+              WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)',
+              maskImage: 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)',
             }}
           />
-        ))}
+        </div>
+      )}
+
+      {/* Content */}
+      <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'minmax(0, 680px)',
+          alignItems: 'center',
+        }}>
+          {/* Left */}
+          <div>
+            {/* Eyebrow */}
+            <div style={{
+              display: 'inline-flex', alignItems: 'center', gap: '10px',
+              fontFamily: fontMono, fontSize: '13px', letterSpacing: '0.16em',
+              textTransform: 'uppercase', color: c.cyan, marginBottom: '24px',
+            }}>
+              <span style={{
+                width: '6px', height: '6px', borderRadius: '50%',
+                background: c.cyan,
+                boxShadow: `0 0 10px ${c.cyanGlow}`,
+                display: 'inline-block',
+                animation: 'heroPing 2s ease-in-out infinite',
+              }} />
+              Verfügbar für neue Projekte
+            </div>
+
+            {/* Headline */}
+            <h1 style={{
+              fontFamily: fontDisplay,
+              fontSize: 'clamp(2.5rem, 6.4vw, 5.5rem)',
+              fontWeight: 600,
+              letterSpacing: '-0.04em',
+              lineHeight: 1,
+              margin: '0 0 24px',
+              color: istDunkel ? c.text0 : '#171717',
+              minHeight: '180px',
+            }}>
+              <div>{line1 || (heroStage === 0 ? '_' : '')}</div>
+              <div>{line2}</div>
+              <div style={{
+                color: c.cyan,
+                textShadow: istDunkel ? `0 0 32px ${c.cyanGlow}` : 'none',
+              }}>
+                {line3}
+              </div>
+            </h1>
+
+            {/* Role */}
+            <div style={{
+              fontFamily: fontMono,
+              fontSize: 'clamp(1rem, 1.6vw, 1.25rem)',
+              color: istDunkel ? c.text1 : '#171717',
+              marginBottom: '28px',
+              minHeight: '1.5em',
+            }}>
+              <span style={{ color: c.text3 }}>&gt; role: </span>
+              <span style={{ color: c.cyan }}>{heroStage === 2 ? roleText : ''}</span>
+            </div>
+
+            {/* CTA */}
+            {heroStage === 2 && (
+              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
+                <a href="#projects" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '10px',
+                  padding: '14px 26px', fontFamily: fontMono, fontSize: '13px',
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  borderRadius: '10px', border: '1px solid transparent',
+                  background: c.cyan, color: c.bg0, fontWeight: 600,
+                  boxShadow: `0 4px 20px rgba(34,211,238,0.25)`,
+                  textDecoration: 'none', transition: `all 0.3s ${ease}`,
+                }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = '#00fff5'
+                    e.currentTarget.style.boxShadow = '0 0 32px rgba(34,211,238,0.55), 0 0 60px rgba(34,211,238,0.25)'
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = c.cyan
+                    e.currentTarget.style.boxShadow = '0 4px 20px rgba(34,211,238,0.25)'
+                    e.currentTarget.style.transform = 'none'
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14M13 6l6 6-6 6"/>
+                  </svg>
+                  Meine Projekte
+                </a>
+
+                <a href="#contact" style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '10px',
+                  padding: '14px 26px', fontFamily: fontMono, fontSize: '13px',
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  borderRadius: '10px', border: `1px solid ${c.cyanBorderStrong}`,
+                  background: 'transparent', color: c.cyan,
+                  textDecoration: 'none', transition: `all 0.3s ${ease}`,
+                }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.background = c.cyanBg
+                    e.currentTarget.style.borderColor = c.cyan
+                    e.currentTarget.style.boxShadow = `0 0 12px ${c.cyanGlow}`
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.background = 'transparent'
+                    e.currentTarget.style.borderColor = c.cyanBorderStrong
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.transform = 'none'
+                  }}
+                >
+                  Kontakt aufnehmen
+                </a>
+
+                <a href="/lebenslauf.pdf" download style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '10px',
+                  padding: '14px 26px', fontFamily: fontMono, fontSize: '13px',
+                  letterSpacing: '0.04em', textTransform: 'uppercase',
+                  borderRadius: '10px', border: `1px solid rgba(255,255,255,0.06)`,
+                  background: c.bg2, color: c.text2,
+                  textDecoration: 'none', transition: `all 0.3s ${ease}`,
+                }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.color = c.cyan
+                    e.currentTarget.style.borderColor = c.cyanBorderStrong
+                    e.currentTarget.style.background = c.bg2
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.color = c.text2
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 10v6m0 0l-3-3m3 3l3-3M5 19h14"/>
+                  </svg>
+                  CV
+                </a>
+              </div>
+            )}
+          </div>
+
+        </div>
       </div>
+
+      {/* Scroll cue */}
+      <div style={{
+        position: 'absolute', bottom: '32px', left: '50%', transform: 'translateX(-50%)',
+        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
+        fontFamily: fontMono, fontSize: '11px', letterSpacing: '0.2em',
+        color: c.text3, textTransform: 'uppercase', zIndex: 3,
+      }}>
+        scroll
+        <div style={{
+          width: '1px', height: '40px',
+          background: `linear-gradient(180deg, ${c.cyan}, transparent)`,
+          animation: 'scrollPulse 2s ease-in-out infinite',
+        }} />
+      </div>
+
+      {/* Keyframes via style tag — safe in Vite */}
+      <style>{`
+        @keyframes heroPing {
+          0%, 100% { transform: scale(1); opacity: 1; }
+          50% { transform: scale(1.6); opacity: 0.6; }
+        }
+        @keyframes heroSpin { to { transform: rotate(360deg); } }
+        @keyframes scrollPulse {
+          0%, 100% { transform: scaleY(1); opacity: 0.6; }
+          50% { transform: scaleY(1.3); opacity: 1; }
+        }
+        .photo-bg.photo-in {
+          opacity: 0.35 !important;
+          transform: translateX(0) scale(1) !important;
+        }
+        @media (max-width: 900px) {
+          .hero-grid { grid-template-columns: 1fr !important; }
+        }
+      `}</style>
     </section>
   )
 }

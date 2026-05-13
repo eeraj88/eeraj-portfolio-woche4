@@ -1,160 +1,171 @@
-import { useContext, useState, useRef } from 'react'
+import { useContext } from 'react'
 import testimonials from '../data/testimonials'
 import { ThemeContext } from '../Context/ThemeContext'
 
-function Testimonials() {
-  const { istDunkel } = useContext(ThemeContext)
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const containerRef = useRef(null)
+const C = { cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)', cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)', bg2: '#111111', text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a' }
+const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
+const fontMono = "'JetBrains Mono', ui-monospace, monospace"
+const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
 
-  const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-  }
+function TestiCard({ t }) {
+  return (
+    <div style={{
+      flex: '0 0 380px',
+      minHeight: '320px',
+      display: 'flex', flexDirection: 'column',
+      background: C.bg2,
+      border: `1px solid ${C.cyanBorder}`,
+      borderRadius: '24px',
+      padding: '26px 26px 22px',
+      position: 'relative',
+      boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
+      transition: `transform 0.3s ${ease}, border-color 0.3s ${ease}, box-shadow 0.3s ${ease}`,
+    }}
+      onMouseEnter={e => {
+        e.currentTarget.style.borderColor = C.cyanBorderStrong
+        e.currentTarget.style.transform = 'translateY(-4px)'
+        e.currentTarget.style.boxShadow = `0 4px 24px rgba(0,0,0,0.5), 0 0 32px rgba(34,211,238,0.18)`
+      }}
+      onMouseLeave={e => {
+        e.currentTarget.style.borderColor = C.cyanBorder
+        e.currentTarget.style.transform = 'none'
+        e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.5)'
+      }}
+    >
+      {/* Quote mark */}
+      <div style={{
+        position: 'absolute', top: '8px', right: '22px',
+        fontFamily: fontDisplay, fontSize: '72px', lineHeight: 1,
+        color: C.cyanBorder, pointerEvents: 'none',
+      }}>"</div>
 
-  const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-  }
+      {/* Stars */}
+      <div style={{ display: 'flex', gap: '4px', marginBottom: '16px' }}>
+        {[...Array(t.bewertung || 5)].map((_, i) => (
+          <svg key={i} width="14" height="14" viewBox="0 0 20 20" fill={C.cyan}>
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+        ))}
+      </div>
 
-  const TestimonialCard = ({ testimonial, isActive, isAdjacent }) => {
-    return (
-      <div className={`
-        relative rounded-2xl border p-6 transition-all duration-500 flex flex-col items-center
-        ${isActive ? 'w-[450px] opacity-100 scale-100' : 'w-[300px] opacity-40 scale-90 blur-sm'}
-        ${isAdjacent && !isActive ? 'hover:opacity-60 hover:blur-none' : ''}
-        ${istDunkel
-          ? 'bg-[#262626] border-[#404040] hover:border-[#b91c1c]'
-          : 'bg-white border-neutral-200 hover:border-[#dc2626]'
-        }
-      `}>
-        {/* Bild oben */}
-        <div className="relative shrink-0">
-          <img
-            className={`rounded-full object-cover border-2 transition-transform duration-500 hover:scale-105 ${
-              isActive ? 'w-20 h-20' : 'w-14 h-14'
-            } ${istDunkel ? 'border-[#b91c1c]/30' : 'border-[#dc2626]/30'}`}
-            alt={testimonial.name}
-            src={testimonial.bild}
-            onError={(e) => { e.target.src = "https://api.dicebear.com/7.x/avataaars/svg?seed=" + testimonial.name }}
-          />
-          <div className={`absolute -bottom-1 -right-1 rounded-full flex items-center justify-center shadow-lg ${
-            isActive ? 'w-6 h-6 text-xs' : 'w-5 h-5 text-[10px]'
-          } ${istDunkel ? 'bg-[#b91c1c] text-[#f5f5f5]' : 'bg-[#dc2626] text-white'}`}>
-            "
-          </div>
+      {/* Quote */}
+      <blockquote style={{
+        fontFamily: "'Inter', system-ui, sans-serif",
+        fontSize: '14px', lineHeight: 1.7,
+        color: C.text1,
+        margin: '0 0 20px',
+        flex: 1,
+        display: '-webkit-box',
+        WebkitLineClamp: 5,
+        WebkitBoxOrient: 'vertical',
+        overflow: 'hidden',
+      }}>
+        "{t.text}"
+      </blockquote>
+
+      {/* Person */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderTop: `1px solid rgba(255,255,255,0.05)`, paddingTop: '16px' }}>
+        <img
+          src={t.bild}
+          alt={t.name}
+          onError={e => { e.target.src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${t.name}` }}
+          style={{
+            width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover',
+            border: `2px solid ${C.cyanBorder}`,
+            flexShrink: 0,
+          }}
+        />
+        <div>
+          <div style={{ fontFamily: fontDisplay, fontSize: '15px', fontWeight: 600, color: C.text0 }}>{t.name}</div>
+          <div style={{ fontFamily: fontMono, fontSize: '11px', color: C.cyan, letterSpacing: '0.04em' }}>{t.rolle}</div>
         </div>
-
-        {/* Name + Rolle */}
-        <div className="text-center mt-3">
-          <figcaption className={`font-bold ${isActive ? 'text-lg' : 'text-sm'} ${istDunkel ? 'text-white' : 'text-gray-900'}`}>
-            {testimonial.name}
-          </figcaption>
-          <p className={`font-medium ${isActive ? 'text-xs' : 'text-[10px]'} ${istDunkel ? 'text-[#b91c1c]' : 'text-[#dc2626]'}`}>
-            {testimonial.rolle}
-          </p>
-        </div>
-
-        {/* Sterne */}
-        <div className={`flex gap-1 mt-3 ${isActive ? '' : 'scale-75'}`}>
-          {[...Array(5)].map((_, i) => (
-            <svg key={i} className={`w-4 h-4 ${istDunkel ? 'text-[#b91c1c]' : 'text-[#dc2626]'}`} viewBox="0 0 20 20" fill="currentColor">
-              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-            </svg>
-          ))}
-        </div>
-
-        {/* Text unten */}
-        <blockquote className={`mt-4 leading-relaxed italic text-center ${isActive ? 'text-sm' : 'text-xs line-clamp-3'} ${istDunkel ? 'text-[#f5f5f5]' : 'text-neutral-600'}`}>
-          "{testimonial.text}"
-        </blockquote>
-
-        {/* Projekt Tag */}
-        <div className="mt-4">
-          <span className={`text-[9px] uppercase tracking-[0.15em] font-black px-3 py-1.5 rounded-full border ${
-            istDunkel ? 'border-[#404040] text-[#a3a3a3]' : 'border-neutral-100 text-neutral-400'
-          }`}>
-            {testimonial.projekt}
+        {/* Project tag */}
+        <div style={{ marginLeft: 'auto' }}>
+          <span style={{
+            fontFamily: fontMono, fontSize: '10px', letterSpacing: '0.12em',
+            textTransform: 'uppercase', color: C.text3,
+            padding: '4px 10px', borderRadius: '9999px',
+            border: `1px solid rgba(255,255,255,0.07)`,
+            whiteSpace: 'nowrap',
+          }}>
+            {t.projekt}
           </span>
         </div>
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+function Testimonials() {
+  const { istDunkel } = useContext(ThemeContext)
+
+  // Duplicate array for seamless infinite scroll
+  const doubled = [...testimonials, ...testimonials]
+  const half1 = doubled
+  const half2 = [...testimonials.slice(4), ...testimonials, ...testimonials.slice(0, 4)]
 
   return (
-    <section id="testimonials" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto mb-12 text-center">
-        <h2 className={`text-3xl font-bold mb-2 ${
-          istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-        }`}>
-          Kunden<span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>stimmen</span>
-        </h2>
-        <p className={`${istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}`}>
-          Was Kunden über meine Arbeit sagen.
-        </p>
+    <section id="testimonials" style={{
+      padding: '96px 0',
+      background: istDunkel ? '#050505' : '#f5f5f5',
+      position: 'relative', overflow: 'hidden',
+    }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+        {/* Section head */}
+        <div style={{ marginBottom: '56px' }}>
+          <span style={{
+            display: 'inline-flex', alignItems: 'center', gap: '8px',
+            fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.18em',
+            textTransform: 'uppercase', color: C.cyan,
+          }}>
+            <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
+            05 — Referenzen
+          </span>
+          <h2 style={{
+            fontFamily: fontDisplay,
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05,
+            margin: '16px 0 12px',
+            color: istDunkel ? C.text0 : '#171717',
+          }}>
+            Kunden<em style={{ fontStyle: 'normal', color: C.cyan, textShadow: istDunkel ? `0 0 24px ${C.cyanGlow}` : 'none' }}>stimmen</em>
+          </h2>
+          <p style={{ color: istDunkel ? C.text2 : '#525252', fontSize: '16px' }}>
+            Was Kunden über meine Arbeit sagen.
+          </p>
+        </div>
       </div>
 
-      <div className="relative max-w-5xl mx-auto">
-        {/* Links Button */}
-        <button
-          onClick={prevTestimonial}
-          className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-            istDunkel
-              ? 'bg-[#112240] border border-[#233554] text-[#64ffda] hover:border-[#64ffda] hover:shadow-[0_0_20px_rgba(100,255,218,0.3)]'
-              : 'bg-white border border-gray-200 text-[#0d9488] hover:border-[#0d9488] hover:shadow-xl'
-          }`}
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-
-        {/* Cards Container */}
-        <div className="flex items-center justify-center gap-6 py-12" ref={containerRef}>
-          {/* Linke Karte */}
-          <div
-            onClick={prevTestimonial}
-            className="cursor-pointer"
-          >
-            <TestimonialCard
-              testimonial={testimonials[(currentIndex - 1 + testimonials.length) % testimonials.length]}
-              isActive={false}
-              isAdjacent={true}
-            />
-          </div>
-
-          {/* Mitte Karte (aktiv) */}
-          <TestimonialCard
-            testimonial={testimonials[currentIndex]}
-            isActive={true}
-            isAdjacent={false}
-          />
-
-          {/* Rechte Karte */}
-          <div
-            onClick={nextTestimonial}
-            className="cursor-pointer"
-          >
-            <TestimonialCard
-              testimonial={testimonials[(currentIndex + 1) % testimonials.length]}
-              isActive={false}
-              isAdjacent={true}
-            />
-          </div>
+      {/* Marquee stage */}
+      <div style={{
+        position: 'relative',
+        WebkitMaskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)',
+        maskImage: 'linear-gradient(90deg, transparent, black 8%, black 92%, transparent)',
+        overflow: 'hidden',
+      }}>
+        {/* Row 1 — left scroll */}
+        <div style={{
+          display: 'flex', gap: '22px',
+          width: 'max-content', padding: '12px 0',
+          animation: 'testiMarquee 70s linear infinite',
+        }}>
+          {half1.map((t, i) => <TestiCard key={`r1-${i}`} t={t} />)}
         </div>
 
-        {/* Rechts Button */}
-        <button
-          onClick={nextTestimonial}
-          className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 ${
-            istDunkel
-              ? 'bg-[#112240] border border-[#233554] text-[#64ffda] hover:border-[#64ffda] hover:shadow-[0_0_20px_rgba(100,255,218,0.3)]'
-              : 'bg-white border border-gray-200 text-[#0d9488] hover:border-[#0d9488] hover:shadow-xl'
-          }`}
-        >
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
       </div>
+
+      <style>{`
+        @keyframes testiMarquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        @keyframes testiMarqueeR {
+          from { transform: translateX(-50%); }
+          to   { transform: translateX(0); }
+        }
+        /* Pause on hover */
+        div:has(> div[style*="testiMarquee"]):hover > div { animation-play-state: paused !important; }
+      `}</style>
     </section>
   )
 }

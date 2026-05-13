@@ -4,7 +4,154 @@ import { ThemeContext } from '../Context/ThemeContext'
 import { giveXP } from './PokemonBuddy'
 import LikeButton from './LikeButton'
 import Comments from './Comments'
-import { BorderBeam } from './ui/BorderBeam'
+
+const C = { cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)', cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)', cyanBg: 'rgba(34,211,238,0.06)', bg2: '#111111', bg3: '#161616', text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a' }
+const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
+const fontMono = "'JetBrains Mono', ui-monospace, monospace"
+const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
+
+function FilterBtn({ label, active, onClick }) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.04em',
+        padding: '9px 18px', borderRadius: '9999px',
+        background: active ? C.cyan : 'transparent',
+        border: `1px solid ${active ? C.cyan : 'rgba(255,255,255,0.08)'}`,
+        color: active ? '#050505' : C.text2,
+        boxShadow: active ? `0 0 16px ${C.cyanGlow}` : 'none',
+        cursor: 'pointer',
+        transition: `all 0.25s ${ease}`,
+        fontWeight: active ? 600 : 400,
+      }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.cyan; e.currentTarget.style.borderColor = C.cyanBorderStrong } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+    >
+      {label}
+    </button>
+  )
+}
+
+function ProjectCard({ projekt, idx, onClick }) {
+  const [hov, setHov] = useState(false)
+  return (
+    <div
+      onClick={() => onClick(projekt)}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{
+        background: C.bg2,
+        border: `1px solid ${hov ? C.cyanBorderStrong : 'rgba(255,255,255,0.05)'}`,
+        borderRadius: '16px', overflow: 'hidden',
+        position: 'relative',
+        transform: hov ? 'translateY(-6px)' : 'none',
+        boxShadow: hov ? `0 20px 50px rgba(0,0,0,0.5), 0 0 30px rgba(34,211,238,0.15)` : 'none',
+        transition: `all 0.35s ${ease}`,
+        cursor: 'pointer',
+        display: 'flex', flexDirection: 'column',
+      }}
+    >
+      {/* Inner glow border on hover */}
+      {hov && (
+        <div style={{
+          position: 'absolute', inset: 0, borderRadius: '16px',
+          border: `1px solid ${C.cyan}`,
+          boxShadow: `0 0 20px ${C.cyanGlow}`,
+          pointerEvents: 'none', zIndex: 3,
+        }} />
+      )}
+
+      {/* Image */}
+      <div style={{ position: 'relative', aspectRatio: '16/10', overflow: 'hidden', background: C.bg3 }}>
+        {projekt.bild ? (
+          <img
+            src={projekt.bild}
+            alt={projekt.titel}
+            style={{
+              width: '100%', height: '100%', objectFit: 'cover',
+              transform: hov ? 'scale(1.06)' : 'scale(1)',
+              filter: hov ? 'grayscale(0%) brightness(1)' : 'grayscale(20%) brightness(0.85)',
+              transition: `transform 0.6s ${ease}, filter 0.4s`,
+            }}
+          />
+        ) : (
+          <div style={{
+            width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: `radial-gradient(ellipse at center, rgba(34,211,238,0.08) 0%, transparent 70%)`,
+          }}>
+            <span style={{ fontFamily: fontMono, fontSize: '48px', fontWeight: 700, color: C.cyanBorder }}>
+              {String(projekt.id).padStart(2, '0')}
+            </span>
+          </div>
+        )}
+        {/* Gradient overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(180deg, transparent 40%, rgba(5,5,5,0.7) 100%)',
+          opacity: hov ? 1 : 0, transition: 'opacity 0.3s',
+        }} />
+        {/* Number badge */}
+        <div style={{
+          position: 'absolute', top: '14px', left: '16px',
+          fontFamily: fontMono, fontSize: '11px', letterSpacing: '0.1em',
+          color: C.cyan,
+          background: 'rgba(5,5,5,0.7)',
+          padding: '4px 10px', borderRadius: '9999px',
+          border: `1px solid ${C.cyanBorder}`,
+          zIndex: 2,
+        }}>
+          {String(idx + 1).padStart(2, '0')}
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <h3 style={{ fontFamily: fontDisplay, fontSize: '19px', fontWeight: 600, color: C.text0, margin: '0 0 10px', letterSpacing: '-0.01em' }}>
+          {projekt.titel}
+        </h3>
+        <p style={{ fontSize: '14px', color: C.text2, margin: '0 0 18px', lineHeight: 1.6, flex: 1, display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+          {projekt.beschreibung}
+        </p>
+
+        {/* Tech chips */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '18px' }}>
+          {projekt.technologien.slice(0, 3).map(tech => (
+            <span key={tech} style={{
+              fontFamily: fontMono, fontSize: '10px', padding: '4px 9px', borderRadius: '9999px',
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.08)',
+              color: C.text1,
+            }}>{tech}</span>
+          ))}
+        </div>
+
+        {/* Footer */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+          <span style={{ fontFamily: fontMono, fontSize: '12px', color: C.cyan, letterSpacing: '0.04em', display: 'inline-flex', alignItems: 'center', gap: hov ? '10px' : '6px', transition: 'gap 0.2s' }}>
+            Details ansehen
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div onClick={e => e.stopPropagation()}><LikeButton projectId={projekt.id} compact /></div>
+            {projekt.github && (
+              <a href={projekt.github} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+                style={{ fontFamily: fontMono, fontSize: '12px', color: C.text3, textDecoration: 'none', transition: 'color 0.2s' }}
+                onMouseEnter={e => e.currentTarget.style.color = C.cyan}
+                onMouseLeave={e => e.currentTarget.style.color = C.text3}
+              >GitHub</a>
+            )}
+            {projekt.link && projekt.link !== '#' && (
+              <a href={projekt.link} target="_blank" rel="noreferrer" onClick={e => e.stopPropagation()}
+                style={{ fontFamily: fontMono, fontSize: '12px', color: C.cyan, textDecoration: 'none' }}
+              >Live →</a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function Projects() {
   const { istDunkel } = useContext(ThemeContext)
@@ -12,297 +159,109 @@ function Projects() {
   const [aktivesProjekt, setAktivesProjekt] = useState(null)
   const [viewedProjects, setViewedProjects] = useState(new Set())
 
-  // Kategorien sammeln (aus Arrays flattens)
   const alleKategorien = projects.flatMap(p => Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie])
   const kategorien = ['Alle', ...new Set(alleKategorien)]
 
-  const gefilterteProjekte = aktiverFilter === 'Alle'
+  const gefiltert = aktiverFilter === 'Alle'
     ? projects
-    : projects.filter(p => {
-        const kats = Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie]
-        return kats.includes(aktiverFilter)
-      })
+    : projects.filter(p => (Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie]).includes(aktiverFilter))
 
-  // Projekt öffnen und XP geben (nur beim ersten Mal)
-  const openProject = (projekt) => {
-    setAktivesProjekt(projekt)
-    
-    if (!viewedProjects.has(projekt.id)) {
-      setViewedProjects(prev => new Set([...prev, projekt.id]))
+  const openProject = (p) => {
+    setAktivesProjekt(p)
+    if (!viewedProjects.has(p.id)) {
+      setViewedProjects(prev => new Set([...prev, p.id]))
       giveXP(10, 'Projekt angeschaut')
     }
   }
 
   return (
-    <section id="projects" className="py-20 px-4">
-      <div className="max-w-6xl mx-auto">
-        <h2 className={`text-3xl font-bold mb-2 text-center ${
-          istDunkel ? 'text-[#f5f5f5]' : 'text-[#171717]'
-        }`}>
-          Meine <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Projekte</span>
-        </h2>
+    <section id="projects" style={{ padding: '96px 0', background: istDunkel ? C.bg2 : '#ffffff', position: 'relative' }}>
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+        {/* Section head */}
+        <div style={{ marginBottom: '56px' }}>
+          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.18em', textTransform: 'uppercase', color: C.cyan }}>
+            <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
+            04 — Projekte
+          </span>
+          <h2 style={{ fontFamily: fontDisplay, fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, margin: '16px 0 12px', color: istDunkel ? C.text0 : '#171717' }}>
+            Meine <em style={{ fontStyle: 'normal', color: C.cyan, textShadow: istDunkel ? `0 0 24px ${C.cyanGlow}` : 'none' }}>Projekte</em>
+          </h2>
+          <p style={{ color: istDunkel ? C.text2 : '#525252', fontSize: '16px' }}>Eine Auswahl meiner bisherigen Arbeiten</p>
+        </div>
 
-        <p className={`text-center mb-8 ${
-          istDunkel ? 'text-[#a3a3a3]' : 'text-[#525252]'
-        }`}>
-          Eine Auswahl meiner bisherigen Arbeiten
-        </p>
-
-        {/* Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {kategorien.map(kategorie => (
-            <button
-              key={kategorie}
-              onClick={() => setAktiverFilter(kategorie)}
-              className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
-                aktiverFilter === kategorie
-                  ? istDunkel
-                    ? 'bg-[#b91c1c] text-[#f5f5f5]'
-                    : 'bg-[#dc2626] text-white'
-                  : istDunkel
-                    ? 'bg-[#262626] text-[#a3a3a3] border border-[#404040] hover:text-[#b91c1c] hover:border-[#b91c1c]'
-                    : 'bg-white text-[#525252] border border-[#e5e5e5] hover:text-[#dc2626] hover:border-[#dc2626]'
-              }`}
-            >
-              {kategorie}
-            </button>
+        {/* Filters */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '40px' }}>
+          {kategorien.map(kat => (
+            <FilterBtn key={kat} label={kat} active={aktiverFilter === kat} onClick={() => setAktiverFilter(kat)} />
           ))}
         </div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gefilterteProjekte.map(projekt => (
-            <div
-              key={projekt.id}
-              onClick={() => openProject(projekt)}
-              className={`relative rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-2 group cursor-pointer ${
-                istDunkel
-                  ? 'bg-[#262626] border border-[#404040]'
-                  : 'bg-white border border-[#e5e5e5] shadow-sm hover:shadow-xl'
-              }`}
-            >
-              {/* Magic UI Border Beam - Nur sichtbar bei Group Hover */}
-              <BorderBeam
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                size={250}
-                duration={12}
-                delay={0}
-                colorFrom={istDunkel ? "#b91c1c" : "#dc2626"}
-                colorTo={istDunkel ? "#dc2626" : "#b91c1c"}
-              />
-
-              {/* Project Header */}
-              <div className="h-44 relative overflow-hidden">
-                {projekt.bild ? (
-                  <img
-                    src={projekt.bild}
-                    alt={projekt.titel}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                ) : (
-                  <div className={`w-full h-full flex items-center justify-center ${
-                    istDunkel
-                      ? 'bg-gradient-to-br from-[#64ffda]/20 via-[#0d9488]/20 to-[#f97316]/20'
-                      : 'bg-gradient-to-br from-[#0d9488]/20 via-[#0f766e]/20 to-[#ea580c]/20'
-                  }`}>
-                    <span className={`text-5xl font-bold opacity-30 ${
-                      istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'
-                    }`}>
-                      {projekt.id.toString().padStart(2, '0')}
-                    </span>
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-
-              <div className="p-6 relative z-10">
-                <h3 className={`text-lg font-bold mb-2 ${
-                  istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-                }`}>
-                  {projekt.titel}
-                </h3>
-
-                <p className={`text-sm mb-4 line-clamp-2 ${
-                  istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-                }`}>
-                  {projekt.beschreibung}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {projekt.technologien.slice(0, 3).map(tech => (
-                    <span
-                      key={tech}
-                      className={`text-xs px-2.5 py-1 rounded-full font-medium ${
-                        istDunkel
-                          ? 'bg-[#0a192f] text-[#64ffda] border border-[#233554]'
-                          : 'bg-[#f1f5f9] text-[#0d9488] border border-[#e2e8f0]'
-                      }`}
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Actions */}
-                <div className={`flex items-center justify-between pt-4 border-t ${
-                  istDunkel ? 'border-[#233554]' : 'border-[#e2e8f0]'
-                }`}>
-                  <span className={`text-sm ${
-                    istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-                  }`}>
-                    Klicken für Details
-                  </span>
-
-                  <div className="flex items-center gap-3">
-                    {/* Like Button auf Card */}
-                    <div onClick={e => e.stopPropagation()}>
-                      <LikeButton projectId={projekt.id} compact />
-                    </div>
-
-                    {projekt.github && (
-                      <a
-                        href={projekt.github}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        className={`text-sm font-medium transition-colors ${
-                          istDunkel
-                            ? 'text-[#8892b0] hover:text-[#64ffda]'
-                            : 'text-[#475569] hover:text-[#0d9488]'
-                        }`}
-                      >
-                        GitHub
-                      </a>
-                    )}
-                    {projekt.link && projekt.link !== '#' && (
-                      <a
-                        href={projekt.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        onClick={e => e.stopPropagation()}
-                        className={`text-sm font-medium flex items-center gap-1 transition-colors ${
-                          istDunkel
-                            ? 'text-[#64ffda] hover:text-[#64ffda]/80'
-                            : 'text-[#0d9488] hover:text-[#0f766e]'
-                        }`}
-                      >
-                        Live →
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
+        {/* Grid */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="projects-grid">
+          {gefiltert.map((p, i) => (
+            <ProjectCard key={p.id} projekt={p} idx={i} onClick={openProject} />
           ))}
         </div>
       </div>
 
       {/* Modal */}
       {aktivesProjekt && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 px-4 backdrop-blur-sm"
+        <div
+          style={{ position: 'fixed', inset: 0, zIndex: 50, display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(0,0,0,0.85)', padding: '16px', backdropFilter: 'blur(8px)' }}
           onClick={() => setAktivesProjekt(null)}
         >
           <div
-            className={`w-full max-w-2xl rounded-2xl p-8 relative ${
-              istDunkel ? 'bg-[#112240] border border-[#233554]' : 'bg-white'
-            }`}
+            style={{ width: '100%', maxWidth: '680px', borderRadius: '20px', padding: '32px', position: 'relative', maxHeight: '90vh', overflowY: 'auto', background: '#0a0a0a', border: `1px solid ${C.cyanBorder}`, boxShadow: `0 0 60px rgba(34,211,238,0.12)` }}
             onClick={e => e.stopPropagation()}
           >
             <button
               onClick={() => setAktivesProjekt(null)}
-              className={`absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full transition-colors z-10 ${
-                istDunkel ? 'bg-[#0a192f] hover:bg-[#1d3557] text-[#ccd6f6] border border-[#233554]' : 'bg-gray-100 hover:bg-gray-200'
-              }`}
-              aria-label="Modal schliessen"
-            >
-              ✕
-            </button>
+              style={{ position: 'absolute', top: '16px', right: '16px', width: '32px', height: '32px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: C.bg2, border: `1px solid ${C.cyanBorder}`, color: C.text2, cursor: 'pointer', fontSize: '16px', zIndex: 10 }}
+            >✕</button>
 
-            {/* Modal Bild */}
             {aktivesProjekt.bild && (
-              <div className="h-48 -mx-8 -mt-8 mb-6 overflow-hidden rounded-t-2xl">
-                <img 
-                  src={aktivesProjekt.bild} 
-                  alt={aktivesProjekt.titel}
-                  className="w-full h-full object-cover"
-                />
+              <div style={{ height: '200px', margin: '-32px -32px 24px', borderRadius: '20px 20px 0 0', overflow: 'hidden' }}>
+                <img src={aktivesProjekt.bild} alt={aktivesProjekt.titel} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
               </div>
             )}
 
-            <h3 className={`text-2xl font-bold mb-4 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-            }`}>
-              {aktivesProjekt.titel}
-            </h3>
+            <h3 style={{ fontFamily: fontDisplay, fontSize: '24px', fontWeight: 700, color: C.text0, margin: '0 0 16px' }}>{aktivesProjekt.titel}</h3>
+            <p style={{ color: C.text2, marginBottom: '24px', lineHeight: 1.7 }}>{aktivesProjekt.beschreibung}</p>
 
-            <p className={`mb-6 ${istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}`}>
-              {aktivesProjekt.beschreibung}
-            </p>
-
-            <div className="flex flex-wrap gap-2 mb-6">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '24px' }}>
               {aktivesProjekt.technologien.map(tech => (
-                <span
-                  key={tech}
-                  className={`text-sm px-3 py-1.5 rounded-full font-medium ${
-                    istDunkel
-                      ? 'bg-[#0a192f] text-[#64ffda] border border-[#233554]'
-                      : 'bg-[#f1f5f9] text-[#0d9488] border border-[#e2e8f0]'
-                  }`}
-                >
-                  {tech}
-                </span>
+                <span key={tech} style={{ fontFamily: fontMono, fontSize: '12px', padding: '5px 12px', borderRadius: '9999px', background: C.cyanBg, border: `1px solid ${C.cyanBorder}`, color: C.cyan }}>{tech}</span>
               ))}
             </div>
 
-            <p className={`text-sm mb-6 ${istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'}`}>
+            <p style={{ fontFamily: fontMono, fontSize: '12px', color: C.text3, marginBottom: '24px' }}>
               Kategorie: {Array.isArray(aktivesProjekt.kategorie) ? aktivesProjekt.kategorie.join(', ') : aktivesProjekt.kategorie}
             </p>
 
-            <div className="flex flex-wrap gap-4">
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
               {aktivesProjekt.link && aktivesProjekt.link !== '#' && (
-                <a
-                  href={aktivesProjekt.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`inline-block px-6 py-3 rounded-lg font-semibold transition-all ${
-                    istDunkel
-                      ? 'bg-[#64ffda] text-[#0a192f] hover:shadow-[0_0_20px_rgba(100,255,218,0.4)]'
-                      : 'bg-[#0d9488] text-white hover:bg-[#0f766e]'
-                  }`}
-                >
-                  Live Demo
-                </a>
+                <a href={aktivesProjekt.link} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', background: C.cyan, color: '#050505', fontFamily: fontMono, fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: `all 0.3s ${ease}` }}
+                  onMouseEnter={e => { e.currentTarget.style.background = '#00fff5'; e.currentTarget.style.transform = 'translateY(-2px)' }}
+                  onMouseLeave={e => { e.currentTarget.style.background = C.cyan; e.currentTarget.style.transform = 'none' }}
+                >Live Demo</a>
               )}
               {aktivesProjekt.github && (
-                <a
-                  href={aktivesProjekt.github}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={`inline-block px-6 py-3 rounded-lg font-semibold transition-all ${
-                    istDunkel
-                      ? 'bg-[#0a192f] text-[#ccd6f6] hover:bg-[#1d3557] border border-[#233554]'
-                      : 'bg-gray-100 text-[#0a192f] hover:bg-gray-200 border border-[#e2e8f0]'
-                  }`}
-                >
-                  GitHub Code
-                </a>
+                <a href={aktivesProjekt.github} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', background: 'transparent', color: C.cyan, fontFamily: fontMono, fontSize: '13px', border: `1px solid ${C.cyanBorderStrong}`, textDecoration: 'none' }}>GitHub</a>
               )}
             </div>
 
-            {/* Like Button */}
-            <div className="mt-4">
-              <LikeButton projectId={aktivesProjekt.id} />
-            </div>
-
-            {/* Comments */}
-            <div className="mt-8 pt-6 border-t border-gray-200 dark:border-[#233554]">
+            <div><LikeButton projectId={aktivesProjekt.id} /></div>
+            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: `1px solid rgba(255,255,255,0.05)` }}>
               <Comments projectId={aktivesProjekt.id} />
             </div>
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 900px) { .projects-grid { grid-template-columns: repeat(2,1fr) !important; } }
+        @media (max-width: 600px) { .projects-grid { grid-template-columns: 1fr !important; } }
+      `}</style>
     </section>
   )
 }

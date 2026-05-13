@@ -4,125 +4,177 @@ import { AnimatedThemeToggler } from './ui/AnimatedThemeToggler'
 
 const SPOTIFY_PLAYLIST_ID = '55f8XIuabL2aM5SANjYT9B'
 
-function Header({
-  istDunkel,
-  toggleDarkMode,
-  scrollToSection,
-  aboutRef,
-  skillsRef,
-  projectsRef,
-  testimonialsRef,
-  contactsRef
-}) {
+const C = {
+  cyan: '#22d3ee',
+  cyanGlow: 'rgba(34,211,238,0.45)',
+  cyanBorder: 'rgba(34,211,238,0.22)',
+  cyanBorderStrong: 'rgba(34,211,238,0.55)',
+  cyanBg: 'rgba(34,211,238,0.06)',
+  bg0: '#050505',
+  bg1: '#0a0a0a',
+  bg2: '#111111',
+  text2: '#a1a1aa',
+  text3: '#71717a',
+}
+const fontMono = "'JetBrains Mono', ui-monospace, monospace"
+const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
+const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
+
+function NavLink({ label, onClick }) {
+  const [hovered, setHovered] = useState(false)
+  return (
+    <button
+      onClick={onClick}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      style={{
+        fontFamily: fontMono,
+        fontSize: '13px',
+        color: hovered ? C.cyan : C.text2,
+        background: 'none',
+        border: 'none',
+        cursor: 'pointer',
+        padding: '6px 0',
+        position: 'relative',
+        transition: `color 0.2s ${ease}`,
+      }}
+    >
+      <span style={{
+        color: C.cyan,
+        opacity: hovered ? 1 : 0,
+        marginRight: '4px',
+        transition: `opacity 0.2s ${ease}`,
+      }}>//</span>
+      {label}
+      {/* Underline */}
+      <span style={{
+        position: 'absolute', left: 0, right: 0, bottom: '-2px',
+        height: '1px',
+        background: C.cyan,
+        boxShadow: `0 0 8px ${C.cyanGlow}`,
+        transform: hovered ? 'scaleX(1)' : 'scaleX(0)',
+        transformOrigin: 'left',
+        transition: `transform 0.3s ${ease}`,
+        display: 'block',
+      }} />
+    </button>
+  )
+}
+
+function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRef, projectsRef, testimonialsRef, contactsRef }) {
   const [menuOffen, setMenuOffen] = useState(false)
   const [spotifyOpen, setSpotifyOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
 
-  const handleNavigation = (ref) => {
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 50)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const navItems = [
+    { label: 'About', ref: aboutRef },
+    { label: 'Skills', ref: skillsRef },
+    { label: 'Projekte', ref: projectsRef },
+    { label: 'Referenzen', ref: testimonialsRef },
+    { label: 'Kontakt', ref: contactsRef },
+  ]
+
+  const handleNav = (ref) => {
     scrollToSection(ref)
     setMenuOffen(false)
   }
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  const navLinkClass = `text-sm font-medium transition-all duration-300 hover:scale-105 relative group`
-
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? 'bg-black/80 backdrop-blur-xl border-b border-white/10 py-3' : 'bg-transparent py-5'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
+    <header style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60,
+      padding: '14px 0',
+      background: isScrolled
+        ? (istDunkel ? 'rgba(5,5,5,0.88)' : 'rgba(250,250,250,0.92)')
+        : (istDunkel ? 'rgba(10,10,10,0.55)' : 'rgba(250,250,250,0.7)'),
+      backdropFilter: 'blur(16px) saturate(180%)',
+      WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+      borderBottom: `1px solid ${isScrolled
+        ? (istDunkel ? 'rgba(34,211,238,0.35)' : 'rgba(0,0,0,0.10)')
+        : (istDunkel ? 'rgba(34,211,238,0.14)' : 'rgba(0,0,0,0.05)')}`,
+      boxShadow: isScrolled && istDunkel
+        ? '0 1px 20px rgba(34,211,238,0.08)'
+        : 'none',
+      transition: `background 0.3s, border-color 0.3s`,
+    }}>
+      <div style={{
+        maxWidth: '1200px', margin: '0 auto',
+        padding: '0 24px 0 8px',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px',
+      }}>
+        {/* Brand */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, lineHeight: 1.1 }}
+        >
+          <div style={{ fontFamily: fontDisplay, fontWeight: 700, fontSize: '19px', letterSpacing: '-0.01em', display: 'flex', alignItems: 'baseline', gap: '4px' }}>
+            <span style={{ color: C.cyan, textShadow: istDunkel ? `0 0 18px ${C.cyanGlow}` : 'none' }}>Eeraj</span>
+            <span style={{ color: C.text3 }}>.</span>
+            <span style={{ color: istDunkel ? '#ffffff' : '#171717' }}>dev</span>
+          </div>
+          <span style={{ display: 'block', fontFamily: fontMono, fontSize: '10px', color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '2px' }}>
+            Portfolio
+          </span>
+        </button>
 
-        {/* Logo */}
-        <div className="flex items-center gap-3">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="flex items-center gap-2 group"
-          >
-            <div
-              className="w-10 h-10 rounded-lg bg-gradient-to-br from-red-600 to-orange-600 flex items-center justify-center text-white font-bold text-lg transition-all duration-300 group-hover:scale-110 group-hover:shadow-[0_0_20px_rgba(220,38,38,0.5)]"
-              style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
-            >
-              E
-            </div>
-            <div className="flex flex-col">
-              <span
-                className={`text-lg font-bold transition-colors ${istDunkel ? 'text-white' : 'text-black'}`}
-                style={{ fontFamily: 'Space Grotesk, system-ui, sans-serif' }}
-              >
-                Eeraj Jan
-              </span>
-              <span
-                className={`text-[10px] uppercase tracking-[0.2em] ${istDunkel ? 'text-gray-500' : 'text-gray-400'}`}
-                style={{ fontFamily: 'JetBrains Mono, monospace' }}
-              >
-                Portfolio
-              </span>
-            </div>
-          </button>
-        </div>
-
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {[
-            { label: 'About', ref: aboutRef },
-            { label: 'Skills', ref: skillsRef },
-            { label: 'Projekte', ref: projectsRef },
-            { label: 'Referenzen', ref: testimonialsRef },
-            { label: 'Kontakt', ref: contactsRef }
-          ].map(({ label, ref }) => (
-            <button
-              key={label}
-              onClick={() => handleNavigation(ref)}
-              className={navLinkClass}
-              style={{ fontFamily: 'JetBrains Mono, monospace' }}
-            >
-              <span className={istDunkel ? 'text-gray-400 hover:text-white' : 'text-gray-600 hover:text-black'}>
-                {label}
-              </span>
-              <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-red-600 transition-all duration-300 group-hover:w-full`}></span>
-            </button>
+        {/* Desktop nav */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }} className="hidden-mobile">
+          {navItems.map(({ label, ref }) => (
+            <NavLink key={label} label={label} onClick={() => handleNav(ref)} />
           ))}
         </nav>
 
-        {/* Controls */}
-        <div className="flex items-center gap-3">
+        {/* Actions */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <Leaderboard isNav={true} iconOnly={true} />
 
-          <div className="relative">
+          {/* Spotify */}
+          <div style={{ position: 'relative' }}>
             <button
-              onClick={() => setSpotifyOpen(!spotifyOpen)}
-              className={`w-10 h-10 rounded-lg transition-all duration-300 hover:scale-110 flex items-center justify-center ${
-                istDunkel
-                  ? 'bg-white/5 hover:bg-white/10 border border-white/10'
-                  : 'bg-gray-100 hover:bg-gray-200'
-              }`}
+              onClick={() => setSpotifyOpen(v => !v)}
               title="Meine Musik"
+              style={{
+                width: '38px', height: '38px', borderRadius: '10px',
+                background: C.bg2,
+                border: `1px solid ${C.cyanBorder}`,
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                color: '#1DB954', cursor: 'pointer',
+                transition: `all 0.25s ${ease}`,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = C.cyanBorderStrong
+                e.currentTarget.style.boxShadow = `0 0 18px ${C.cyanGlow}`
+                e.currentTarget.style.transform = 'translateY(-1px)'
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = C.cyanBorder
+                e.currentTarget.style.boxShadow = 'none'
+                e.currentTarget.style.transform = 'none'
+              }}
             >
-              <svg className="w-5 h-5 text-green-500" viewBox="0 0 24 24" fill="currentColor">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.75 }}>
                 <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.02.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
               </svg>
             </button>
-
             {spotifyOpen && (
               <>
-                <div className="fixed inset-0 z-40" onClick={() => setSpotifyOpen(false)} />
-                <div className={`absolute right-0 top-12 w-80 rounded-xl shadow-2xl overflow-hidden z-50 ${
-                  istDunkel ? 'bg-white/5 border border-white/10' : 'bg-white border border-gray-200'
-                }`}>
+                <div style={{ position: 'fixed', inset: 0, zIndex: 40 }} onClick={() => setSpotifyOpen(false)} />
+                <div style={{
+                  position: 'absolute', right: 0, top: '48px',
+                  width: '320px', borderRadius: '16px',
+                  overflow: 'hidden', zIndex: 50,
+                  background: C.bg2,
+                  border: `1px solid ${C.cyanBorder}`,
+                  boxShadow: `0 20px 50px rgba(0,0,0,0.5), 0 0 30px ${C.cyanBg}`,
+                }}>
                   <iframe
-                    src={`https://open.spotify.com/embed/playlist/${SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=${istDunkel ? '0' : '1'}`}
-                    width="100%"
-                    height="352"
-                    frameBorder="0"
+                    src={`https://open.spotify.com/embed/playlist/${SPOTIFY_PLAYLIST_ID}?utm_source=generator&theme=0`}
+                    width="100%" height="352" frameBorder="0"
                     allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                     loading="lazy"
                   />
@@ -133,57 +185,64 @@ function Header({
 
           <AnimatedThemeToggler variant="circle" />
 
+          {/* Hamburger (mobile) */}
           <button
-            onClick={() => setMenuOffen(!menuOffen)}
-            className={`lg:hidden p-2 rounded-lg transition-colors ${
-              istDunkel
-                ? 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
-                : 'bg-gray-100 text-black hover:bg-gray-200'
-            }`}
-            aria-label="Menu oeffnen"
+            onClick={() => setMenuOffen(v => !v)}
+            className="show-mobile"
+            style={{
+              width: '38px', height: '38px', borderRadius: '10px',
+              background: C.bg2,
+              border: `1px solid ${C.cyanBorder}`,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              color: C.text2, cursor: 'pointer',
+            }}
+            aria-label="Menu"
           >
             {menuOffen ? (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>
             ) : (
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-              </svg>
+              <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16"/></svg>
             )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile menu */}
       {menuOffen && (
-        <div className={`lg:hidden px-4 pb-4 ${
-          istDunkel ? 'bg-black/98 backdrop-blur-xl' : 'bg-white/98 backdrop-blur-xl'
-        }`}>
-          <nav className="flex flex-col gap-2 pt-4">
-            {[
-              { label: 'About', ref: aboutRef },
-              { label: 'Skills', ref: skillsRef },
-              { label: 'Projekte', ref: projectsRef },
-              { label: 'Referenzen', ref: testimonialsRef },
-              { label: 'Kontakt', ref: contactsRef }
-            ].map(({ label, ref }) => (
-              <button
-                key={label}
-                onClick={() => handleNavigation(ref)}
-                className={`text-left px-4 py-3 rounded-lg transition-colors ${
-                  istDunkel
-                    ? 'text-gray-400 hover:bg-white/5 hover:text-white'
-                    : 'text-gray-600 hover:bg-gray-100 hover:text-black'
-                }`}
-                style={{ fontFamily: 'JetBrains Mono, monospace' }}
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
+        <div style={{
+          padding: '16px 24px',
+          background: istDunkel ? 'rgba(5,5,5,0.96)' : 'rgba(255,255,255,0.96)',
+          backdropFilter: 'blur(20px)',
+          borderBottom: `1px solid ${C.cyanBorder}`,
+          animation: 'slideDown 0.3s ease',
+        }}>
+          {navItems.map(({ label, ref }) => (
+            <button
+              key={label}
+              onClick={() => handleNav(ref)}
+              style={{
+                display: 'block', width: '100%', textAlign: 'left',
+                padding: '12px 0', fontFamily: fontMono, fontSize: '14px',
+                color: C.text2, background: 'none', border: 'none',
+                cursor: 'pointer', borderBottom: `1px solid ${C.cyanBorder}`,
+              }}
+              onMouseEnter={e => e.currentTarget.style.color = C.cyan}
+              onMouseLeave={e => e.currentTarget.style.color = C.text2}
+            >
+              <span style={{ color: C.cyan, marginRight: '8px' }}>//</span>{label}
+            </button>
+          ))}
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 820px) { .hidden-mobile { display: none !important; } }
+        @media (min-width: 821px) { .show-mobile { display: none !important; } }
+        @keyframes slideDown {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
     </header>
   )
 }

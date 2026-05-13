@@ -37,53 +37,156 @@ function Footer() {
   ]
 
   const quickLinks = [
+    { name: 'About', href: '#about' },
     { name: 'Skills', href: '#skills' },
     { name: 'Projekte', href: '#projects' },
+    { name: 'Testimonials', href: '#testimonials' },
     { name: 'Kontakt', href: '#contact' },
   ]
 
   return (
-    <footer className={`relative py-12 px-4 ${
-      istDunkel 
-        ? 'border-t border-[#233554]' 
-        : 'border-t border-[#e2e8f0]'
+    <footer className={`relative py-16 px-4 ${
+      istDunkel
+        ? 'border-t border-[rgba(34,211,238,0.12)] bg-[#050505]'
+        : 'border-t border-[#e2e8f0] bg-white'
     }`}>
+      {/* Cyan top glow line */}
+      {istDunkel && (
+        <div style={{
+          position: 'absolute', top: 0, left: '10%', right: '10%', height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(34,211,238,0.5), transparent)',
+          pointerEvents: 'none'
+        }} />
+      )}
+
       <div className="max-w-6xl mx-auto">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+
           {/* Brand */}
           <div>
-            <h3 className={`text-xl font-bold mb-3 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-            }`}>
-              <span className={istDunkel ? 'gradient-text' : 'gradient-text-light'}>Eeraj</span>.dev
+            <h3 style={{
+              fontFamily: 'Space Grotesk, system-ui, sans-serif',
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+              marginBottom: '12px',
+              color: istDunkel ? '#ffffff' : '#0a192f'
+            }}>
+              <span style={{ color: '#22d3ee', textShadow: istDunkel ? '0 0 20px rgba(34,211,238,0.45)' : 'none' }}>
+                Eeraj
+              </span>
+              <span style={{ color: istDunkel ? '#71717a' : '#94a3b8' }}>.dev</span>
             </h3>
-            <p className={`text-sm leading-relaxed ${
-              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-            }`}>
-              Frontend Developer mit Leidenschaft für kreative Web-Lösungen und moderne Technologien.
+            <p style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '12px',
+              lineHeight: 1.7,
+              color: istDunkel ? '#a1a1aa' : '#475569',
+              maxWidth: '260px',
+              marginBottom: '16px'
+            }}>
+              Ich baue, berate & verkaufe — mit breiter Expertise,
+              die Ergebnisse liefert. Lass uns reden.
             </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <a
+                href="mailto:eeraj.jn@googlemail.com"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  padding: '9px 18px',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '11px', fontWeight: 700,
+                  letterSpacing: '0.06em',
+                  borderRadius: '9px',
+                  background: istDunkel ? 'rgba(34,211,238,0.1)' : 'transparent',
+                  border: '1px solid rgba(34,211,238,0.5)',
+                  color: '#22d3ee',
+                  textDecoration: 'none',
+                  transition: 'all 0.25s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'rgba(34,211,238,0.18)'
+                  e.currentTarget.style.borderColor = '#22d3ee'
+                  e.currentTarget.style.boxShadow = '0 0 16px rgba(34,211,238,0.35)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = istDunkel ? 'rgba(34,211,238,0.1)' : 'transparent'
+                  e.currentTarget.style.borderColor = 'rgba(34,211,238,0.5)'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
+                </svg>
+                eeraj.jn@googlemail.com
+              </a>
+              <a
+                href="tel:+491729143388"
+                style={{
+                  display: 'inline-flex', alignItems: 'center', gap: '8px',
+                  padding: '9px 18px',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  fontSize: '11px', fontWeight: 700,
+                  letterSpacing: '0.06em',
+                  borderRadius: '9px',
+                  background: 'transparent',
+                  border: '1px solid rgba(34,211,238,0.25)',
+                  color: '#71717a',
+                  textDecoration: 'none',
+                  transition: 'all 0.25s',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.background = 'rgba(34,211,238,0.08)'
+                  e.currentTarget.style.borderColor = 'rgba(34,211,238,0.5)'
+                  e.currentTarget.style.color = '#22d3ee'
+                  e.currentTarget.style.boxShadow = '0 0 12px rgba(34,211,238,0.2)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.background = 'transparent'
+                  e.currentTarget.style.borderColor = 'rgba(34,211,238,0.25)'
+                  e.currentTarget.style.color = '#71717a'
+                  e.currentTarget.style.boxShadow = 'none'
+                }}
+              >
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.02z"/>
+                </svg>
+                0172 914 3388
+              </a>
+            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className={`text-sm font-semibold uppercase tracking-wider mb-3 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-            }`}>
-              Quick Links
+            <h4 style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '11px',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: '#22d3ee',
+              marginBottom: '16px'
+            }}>
+              Navigation
             </h4>
-            <ul className="space-y-2">
+            <ul style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
               {quickLinks.map(link => (
                 <li key={link.name}>
-                  <a 
+                  <a
                     href={link.href}
-                    className={`text-sm transition-colors hover:underline ${
-                      istDunkel 
-                        ? 'text-[#8892b0] hover:text-[#64ffda]' 
-                        : 'text-[#475569] hover:text-[#0d9488]'
-                    }`}
+                    style={{
+                      fontFamily: 'Inter, system-ui, sans-serif',
+                      fontSize: '14px',
+                      color: istDunkel ? '#a1a1aa' : '#475569',
+                      textDecoration: 'none',
+                      transition: 'color 0.2s',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px'
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#22d3ee'}
+                    onMouseLeave={e => e.currentTarget.style.color = istDunkel ? '#a1a1aa' : '#475569'}
                   >
+                    <span style={{ color: 'rgba(34,211,238,0.5)', fontFamily: 'JetBrains Mono, monospace' }}>›</span>
                     {link.name}
                   </a>
                 </li>
@@ -91,14 +194,19 @@ function Footer() {
             </ul>
           </div>
 
-          {/* Social Links */}
+          {/* Social + Visitor */}
           <div>
-            <h4 className={`text-sm font-semibold uppercase tracking-wider mb-3 ${
-              istDunkel ? 'text-[#ccd6f6]' : 'text-[#0a192f]'
-            }`}>
+            <h4 style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '11px',
+              letterSpacing: '0.18em',
+              textTransform: 'uppercase',
+              color: '#22d3ee',
+              marginBottom: '16px'
+            }}>
               Connect
             </h4>
-            <div className="flex gap-3">
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
               {socials.map(social => (
                 <a
                   key={social.name}
@@ -106,46 +214,72 @@ function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.name}
-                  className={`p-2.5 rounded-lg transition-all duration-200 hover:scale-110 ${
-                    istDunkel 
-                      ? 'bg-[#112240] text-[#8892b0] hover:bg-[#1d3557] hover:text-[#64ffda] border border-[#233554]' 
-                      : 'bg-[#f8fafc] text-[#475569] hover:bg-[#f1f5f9] hover:text-[#0d9488] border border-[#e2e8f0]'
-                  }`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px', height: '40px',
+                    borderRadius: '10px',
+                    background: istDunkel ? 'rgba(34,211,238,0.06)' : '#f1f5f9',
+                    border: `1px solid ${istDunkel ? 'rgba(34,211,238,0.22)' : '#e2e8f0'}`,
+                    color: istDunkel ? '#71717a' : '#475569',
+                    transition: 'all 0.25s',
+                    textDecoration: 'none'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.color = '#22d3ee'
+                    e.currentTarget.style.borderColor = 'rgba(34,211,238,0.55)'
+                    e.currentTarget.style.boxShadow = '0 0 14px rgba(34,211,238,0.3)'
+                    e.currentTarget.style.transform = 'translateY(-2px)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.color = istDunkel ? '#71717a' : '#475569'
+                    e.currentTarget.style.borderColor = istDunkel ? 'rgba(34,211,238,0.22)' : '#e2e8f0'
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.transform = 'none'
+                  }}
                 >
                   {social.icon}
                 </a>
               ))}
             </div>
-            <p className={`text-xs mt-3 ${
-              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-            }`}>
-              Lass uns vernetzen!
+            <p style={{
+              fontFamily: 'JetBrains Mono, monospace',
+              fontSize: '12px',
+              color: istDunkel ? '#52525b' : '#94a3b8'
+            }}>
+              Besucher: <VisitorCounter />
             </p>
           </div>
         </div>
 
         {/* Divider */}
-        <div className={`${istDunkel ? 'section-divider-dark' : 'section-divider-light'} mb-6`} />
+        <div style={{
+          height: '1px',
+          background: istDunkel
+            ? 'linear-gradient(90deg, transparent, rgba(34,211,238,0.2), transparent)'
+            : 'linear-gradient(90deg, transparent, #e2e8f0, transparent)',
+          margin: '0 0 20px'
+        }} />
 
         {/* Bottom Bar */}
-        <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-4">
-            <p className={`text-xs ${
-              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-            }`}>
-              &copy; {aktuellesJahr} Eeraj. Alle Rechte vorbehalten.
-            </p>
-            <p className={`text-xs ${
-              istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-            }`}>
-              Besucher: <VisitorCounter />
-            </p>
-          </div>
-
-          <p className={`text-xs ${
-            istDunkel ? 'text-[#8892b0]' : 'text-[#475569]'
-          }`}>
-            Gebaut mit <span className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>React</span> + <span className={istDunkel ? 'text-[#64ffda]' : 'text-[#0d9488]'}>Tailwind CSS</span>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+          <p style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '12px',
+            color: istDunkel ? '#52525b' : '#94a3b8'
+          }}>
+            © {aktuellesJahr} Eeraj Jan. Alle Rechte vorbehalten.
+          </p>
+          <p style={{
+            fontFamily: 'JetBrains Mono, monospace',
+            fontSize: '12px',
+            color: istDunkel ? '#52525b' : '#94a3b8'
+          }}>
+            Built with{' '}
+            <span style={{ color: '#22d3ee' }}>React</span>
+            {' '}+{' '}
+            <span style={{ color: '#22d3ee' }}>Tailwind CSS</span>
           </p>
         </div>
       </div>
