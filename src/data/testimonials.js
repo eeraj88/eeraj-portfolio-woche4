@@ -49,7 +49,7 @@ const testimonials = [
     name: "Elon Musk",
     rolle: "X / Tesla / SpaceX",
     projekt: "AI Neural Interface",
-    bild: "/elon-musk.png",
+    bild: "/elon-musk.jpg",
     text: "Wir brauchen keine Raketen, um zum Mars zu kommen, wenn wir Eerajs Automatisierungs-Skripte nutzen. Die Latenz ist niedriger als bei Starlink. Effizienz-Level: Übermenschlich. I will probably buy his portfolio next week.",
     bewertung: 5
   },
@@ -58,7 +58,7 @@ const testimonials = [
     name: "Gordon Ramsay",
     rolle: "Sternekoch",
     projekt: "Kitchen Dashboard",
-    bild: "/gordon-ramsay.png",
+    bild: "/gordon ramsey.jpg",
     text: "Finally! No raw code, no frozen features! This Dashboard is delicious. The UI is crispy, the animations are smooth like a perfect Hollandaise. Eeraj, you're not a donkey, you're a genius! Perfection!",
     bewertung: 5
   },
@@ -67,7 +67,7 @@ const testimonials = [
     name: "Pharrell Williams",
     rolle: "Produzent & Designer",
     projekt: "Creative Studio",
-    bild: "/pharrell-williams.png",
+    bild: "/pharrell-williams.jpg",
     text: "Because I'm Happy! Diese Website ist pures Gold. Eeraj versteht den Vibe, den Rhythmus und die Ästhetik der Zukunft. Sein Code ist wie ein Hit-Beat – er geht sofort ins Blut und man will ihn immer wieder sehen. Truly inspiring.",
     bewertung: 5
   },
