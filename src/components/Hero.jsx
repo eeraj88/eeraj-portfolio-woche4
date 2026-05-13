@@ -108,18 +108,18 @@ function Hero() {
   }, [heroStage])
 
   const c = {
-    cyan: '#22d3ee',
-    cyanGlow: 'rgba(34,211,238,0.45)',
-    cyanBorder: 'rgba(34,211,238,0.22)',
-    cyanBorderStrong: 'rgba(34,211,238,0.55)',
-    cyanBg: 'rgba(34,211,238,0.06)',
-    bg0: '#050505',
-    bg1: '#0a0a0a',
-    bg2: '#111111',
-    text0: '#ffffff',
-    text1: '#e4e4e7',
-    text2: '#a1a1aa',
-    text3: '#71717a',
+    cyan: 'var(--cyan)',
+    cyanGlow: 'var(--cyan-glow)',
+    cyanBorder: 'var(--cyan-border)',
+    cyanBorderStrong: 'var(--cyan-border-strong)',
+    cyanBg: 'var(--cyan-bg-soft)',
+    bg0: 'var(--bg-0)',
+    bg1: 'var(--bg-1)',
+    bg2: 'var(--bg-2)',
+    text0: 'var(--text-0)',
+    text1: 'var(--text-1)',
+    text2: 'var(--text-2)',
+    text3: 'var(--text-3)',
   }
 
   const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
@@ -134,7 +134,7 @@ function Hero() {
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
-      background: istDunkel ? c.bg1 : '#fafafa',
+      background: 'var(--bg-1)',
     }}>
       {/* Grid Background */}
       {istDunkel && (
@@ -212,14 +212,14 @@ function Hero() {
               letterSpacing: '-0.04em',
               lineHeight: 1,
               margin: '0 0 24px',
-              color: istDunkel ? c.text0 : '#171717',
+              color: 'var(--text-0)',
               minHeight: '180px',
             }}>
               <div>{line1 || (heroStage === 0 ? '_' : '')}</div>
               <div>{line2}</div>
               <div style={{
                 color: c.cyan,
-                textShadow: istDunkel ? `0 0 32px ${c.cyanGlow}` : 'none',
+                textShadow: `0 0 32px var(--cyan-glow)`,
               }}>
                 {line3}
               </div>
@@ -229,7 +229,7 @@ function Hero() {
             <div style={{
               fontFamily: fontMono,
               fontSize: 'clamp(1rem, 1.6vw, 1.25rem)',
-              color: istDunkel ? c.text1 : '#171717',
+              color: 'var(--text-1)',
               marginBottom: '28px',
               minHeight: '1.5em',
             }}>
@@ -293,8 +293,8 @@ function Hero() {
                   display: 'inline-flex', alignItems: 'center', gap: '10px',
                   padding: '14px 26px', fontFamily: fontMono, fontSize: '13px',
                   letterSpacing: '0.04em', textTransform: 'uppercase',
-                  borderRadius: '10px', border: `1px solid rgba(255,255,255,0.06)`,
-                  background: c.bg2, color: c.text2,
+                  borderRadius: '10px', border: `1px solid var(--cyan-border)`,
+                  background: 'var(--bg-2)', color: 'var(--text-2)',
                   textDecoration: 'none', transition: `all 0.3s ${ease}`,
                 }}
                   onMouseEnter={e => {
@@ -303,8 +303,8 @@ function Hero() {
                     e.currentTarget.style.background = c.bg2
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.color = c.text2
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
+                    e.currentTarget.style.color = 'var(--text-2)'
+                    e.currentTarget.style.borderColor = 'var(--cyan-border)'
                   }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

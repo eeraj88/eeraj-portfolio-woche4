@@ -5,7 +5,7 @@ import { giveXP } from './PokemonBuddy'
 import LikeButton from './LikeButton'
 import Comments from './Comments'
 
-const C = { cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)', cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)', cyanBg: 'rgba(34,211,238,0.06)', bg2: '#111111', bg3: '#161616', text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a' }
+const C = { cyan: 'var(--cyan)', cyanGlow: 'var(--cyan-glow)', cyanBorder: 'var(--cyan-border)', cyanBorderStrong: 'var(--cyan-border-strong)', cyanBg: 'var(--cyan-bg-soft)', bg2: 'var(--bg-2)', bg3: 'var(--bg-3)', text0: 'var(--text-0)', text1: 'var(--text-1)', text2: 'var(--text-2)', text3: 'var(--text-3)' }
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
 const fontMono = "'JetBrains Mono', ui-monospace, monospace"
 const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
@@ -18,15 +18,15 @@ function FilterBtn({ label, active, onClick }) {
         fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.04em',
         padding: '9px 18px', borderRadius: '9999px',
         background: active ? C.cyan : 'transparent',
-        border: `1px solid ${active ? C.cyan : 'rgba(255,255,255,0.08)'}`,
-        color: active ? '#050505' : C.text2,
+        border: `1px solid ${active ? 'var(--cyan)' : 'var(--cyan-border)'}`,
+        color: active ? 'var(--bg-0)' : 'var(--text-2)',
         boxShadow: active ? `0 0 16px ${C.cyanGlow}` : 'none',
         cursor: 'pointer',
         transition: `all 0.25s ${ease}`,
         fontWeight: active ? 600 : 400,
       }}
-      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = C.cyan; e.currentTarget.style.borderColor = C.cyanBorderStrong } }}
-      onMouseLeave={e => { if (!active) { e.currentTarget.style.color = C.text2; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)' } }}
+      onMouseEnter={e => { if (!active) { e.currentTarget.style.color = 'var(--cyan)'; e.currentTarget.style.borderColor = 'var(--cyan-border-strong)' } }}
+      onMouseLeave={e => { if (!active) { e.currentTarget.style.color = 'var(--text-2)'; e.currentTarget.style.borderColor = 'var(--cyan-border)' } }}
     >
       {label}
     </button>
@@ -42,7 +42,7 @@ function ProjectCard({ projekt, idx, onClick }) {
       onMouseLeave={() => setHov(false)}
       style={{
         background: C.bg2,
-        border: `1px solid ${hov ? C.cyanBorderStrong : 'rgba(255,255,255,0.05)'}`,
+        border: `1px solid ${hov ? 'var(--cyan-border-strong)' : 'var(--cyan-border)'}`,
         borderRadius: '16px', overflow: 'hidden',
         position: 'relative',
         transform: hov ? 'translateY(-6px)' : 'none',
@@ -120,14 +120,14 @@ function ProjectCard({ projekt, idx, onClick }) {
             <span key={tech} style={{
               fontFamily: fontMono, fontSize: '10px', padding: '4px 9px', borderRadius: '9999px',
               background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.08)',
-              color: C.text1,
+              border: '1px solid var(--cyan-border)',
+              color: 'var(--text-1)',
             }}>{tech}</span>
           ))}
         </div>
 
         {/* Footer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid var(--cyan-border)' }}>
           <span style={{ fontFamily: fontMono, fontSize: '12px', color: C.cyan, letterSpacing: '0.04em', display: 'inline-flex', alignItems: 'center', gap: hov ? '10px' : '6px', transition: 'gap 0.2s' }}>
             Details ansehen
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -175,7 +175,7 @@ function Projects() {
   }
 
   return (
-    <section id="projects" style={{ padding: '96px 0', background: istDunkel ? C.bg2 : '#ffffff', position: 'relative' }}>
+    <section id="projects" style={{ padding: '96px 0', background: 'var(--bg-2)', position: 'relative' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
         {/* Section head */}
         <div style={{ marginBottom: '56px' }}>
@@ -183,10 +183,10 @@ function Projects() {
             <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
             04 — Projekte
           </span>
-          <h2 style={{ fontFamily: fontDisplay, fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, margin: '16px 0 12px', color: istDunkel ? C.text0 : '#171717' }}>
-            Meine <em style={{ fontStyle: 'normal', color: C.cyan, textShadow: istDunkel ? `0 0 24px ${C.cyanGlow}` : 'none' }}>Projekte</em>
+          <h2 style={{ fontFamily: fontDisplay, fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, margin: '16px 0 12px', color: 'var(--text-0)' }}>
+            Meine <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Projekte</em>
           </h2>
-          <p style={{ color: istDunkel ? C.text2 : '#525252', fontSize: '16px' }}>Eine Auswahl meiner bisherigen Arbeiten</p>
+          <p style={{ color: 'var(--text-2)', fontSize: '16px' }}>Eine Auswahl meiner bisherigen Arbeiten</p>
         </div>
 
         {/* Filters */}
@@ -211,7 +211,7 @@ function Projects() {
           onClick={() => setAktivesProjekt(null)}
         >
           <div
-            style={{ width: '100%', maxWidth: '680px', borderRadius: '20px', padding: '32px', position: 'relative', maxHeight: '90vh', overflowY: 'auto', background: '#0a0a0a', border: `1px solid ${C.cyanBorder}`, boxShadow: `0 0 60px rgba(34,211,238,0.12)` }}
+            style={{ width: '100%', maxWidth: '680px', borderRadius: '20px', padding: '32px', position: 'relative', maxHeight: '90vh', overflowY: 'auto', background: 'var(--bg-1)', border: `1px solid var(--cyan-border)`, boxShadow: `0 0 60px var(--cyan-glow)` }}
             onClick={e => e.stopPropagation()}
           >
             <button
@@ -240,7 +240,7 @@ function Projects() {
 
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>
               {aktivesProjekt.link && aktivesProjekt.link !== '#' && (
-                <a href={aktivesProjekt.link} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', background: C.cyan, color: '#050505', fontFamily: fontMono, fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: `all 0.3s ${ease}` }}
+                <a href={aktivesProjekt.link} target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '12px 24px', borderRadius: '10px', background: 'var(--cyan)', color: 'var(--bg-0)', fontFamily: fontMono, fontSize: '13px', fontWeight: 600, textDecoration: 'none', transition: `all 0.3s ${ease}` }}
                   onMouseEnter={e => { e.currentTarget.style.background = '#00fff5'; e.currentTarget.style.transform = 'translateY(-2px)' }}
                   onMouseLeave={e => { e.currentTarget.style.background = C.cyan; e.currentTarget.style.transform = 'none' }}
                 >Live Demo</a>
@@ -251,7 +251,7 @@ function Projects() {
             </div>
 
             <div><LikeButton projectId={aktivesProjekt.id} /></div>
-            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: `1px solid rgba(255,255,255,0.05)` }}>
+            <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: `1px solid var(--cyan-border)` }}>
               <Comments projectId={aktivesProjekt.id} />
             </div>
           </div>

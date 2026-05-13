@@ -7,17 +7,17 @@ const EMAILJS_TEMPLATE_ID = 'template_ygcl039'
 const EMAILJS_PUBLIC_KEY = 'Mk2_ZRMHb-UvIL-5M'
 
 const C = {
-  cyan: '#22d3ee',
-  cyanGlow: 'rgba(34,211,238,0.45)',
-  cyanBorder: 'rgba(34,211,238,0.22)',
-  cyanFocus: 'rgba(34,211,238,0.15)',
-  bg0: '#050505',
-  bg1: '#0a0a0a',
-  bg2: '#111111',
-  text0: '#ffffff',
-  text1: '#e4e4e7',
-  text2: '#a1a1aa',
-  text3: '#71717a',
+  cyan: 'var(--cyan)',
+  cyanGlow: 'var(--cyan-glow)',
+  cyanBorder: 'var(--cyan-border)',
+  cyanFocus: 'var(--cyan-bg-soft)',
+  bg0: 'var(--bg-0)',
+  bg1: 'var(--bg-1)',
+  bg2: 'var(--bg-2)',
+  text0: 'var(--text-0)',
+  text1: 'var(--text-1)',
+  text2: 'var(--text-2)',
+  text3: 'var(--text-3)',
 }
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
 const fontMono = "'JetBrains Mono', ui-monospace, monospace"
@@ -78,7 +78,7 @@ function Contact() {
     width: '100%',
     padding: '13px 16px',
     background: C.bg1,
-    border: `1px solid ${fehler[field] ? '#ef4444' : focusedField === field ? C.cyan : 'rgba(255,255,255,0.08)'}`,
+    border: `1px solid ${fehler[field] ? '#ef4444' : focusedField === field ? 'var(--cyan)' : 'var(--cyan-border)'}`,
     borderRadius: '10px',
     color: C.text0,
     fontFamily: fontMono,
@@ -95,7 +95,7 @@ function Contact() {
   return (
     <section
       id="contact"
-      style={{ padding: '96px 0', background: istDunkel ? C.bg2 : '#ffffff', position: 'relative' }}
+      style={{ padding: '96px 0', background: 'var(--bg-2)', position: 'relative' }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
 
@@ -114,11 +114,11 @@ function Contact() {
             fontSize: 'clamp(2rem, 4vw, 3rem)',
             fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05,
             margin: '16px 0 12px',
-            color: istDunkel ? C.text0 : '#171717',
+            color: 'var(--text-0)',
           }}>
-            <em style={{ fontStyle: 'normal', color: C.cyan, textShadow: istDunkel ? `0 0 24px ${C.cyanGlow}` : 'none' }}>Kontakt</em>
+            <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Kontakt</em>
           </h2>
-          <p style={{ color: istDunkel ? C.text2 : '#525252', fontSize: '16px', maxWidth: '480px', margin: '0 auto' }}>
+          <p style={{ color: 'var(--text-2)', fontSize: '16px', maxWidth: '480px', margin: '0 auto' }}>
             Schreib mir eine Nachricht — ich freue mich von dir zu hören!
           </p>
         </div>
@@ -130,7 +130,7 @@ function Contact() {
             maxWidth: '640px',
             margin: '0 auto',
             background: C.bg2,
-            border: `1px solid rgba(255,255,255,0.05)`,
+            border: `1px solid var(--cyan-border)`,
             borderRadius: '24px',
             padding: '48px',
             position: 'relative',

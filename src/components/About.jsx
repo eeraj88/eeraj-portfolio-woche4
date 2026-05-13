@@ -72,19 +72,19 @@ function About() {
                   style={{
                     position: 'relative',
                     padding: '24px 20px 22px',
-                    background: 'linear-gradient(160deg, #111111 0%, #161616 100%)',
-                    border: '1px solid rgba(255,255,255,0.07)',
+                    background: 'linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%)',
+                    border: '1px solid var(--cyan-border)',
                     borderRadius: '16px',
                     overflow: 'hidden',
                     transition: 'border-color 0.3s, transform 0.3s, box-shadow 0.3s',
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.borderColor = 'rgba(34,211,238,0.55)'
+                    e.currentTarget.style.borderColor = 'var(--cyan-border-strong)'
                     e.currentTarget.style.transform = 'translateY(-3px)'
-                    e.currentTarget.style.boxShadow = '0 14px 36px rgba(0,0,0,0.5), 0 0 28px rgba(34,211,238,0.15)'
+                    e.currentTarget.style.boxShadow = 'var(--shadow-card), var(--glow-sm)'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)'
+                    e.currentTarget.style.borderColor = 'var(--cyan-border)'
                     e.currentTarget.style.transform = 'none'
                     e.currentTarget.style.boxShadow = 'none'
                   }}
@@ -97,26 +97,26 @@ function About() {
                   <span style={{
                     position: 'absolute', top: '16px', right: '18px',
                     fontFamily: "'JetBrains Mono', monospace", fontSize: '10px',
-                    letterSpacing: '0.22em', color: '#71717a',
+                    letterSpacing: '0.22em', color: 'var(--text-3)',
                   }}>
                     0{i + 1}
                   </span>
                   <div style={{
                     fontFamily: "'Space Grotesk', system-ui, sans-serif",
                     fontSize: '2.4rem', fontWeight: 600,
-                    color: '#22d3ee',
-                    textShadow: '0 0 24px rgba(34,211,238,0.45)',
+                    color: 'var(--cyan)',
+                    textShadow: '0 0 24px var(--cyan-glow)',
                     lineHeight: 1, marginBottom: '8px',
                     position: 'relative', zIndex: 1,
                   }}>{value}</div>
                   <div style={{
                     fontFamily: "'JetBrains Mono', monospace",
                     fontSize: '11px', letterSpacing: '0.14em',
-                    color: '#a1a1aa', textTransform: 'uppercase',
+                    color: 'var(--text-2)', textTransform: 'uppercase',
                     position: 'relative', zIndex: 1,
                   }}>{label}</div>
                   <div style={{
-                    fontSize: '12px', color: '#71717a',
+                    fontSize: '12px', color: 'var(--text-3)',
                     marginTop: '6px', position: 'relative', zIndex: 1,
                   }}>Erfahrung</div>
                 </div>
@@ -127,7 +127,7 @@ function About() {
       </div>
 
       <style>{`
-        .section-alt { background: var(--bg-0, #050505); }
+        .section-alt { background: var(--bg-0); }
         .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 3; }
         section { padding: var(--sp-24, 6rem) 0; position: relative; }
 
@@ -138,11 +138,11 @@ function About() {
           font-size: 12px;
           letter-spacing: 0.18em;
           text-transform: uppercase;
-          color: #22d3ee;
+          color: var(--cyan);
         }
         .eyebrow::before {
-          content: ""; width: 24px; height: 1px; background: #22d3ee;
-          box-shadow: 0 0 6px rgba(34, 211, 238, 0.45);
+          content: ""; width: 24px; height: 1px; background: var(--cyan);
+          box-shadow: 0 0 6px var(--cyan-glow);
         }
         .section-title {
           font-family: var(--font-display, 'Space Grotesk', system-ui, sans-serif);
@@ -151,12 +151,12 @@ function About() {
           letter-spacing: -0.025em;
           line-height: 1.05;
           margin: 16px 0 12px;
-          color: var(--text-0, #ffffff);
+          color: var(--text-0);
         }
         .section-title em {
           font-style: normal;
-          color: #22d3ee;
-          text-shadow: 0 0 24px rgba(34, 211, 238, 0.45);
+          color: var(--cyan);
+          text-shadow: 0 0 24px var(--cyan-glow);
         }
 
         .about-grid {
@@ -202,16 +202,16 @@ function About() {
           font-size: 28px;
           font-weight: 600;
           letter-spacing: -0.02em;
-          color: var(--text-0, #ffffff);
+          color: var(--text-0);
           margin: 0 0 20px;
         }
         .about-body p {
-          color: var(--text-2, #a1a1aa);
+          color: var(--text-2);
           font-size: 16px;
           line-height: 1.75;
           margin: 0 0 18px;
         }
-        .about-body strong { color: #22d3ee; font-weight: 500; }
+        .about-body strong { color: var(--cyan); font-weight: 500; }
 
         .about-tags {
           display: flex; flex-wrap: wrap; gap: 10px;
@@ -222,15 +222,15 @@ function About() {
           font-size: 12px;
           padding: 7px 14px;
           border-radius: var(--r-full, 9999px);
-          background: var(--cyan-bg-soft, rgba(34, 211, 238, 0.06));
-          border: 1px solid var(--cyan-border, rgba(34, 211, 238, 0.22));
-          color: #22d3ee;
+          background: var(--cyan-bg-soft);
+          border: 1px solid var(--cyan-border);
+          color: var(--cyan);
           transition: all 0.25s var(--ease, cubic-bezier(0.22, 0.61, 0.36, 1));
         }
         .tag:hover {
-          border-color: #22d3ee;
-          background: rgba(34, 211, 238, 0.12);
-          box-shadow: var(--glow-sm, 0 0 12px var(--cyan-glow, rgba(34,211,238,0.45)]);
+          border-color: var(--cyan);
+          background: var(--cyan-bg-soft);
+          box-shadow: var(--glow-sm);
         }
 
         .stats {
@@ -246,8 +246,8 @@ function About() {
           position: relative;
           text-align: left;
           padding: 24px 22px 22px;
-          background: linear-gradient(160deg, var(--bg-2, #111111) 0%, var(--bg-3, #161616) 100%);
-          border: 1px solid rgba(255,255,255,0.06);
+          background: linear-gradient(160deg, var(--bg-2) 0%, var(--bg-3) 100%);
+          border: 1px solid var(--cyan-border);
           border-radius: var(--r-lg, 16px);
           overflow: hidden;
           transition: all 0.3s var(--ease, cubic-bezier(0.22, 0.61, 0.36, 1));
@@ -291,8 +291,8 @@ function About() {
           font-family: var(--font-display, 'Space Grotesk', system-ui, sans-serif);
           font-size: 2.6rem;
           font-weight: 600;
-          color: #22d3ee;
-          text-shadow: 0 0 24px var(--cyan-glow, rgba(34, 211, 238, 0.45));
+          color: var(--cyan);
+          text-shadow: 0 0 24px var(--cyan-glow);
           line-height: 1;
           margin-bottom: 8px;
           position: relative; z-index: 1;
@@ -301,13 +301,13 @@ function About() {
           font-family: var(--font-mono, 'JetBrains Mono', monospace);
           font-size: 11px;
           letter-spacing: 0.14em;
-          color: var(--text-2, #a1a1aa);
+          color: var(--text-2);
           text-transform: uppercase;
           position: relative; z-index: 1;
         }
         .stat-sub {
           font-size: 12px;
-          color: var(--text-3, #71717a);
+          color: var(--text-3);
           margin-top: 8px;
           position: relative; z-index: 1;
           line-height: 1.4;

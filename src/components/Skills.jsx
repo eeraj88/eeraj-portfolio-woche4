@@ -57,7 +57,7 @@ function Skills() {
   const { istDunkel } = useContext(ThemeContext)
 
   return (
-    <section id="skills" style={{ padding: '96px 0', background: istDunkel ? '#0a0a0a' : '#fafafa', position: 'relative' }}>
+    <section id="skills" style={{ padding: '96px 0', background: 'var(--bg-1)', position: 'relative' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
 
         {/* Section head */}
@@ -65,9 +65,9 @@ function Skills() {
           <span style={{
             display: 'inline-flex', alignItems: 'center', gap: '8px',
             fontFamily: 'JetBrains Mono, monospace', fontSize: '12px',
-            letterSpacing: '0.18em', textTransform: 'uppercase', color: '#22d3ee',
+            letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--cyan)',
           }}>
-            <span style={{ width: '24px', height: '1px', background: '#22d3ee', boxShadow: '0 0 6px rgba(34,211,238,0.45)', display: 'inline-block' }} />
+            <span style={{ width: '24px', height: '1px', background: 'var(--cyan)', boxShadow: '0 0 6px var(--cyan-glow)', display: 'inline-block' }} />
             02 — Stack
           </span>
           <h2 style={{
@@ -75,12 +75,12 @@ function Skills() {
             fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 600,
             letterSpacing: '-0.025em', lineHeight: 1.05,
             margin: '16px 0 12px',
-            color: istDunkel ? '#ffffff' : '#171717',
+            color: 'var(--text-0)',
           }}>
             Meine{' '}
-            <em style={{ fontStyle: 'normal', color: '#22d3ee', textShadow: istDunkel ? '0 0 24px rgba(34,211,238,0.45)' : 'none' }}>Skills</em>
+            <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Skills</em>
           </h2>
-          <p style={{ color: istDunkel ? '#a1a1aa' : '#525252', fontSize: '16px', maxWidth: '640px' }}>
+          <p style={{ color: 'var(--text-2)', fontSize: '16px', maxWidth: '640px' }}>
             Technologien und Tools aus meinem Werkzeugkasten — von Frontend über Automation bis Business.
           </p>
         </div>
@@ -93,25 +93,25 @@ function Skills() {
               className={`skill-card skill-${card.size} reveal`}
               style={{
                 background: card.size === 'lg'
-                  ? 'radial-gradient(ellipse at 100% 0%, rgba(34,211,238,0.12) 0%, transparent 55%), #111111'
-                  : '#111111',
-                border: `1px solid ${card.size === 'lg' ? 'rgba(34,211,238,0.22)' : 'rgba(255,255,255,0.05)'}`,
+                  ? 'radial-gradient(ellipse at 100% 0%, var(--cyan-bg-soft) 0%, transparent 55%), var(--bg-2)'
+                  : 'var(--bg-2)',
+                border: `1px solid ${card.size === 'lg' ? 'var(--cyan-border)' : 'var(--cyan-border)'}`,
                 borderRadius: '16px', padding: '24px',
                 position: 'relative', overflow: 'hidden',
                 display: 'flex', flexDirection: 'column',
                 transition: 'all 0.3s cubic-bezier(0.22,0.61,0.36,1)',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'rgba(34,211,238,0.55)'
-                e.currentTarget.style.background = 'radial-gradient(ellipse at 100% 0%, rgba(34,211,238,0.12) 0%, transparent 55%), #161616'
+                e.currentTarget.style.borderColor = 'var(--cyan-border-strong)'
+                e.currentTarget.style.background = 'radial-gradient(ellipse at 100% 0%, var(--cyan-bg-soft) 0%, transparent 55%), var(--bg-3)'
                 e.currentTarget.style.transform = 'translateY(-3px)'
-                e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.4), 0 0 24px rgba(34,211,238,0.08)'
+                e.currentTarget.style.boxShadow = 'var(--shadow-card), var(--glow-sm)'
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.borderColor = card.size === 'lg' ? 'rgba(34,211,238,0.22)' : 'rgba(255,255,255,0.05)'
+                e.currentTarget.style.borderColor = 'var(--cyan-border)'
                 e.currentTarget.style.background = card.size === 'lg'
-                  ? 'radial-gradient(ellipse at 100% 0%, rgba(34,211,238,0.12) 0%, transparent 55%), #111111'
-                  : '#111111'
+                  ? 'radial-gradient(ellipse at 100% 0%, var(--cyan-bg-soft) 0%, transparent 55%), var(--bg-2)'
+                  : 'var(--bg-2)'
                 e.currentTarget.style.transform = 'none'
                 e.currentTarget.style.boxShadow = 'none'
               }}
@@ -128,9 +128,9 @@ function Skills() {
                 display: 'flex', alignItems: 'center', gap: '10px',
                 marginBottom: '16px',
                 fontFamily: 'JetBrains Mono, monospace', fontSize: '11px',
-                letterSpacing: '0.16em', color: '#71717a', textTransform: 'uppercase',
+                letterSpacing: '0.16em', color: 'var(--text-3)', textTransform: 'uppercase',
               }}>
-                <span style={{ color: '#22d3ee', fontWeight: 600 }}>{card.num}</span>
+                <span style={{ color: 'var(--cyan)', fontWeight: 600 }}>{card.num}</span>
                 <span>{card.cat}</span>
               </div>
 
@@ -139,7 +139,7 @@ function Skills() {
                 fontFamily: 'Space Grotesk, system-ui, sans-serif',
                 fontSize: card.size === 'lg' ? '28px' : '18px',
                 fontWeight: 600, margin: card.tag ? '0 0 8px' : '0 0 16px',
-                color: '#ffffff', letterSpacing: '-0.01em',
+                color: 'var(--text-0)', letterSpacing: '-0.01em',
               }}>
                 {card.title}
               </h3>
@@ -149,7 +149,7 @@ function Skills() {
                 <span style={{
                   display: 'block',
                   fontFamily: 'JetBrains Mono, monospace', fontSize: '11px',
-                  color: '#22d3ee', letterSpacing: '0.14em',
+                  color: 'var(--cyan)', letterSpacing: '0.14em',
                   textTransform: 'uppercase', marginBottom: '16px',
                 }}>
                   {card.tag}
@@ -169,19 +169,19 @@ function Skills() {
                       fontFamily: 'JetBrains Mono, monospace', fontSize: '11px',
                       padding: '5px 11px', borderRadius: '9999px',
                       background: 'transparent',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      color: '#e4e4e7', whiteSpace: 'nowrap',
+                      border: '1px solid var(--cyan-border)',
+                      color: 'var(--text-1)', whiteSpace: 'nowrap',
                       transition: 'all 0.2s cubic-bezier(0.22,0.61,0.36,1)',
                       cursor: 'default',
                     }}
                     onMouseEnter={e => {
-                      e.currentTarget.style.borderColor = 'rgba(34,211,238,0.55)'
-                      e.currentTarget.style.color = '#22d3ee'
-                      e.currentTarget.style.boxShadow = '0 0 10px rgba(34,211,238,0.15)'
+                      e.currentTarget.style.borderColor = 'var(--cyan-border-strong)'
+                      e.currentTarget.style.color = 'var(--cyan)'
+                      e.currentTarget.style.boxShadow = 'var(--glow-sm)'
                     }}
                     onMouseLeave={e => {
-                      e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'
-                      e.currentTarget.style.color = '#e4e4e7'
+                      e.currentTarget.style.borderColor = 'var(--cyan-border)'
+                      e.currentTarget.style.color = 'var(--text-1)'
                       e.currentTarget.style.boxShadow = 'none'
                     }}
                   >

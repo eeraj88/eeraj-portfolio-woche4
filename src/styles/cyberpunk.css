@@ -64,6 +64,32 @@
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
+/* ============================================================
+   LIGHT MODE OVERRIDES
+   ============================================================ */
+[data-theme="light"] {
+  --bg-0: #f0f4f8;
+  --bg-1: #fafbfc;
+  --bg-2: #ffffff;
+  --bg-3: #f1f5f9;
+  --bg-4: #e2e8f0;
+  --cyan: #0891b2;
+  --cyan-bright: #0e7490;
+  --cyan-soft: rgba(8, 145, 178, 0.6);
+  --cyan-glow: rgba(8, 145, 178, 0.25);
+  --cyan-border: rgba(8, 145, 178, 0.22);
+  --cyan-border-strong: rgba(8, 145, 178, 0.45);
+  --cyan-bg-soft: rgba(8, 145, 178, 0.06);
+  --text-0: #0f172a;
+  --text-1: #1e293b;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --shadow-card: 0 4px 24px rgba(0,0,0,0.08);
+  --glow-sm: 0 0 12px rgba(8,145,178,0.2);
+  --glow-md: 0 0 24px rgba(8,145,178,0.2);
+  --glow-lg: 0 0 32px rgba(8,145,178,0.3);
+}
+
 /* === Body / base === */
 html { scroll-behavior: smooth; }
 body {
@@ -72,7 +98,7 @@ body {
   color: var(--text-1);
   -webkit-font-smoothing: antialiased;
 }
-::selection { background: var(--cyan); color: var(--bg-0); }
+::selection { background: var(--cyan); color: #fff; }
 
 /* === Scrollbar === */
 ::-webkit-scrollbar { width: 10px; }
@@ -83,6 +109,13 @@ body {
   border: 2px solid var(--bg-0);
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
+
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg-3); }
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--bg-4), var(--bg-3));
+  border-color: var(--bg-3);
+}
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: var(--cyan); }
 
 /* === Headings === */
 h1, h2, h3, h4 {
@@ -114,6 +147,17 @@ h1, h2, h3, h4 {
   transform: translate(-50%, -50%);
   transition: opacity 0.3s;
   mix-blend-mode: screen;
+}
+
+[data-theme="light"] .fx-cursor {
+  mix-blend-mode: multiply;
+  background: radial-gradient(circle, rgba(8,145,178,0.07) 0%, transparent 65%);
+}
+
+[data-theme="light"] .fx-grid {
+  background-image:
+    linear-gradient(rgba(8,145,178,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8,145,178,0.04) 1px, transparent 1px);
 }
 
 /* === Scroll progress bar === */

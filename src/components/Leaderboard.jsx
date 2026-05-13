@@ -3,10 +3,10 @@ import { ThemeContext } from '../Context/ThemeContext'
 import { subscribeToLeaderboard } from '../firebase'
 
 const C = {
-  cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)',
-  cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)',
-  bg0: '#050505', bg1: '#0a0a0a', bg2: '#111111', bg3: '#161616',
-  text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a',
+  cyan: 'var(--cyan)', cyanGlow: 'var(--cyan-glow)',
+  cyanBorder: 'var(--cyan-border)', cyanBorderStrong: 'var(--cyan-border-strong)',
+  bg0: 'var(--bg-0)', bg1: 'var(--bg-1)', bg2: 'var(--bg-2)', bg3: 'var(--bg-3)',
+  text0: 'var(--text-0)', text1: 'var(--text-1)', text2: 'var(--text-2)', text3: 'var(--text-3)',
 }
 const fontMono = "'JetBrains Mono', ui-monospace, monospace"
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
@@ -109,7 +109,7 @@ export default function Leaderboard({ isNav = false, iconOnly = false }) {
         {/* Header */}
         <div style={{
           padding: '16px 20px 14px',
-          borderBottom: `1px solid rgba(255,255,255,0.05)`,
+          borderBottom: `1px solid var(--cyan-border)`,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <div>
@@ -149,7 +149,7 @@ export default function Leaderboard({ isNav = false, iconOnly = false }) {
                   display: 'flex', alignItems: 'center', gap: '10px',
                   padding: '10px 12px', borderRadius: '10px',
                   background: i === 0 ? 'rgba(251,191,36,0.06)' : C.bg2,
-                  border: `1px solid ${i < 3 ? `${RANK_COLORS[i]}30` : 'rgba(255,255,255,0.05)'}`,
+                  border: `1px solid ${i < 3 ? `${RANK_COLORS[i]}30` : 'var(--cyan-border)'}`,
                   transition: `border-color 0.2s`,
                 }}>
                   <span style={{
@@ -188,7 +188,7 @@ export default function Leaderboard({ isNav = false, iconOnly = false }) {
 
         {/* Footer */}
         <div style={{
-          padding: '8px 16px', borderTop: `1px solid rgba(255,255,255,0.05)`,
+          padding: '8px 16px', borderTop: `1px solid var(--cyan-border)`,
           fontFamily: fontMono, fontSize: '10px', color: C.text3, textAlign: 'center',
         }}>
           Echtzeit · Firebase

@@ -2,7 +2,7 @@ import { useContext } from 'react'
 import testimonials from '../data/testimonials'
 import { ThemeContext } from '../Context/ThemeContext'
 
-const C = { cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)', cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)', bg2: '#111111', text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a' }
+const C = { cyan: 'var(--cyan)', cyanGlow: 'var(--cyan-glow)', cyanBorder: 'var(--cyan-border)', cyanBorderStrong: 'var(--cyan-border-strong)', bg2: 'var(--bg-2)', text0: 'var(--text-0)', text1: 'var(--text-1)', text2: 'var(--text-2)', text3: 'var(--text-3)' }
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
 const fontMono = "'JetBrains Mono', ui-monospace, monospace"
 const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
@@ -64,7 +64,7 @@ function TestiCard({ t }) {
       </blockquote>
 
       {/* Person */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderTop: `1px solid rgba(255,255,255,0.05)`, paddingTop: '16px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', borderTop: `1px solid var(--cyan-border)`, paddingTop: '16px' }}>
         <img
           src={t.bild}
           alt={t.name}
@@ -85,7 +85,7 @@ function TestiCard({ t }) {
             fontFamily: fontMono, fontSize: '10px', letterSpacing: '0.12em',
             textTransform: 'uppercase', color: C.text3,
             padding: '4px 10px', borderRadius: '9999px',
-            border: `1px solid rgba(255,255,255,0.07)`,
+            border: `1px solid var(--cyan-border)`,
             whiteSpace: 'nowrap',
           }}>
             {t.projekt}
@@ -107,7 +107,7 @@ function Testimonials() {
   return (
     <section id="testimonials" style={{
       padding: '96px 0',
-      background: istDunkel ? '#050505' : '#f5f5f5',
+      background: 'var(--bg-0)',
       position: 'relative', overflow: 'hidden',
     }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
@@ -126,11 +126,11 @@ function Testimonials() {
             fontSize: 'clamp(2rem, 4vw, 3rem)',
             fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05,
             margin: '16px 0 12px',
-            color: istDunkel ? C.text0 : '#171717',
+            color: 'var(--text-0)',
           }}>
-            Kunden<em style={{ fontStyle: 'normal', color: C.cyan, textShadow: istDunkel ? `0 0 24px ${C.cyanGlow}` : 'none' }}>stimmen</em>
+            Kunden<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>stimmen</em>
           </h2>
-          <p style={{ color: istDunkel ? C.text2 : '#525252', fontSize: '16px' }}>
+          <p style={{ color: 'var(--text-2)', fontSize: '16px' }}>
             Was Kunden über meine Arbeit sagen.
           </p>
         </div>

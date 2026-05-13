@@ -30,20 +30,20 @@ export function AnimatedThemeToggler({ duration = 500, className }) {
       aria-label="Toggle Theme"
       style={{
         width: '38px', height: '38px', borderRadius: '10px',
-        background: '#111111',
-        border: `1px solid ${istDunkel ? 'rgba(34,211,238,0.22)' : 'rgba(0,0,0,0.12)'}`,
+        background: 'var(--bg-2)',
+        border: `1px solid var(--cyan-border)`,
         display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
         cursor: 'pointer',
         transition: `all 0.25s ${ease}`,
-        color: istDunkel ? '#22d3ee' : '#525252',
+        color: 'var(--cyan)',
       }}
       onMouseEnter={e => {
-        e.currentTarget.style.borderColor = istDunkel ? 'rgba(34,211,238,0.55)' : 'rgba(0,0,0,0.25)'
-        e.currentTarget.style.boxShadow = istDunkel ? '0 0 18px rgba(34,211,238,0.45)' : 'none'
+        e.currentTarget.style.borderColor = 'var(--cyan-border-strong)'
+        e.currentTarget.style.boxShadow = 'var(--glow-sm)'
         e.currentTarget.style.transform = 'translateY(-1px)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = istDunkel ? 'rgba(34,211,238,0.22)' : 'rgba(0,0,0,0.12)'
+        e.currentTarget.style.borderColor = 'var(--cyan-border)'
         e.currentTarget.style.boxShadow = 'none'
         e.currentTarget.style.transform = 'none'
       }}

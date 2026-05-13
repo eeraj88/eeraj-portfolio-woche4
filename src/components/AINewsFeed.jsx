@@ -6,10 +6,10 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseKey = import.meta.env.VITE_SUPABASE_KEY
 
 const C = {
-  cyan: '#22d3ee', cyanGlow: 'rgba(34,211,238,0.45)',
-  cyanBorder: 'rgba(34,211,238,0.22)', cyanBorderStrong: 'rgba(34,211,238,0.55)',
-  bg0: '#050505', bg1: '#0a0a0a', bg2: '#111111',
-  text0: '#ffffff', text1: '#e4e4e7', text2: '#a1a1aa', text3: '#71717a',
+  cyan: 'var(--cyan)', cyanGlow: 'var(--cyan-glow)',
+  cyanBorder: 'var(--cyan-border)', cyanBorderStrong: 'var(--cyan-border-strong)',
+  bg0: 'var(--bg-0)', bg1: 'var(--bg-1)', bg2: 'var(--bg-2)',
+  text0: 'var(--text-0)', text1: 'var(--text-1)', text2: 'var(--text-2)', text3: 'var(--text-3)',
 }
 const fontMono = "'JetBrains Mono', ui-monospace, monospace"
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
@@ -98,7 +98,7 @@ export default function AINewsFeed() {
             position: 'fixed', left: 0, top: '66px', zIndex: 55,
             display: 'flex', alignItems: 'center', gap: '8px',
             padding: '7px 16px 7px 10px',
-            background: '#111111',
+            background: 'var(--bg-2)',
             borderRight: `1px solid ${C.cyanBorder}`,
             borderBottom: `2px solid ${C.cyan}`,
             borderTop: 'none',
@@ -155,7 +155,7 @@ export default function AINewsFeed() {
         {/* Header */}
         <div style={{
           padding: '20px 20px 16px',
-          borderBottom: `1px solid rgba(255,255,255,0.05)`,
+          borderBottom: `1px solid var(--cyan-border)`,
           display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between',
           flexShrink: 0,
         }}>
@@ -237,7 +237,7 @@ export default function AINewsFeed() {
                       {(expanded ? items : [items[0]]).map((item, idx) => (
                         <div key={item.id || idx} style={{
                           padding: '10px 12px',
-                          borderBottom: idx < (expanded ? items : [items[0]]).length - 1 ? `1px solid rgba(255,255,255,0.04)` : 'none',
+                          borderBottom: idx < (expanded ? items : [items[0]]).length - 1 ? `1px solid var(--cyan-border)` : 'none',
                         }}>
                           <div style={{ display: 'flex', gap: '8px' }}>
                             <div style={{ width: '2px', borderRadius: '2px', background: cfg.color, flexShrink: 0, alignSelf: 'stretch', minHeight: '14px' }} />
@@ -289,7 +289,7 @@ export default function AINewsFeed() {
         {/* Footer */}
         <div style={{
           padding: '10px 16px', flexShrink: 0,
-          borderTop: `1px solid rgba(255,255,255,0.05)`,
+          borderTop: `1px solid var(--cyan-border)`,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           background: C.bg2,
         }}>

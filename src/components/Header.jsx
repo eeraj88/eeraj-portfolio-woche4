@@ -5,16 +5,16 @@ import { AnimatedThemeToggler } from './ui/AnimatedThemeToggler'
 const SPOTIFY_PLAYLIST_ID = '55f8XIuabL2aM5SANjYT9B'
 
 const C = {
-  cyan: '#22d3ee',
-  cyanGlow: 'rgba(34,211,238,0.45)',
-  cyanBorder: 'rgba(34,211,238,0.22)',
-  cyanBorderStrong: 'rgba(34,211,238,0.55)',
-  cyanBg: 'rgba(34,211,238,0.06)',
-  bg0: '#050505',
-  bg1: '#0a0a0a',
-  bg2: '#111111',
-  text2: '#a1a1aa',
-  text3: '#71717a',
+  cyan: 'var(--cyan)',
+  cyanGlow: 'var(--cyan-glow)',
+  cyanBorder: 'var(--cyan-border)',
+  cyanBorderStrong: 'var(--cyan-border-strong)',
+  cyanBg: 'var(--cyan-bg-soft)',
+  bg0: 'var(--bg-0)',
+  bg1: 'var(--bg-1)',
+  bg2: 'var(--bg-2)',
+  text2: 'var(--text-2)',
+  text3: 'var(--text-3)',
 }
 const fontMono = "'JetBrains Mono', ui-monospace, monospace"
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
@@ -90,16 +90,12 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
       position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60,
       padding: '14px 0',
       background: isScrolled
-        ? (istDunkel ? 'rgba(5,5,5,0.88)' : 'rgba(250,250,250,0.92)')
-        : (istDunkel ? 'rgba(10,10,10,0.55)' : 'rgba(250,250,250,0.7)'),
+        ? 'color-mix(in srgb, var(--bg-0) 88%, transparent)'
+        : 'color-mix(in srgb, var(--bg-1) 55%, transparent)',
       backdropFilter: 'blur(16px) saturate(180%)',
       WebkitBackdropFilter: 'blur(16px) saturate(180%)',
-      borderBottom: `1px solid ${isScrolled
-        ? (istDunkel ? 'rgba(34,211,238,0.35)' : 'rgba(0,0,0,0.10)')
-        : (istDunkel ? 'rgba(34,211,238,0.14)' : 'rgba(0,0,0,0.05)')}`,
-      boxShadow: isScrolled && istDunkel
-        ? '0 1px 20px rgba(34,211,238,0.08)'
-        : 'none',
+      borderBottom: `1px solid ${isScrolled ? 'var(--cyan-border-strong)' : 'var(--cyan-border)'}`,
+      boxShadow: isScrolled ? 'var(--glow-sm)' : 'none',
       transition: `background 0.3s, border-color 0.3s`,
     }}>
       <div style={{
@@ -113,9 +109,9 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
           style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, lineHeight: 1.1, justifySelf: 'start' }}
         >
           <div style={{ fontFamily: fontDisplay, fontWeight: 700, fontSize: '19px', letterSpacing: '-0.01em', display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-            <span style={{ color: C.cyan, textShadow: istDunkel ? `0 0 18px ${C.cyanGlow}` : 'none' }}>Eeraj</span>
-            <span style={{ color: C.text3 }}>.</span>
-            <span style={{ color: istDunkel ? '#ffffff' : '#171717' }}>dev</span>
+            <span style={{ color: 'var(--cyan)', textShadow: `0 0 18px var(--cyan-glow)` }}>Eeraj</span>
+            <span style={{ color: 'var(--text-3)' }}>.</span>
+            <span style={{ color: 'var(--text-0)' }}>dev</span>
           </div>
           <span style={{ display: 'block', fontFamily: fontMono, fontSize: '10px', color: C.text3, letterSpacing: '0.08em', textTransform: 'uppercase', marginTop: '2px' }}>
             Portfolio
@@ -211,7 +207,7 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
       {menuOffen && (
         <div style={{
           padding: '16px 24px',
-          background: istDunkel ? 'rgba(5,5,5,0.96)' : 'rgba(255,255,255,0.96)',
+          background: 'color-mix(in srgb, var(--bg-0) 96%, transparent)',
           backdropFilter: 'blur(20px)',
           borderBottom: `1px solid ${C.cyanBorder}`,
           animation: 'slideDown 0.3s ease',

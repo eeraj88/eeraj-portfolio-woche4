@@ -45,11 +45,7 @@ function Footer() {
   ]
 
   return (
-    <footer className={`relative py-16 px-4 ${
-      istDunkel
-        ? 'border-t border-[rgba(34,211,238,0.12)] bg-[#050505]'
-        : 'border-t border-[#e2e8f0] bg-white'
-    }`}>
+    <footer className="relative py-16 px-4" style={{ borderTop: '1px solid var(--cyan-border)', background: 'var(--bg-0)' }}>
       {/* Cyan top glow line */}
       {istDunkel && (
         <div style={{
@@ -70,18 +66,18 @@ function Footer() {
               fontWeight: 700,
               letterSpacing: '-0.02em',
               marginBottom: '12px',
-              color: istDunkel ? '#ffffff' : '#0a192f'
+              color: 'var(--text-0)'
             }}>
-              <span style={{ color: '#22d3ee', textShadow: istDunkel ? '0 0 20px rgba(34,211,238,0.45)' : 'none' }}>
+              <span style={{ color: 'var(--cyan)', textShadow: '0 0 20px var(--cyan-glow)' }}>
                 Eeraj
               </span>
-              <span style={{ color: istDunkel ? '#71717a' : '#94a3b8' }}>.dev</span>
+              <span style={{ color: 'var(--text-3)' }}>.dev</span>
             </h3>
             <p style={{
               fontFamily: 'JetBrains Mono, monospace',
               fontSize: '12px',
               lineHeight: 1.7,
-              color: istDunkel ? '#a1a1aa' : '#475569',
+              color: 'var(--text-2)',
               maxWidth: '260px',
               marginBottom: '16px'
             }}>
@@ -98,7 +94,7 @@ function Footer() {
                   fontSize: '11px', fontWeight: 700,
                   letterSpacing: '0.06em',
                   borderRadius: '9px',
-                  background: istDunkel ? 'rgba(34,211,238,0.1)' : 'transparent',
+                  background: 'var(--cyan-bg-soft)',
                   border: '1px solid rgba(34,211,238,0.5)',
                   color: '#22d3ee',
                   textDecoration: 'none',
@@ -110,7 +106,7 @@ function Footer() {
                   e.currentTarget.style.boxShadow = '0 0 16px rgba(34,211,238,0.35)'
                 }}
                 onMouseLeave={e => {
-                  e.currentTarget.style.background = istDunkel ? 'rgba(34,211,238,0.1)' : 'transparent'
+                  e.currentTarget.style.background = 'var(--cyan-bg-soft)'
                   e.currentTarget.style.borderColor = 'rgba(34,211,238,0.5)'
                   e.currentTarget.style.boxShadow = 'none'
                 }}
@@ -130,21 +126,21 @@ function Footer() {
                   letterSpacing: '0.06em',
                   borderRadius: '9px',
                   background: 'transparent',
-                  border: '1px solid rgba(34,211,238,0.25)',
-                  color: '#71717a',
+                  border: '1px solid var(--cyan-border)',
+                  color: 'var(--text-3)',
                   textDecoration: 'none',
                   transition: 'all 0.25s',
                 }}
                 onMouseEnter={e => {
-                  e.currentTarget.style.background = 'rgba(34,211,238,0.08)'
-                  e.currentTarget.style.borderColor = 'rgba(34,211,238,0.5)'
-                  e.currentTarget.style.color = '#22d3ee'
-                  e.currentTarget.style.boxShadow = '0 0 12px rgba(34,211,238,0.2)'
+                  e.currentTarget.style.background = 'var(--cyan-bg-soft)'
+                  e.currentTarget.style.borderColor = 'var(--cyan-border-strong)'
+                  e.currentTarget.style.color = 'var(--cyan)'
+                  e.currentTarget.style.boxShadow = 'var(--glow-sm)'
                 }}
                 onMouseLeave={e => {
                   e.currentTarget.style.background = 'transparent'
-                  e.currentTarget.style.borderColor = 'rgba(34,211,238,0.25)'
-                  e.currentTarget.style.color = '#71717a'
+                  e.currentTarget.style.borderColor = 'var(--cyan-border)'
+                  e.currentTarget.style.color = 'var(--text-3)'
                   e.currentTarget.style.boxShadow = 'none'
                 }}
               >
@@ -176,15 +172,15 @@ function Footer() {
                     style={{
                       fontFamily: 'Inter, system-ui, sans-serif',
                       fontSize: '14px',
-                      color: istDunkel ? '#a1a1aa' : '#475569',
+                      color: 'var(--text-2)',
                       textDecoration: 'none',
                       transition: 'color 0.2s',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '8px'
                     }}
-                    onMouseEnter={e => e.currentTarget.style.color = '#22d3ee'}
-                    onMouseLeave={e => e.currentTarget.style.color = istDunkel ? '#a1a1aa' : '#475569'}
+                    onMouseEnter={e => e.currentTarget.style.color = 'var(--cyan)'}
+                    onMouseLeave={e => e.currentTarget.style.color = 'var(--text-2)'}
                   >
                     <span style={{ color: 'rgba(34,211,238,0.5)', fontFamily: 'JetBrains Mono, monospace' }}>›</span>
                     {link.name}
@@ -220,9 +216,9 @@ function Footer() {
                     justifyContent: 'center',
                     width: '40px', height: '40px',
                     borderRadius: '10px',
-                    background: istDunkel ? 'rgba(34,211,238,0.06)' : '#f1f5f9',
-                    border: `1px solid ${istDunkel ? 'rgba(34,211,238,0.22)' : '#e2e8f0'}`,
-                    color: istDunkel ? '#71717a' : '#475569',
+                    background: 'var(--cyan-bg-soft)',
+                    border: `1px solid var(--cyan-border)`,
+                    color: 'var(--text-3)',
                     transition: 'all 0.25s',
                     textDecoration: 'none'
                   }}
@@ -233,8 +229,8 @@ function Footer() {
                     e.currentTarget.style.transform = 'translateY(-2px)'
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.color = istDunkel ? '#71717a' : '#475569'
-                    e.currentTarget.style.borderColor = istDunkel ? 'rgba(34,211,238,0.22)' : '#e2e8f0'
+                    e.currentTarget.style.color = 'var(--text-3)'
+                    e.currentTarget.style.borderColor = 'var(--cyan-border)'
                     e.currentTarget.style.boxShadow = 'none'
                     e.currentTarget.style.transform = 'none'
                   }}
@@ -246,7 +242,7 @@ function Footer() {
             <p style={{
               fontFamily: 'JetBrains Mono, monospace',
               fontSize: '12px',
-              color: istDunkel ? '#52525b' : '#94a3b8'
+              color: 'var(--text-3)'
             }}>
               Besucher: <VisitorCounter />
             </p>
@@ -256,9 +252,7 @@ function Footer() {
         {/* Divider */}
         <div style={{
           height: '1px',
-          background: istDunkel
-            ? 'linear-gradient(90deg, transparent, rgba(34,211,238,0.2), transparent)'
-            : 'linear-gradient(90deg, transparent, #e2e8f0, transparent)',
+          background: 'linear-gradient(90deg, transparent, var(--cyan-border-strong), transparent)',
           margin: '0 0 20px'
         }} />
 
@@ -267,14 +261,14 @@ function Footer() {
           <p style={{
             fontFamily: 'JetBrains Mono, monospace',
             fontSize: '12px',
-            color: istDunkel ? '#52525b' : '#94a3b8'
+            color: 'var(--text-3)'
           }}>
             © {aktuellesJahr} Eeraj Jan. Alle Rechte vorbehalten.
           </p>
           <p style={{
             fontFamily: 'JetBrains Mono, monospace',
             fontSize: '12px',
-            color: istDunkel ? '#52525b' : '#94a3b8'
+            color: 'var(--text-3)'
           }}>
             Built with{' '}
             <span style={{ color: '#22d3ee' }}>React</span>

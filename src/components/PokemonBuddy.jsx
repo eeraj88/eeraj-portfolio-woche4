@@ -1164,8 +1164,8 @@ export default function PokemonBuddy() {
           className={`poke-btn${isEvolving ? ' evolving' : isAnimating ? ' wiggle-animation' : ''}`}
           style={{
             width: '50px', height: '50px', borderRadius: '14px',
-            background: '#111111',
-            border: '1px solid rgba(34,211,238,0.22)',
+            background: 'var(--bg-2)',
+            border: '1px solid var(--cyan-border)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             overflow: 'hidden', cursor: 'pointer',
             transition: 'all 0.25s cubic-bezier(0.22, 0.61, 0.36, 1)',
@@ -1209,12 +1209,12 @@ export default function PokemonBuddy() {
         <div style={{
           position: 'fixed', bottom: '88px', right: '24px', zIndex: 50,
           width: '288px', borderRadius: '20px', overflow: 'hidden',
-          background: '#0a0a0a',
-          border: '1px solid rgba(34,211,238,0.22)',
+          background: 'var(--bg-1)',
+          border: '1px solid var(--cyan-border)',
           boxShadow: '0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(34,211,238,0.06)',
         }}>
           {/* Cyan top accent */}
-          <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, #22d3ee, transparent)', flexShrink: 0 }} />
+          <div style={{ height: '1px', background: 'linear-gradient(90deg, transparent, var(--cyan), transparent)', flexShrink: 0 }} />
 
           {/* Header */}
           <div style={{
@@ -1223,11 +1223,11 @@ export default function PokemonBuddy() {
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           }}>
             <div>
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', color: '#22d3ee', textTransform: 'uppercase', marginBottom: '3px' }}>
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', letterSpacing: '0.18em', color: 'var(--cyan)', textTransform: 'uppercase', marginBottom: '3px' }}>
                 // Pokémon Buddy
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '15px', fontWeight: 600, color: '#ffffff' }}>
+                <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '15px', fontWeight: 600, color: 'var(--text-0)' }}>
                   {data?.trainerName?.split(' ').slice(0, 2).join(' ') || 'Trainer'}
                 </span>
                 {data?.isShiny && <span style={{ fontSize: '11px' }}>✨</span>}
@@ -1251,8 +1251,8 @@ export default function PokemonBuddy() {
                 onClick={() => setIsOpen(false)}
                 style={{
                   width: '26px', height: '26px', borderRadius: '7px',
-                  background: '#161616', border: '1px solid rgba(34,211,238,0.22)',
-                  color: '#a1a1aa', cursor: 'pointer', fontSize: '14px',
+                  background: 'var(--bg-3)', border: '1px solid var(--cyan-border)',
+                  color: 'var(--text-2)', cursor: 'pointer', fontSize: '14px',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                 }}
               >✕</button>

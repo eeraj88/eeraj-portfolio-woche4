@@ -79,19 +79,13 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
-      <div className={`min-h-screen transition-colors duration-500 relative overflow-hidden ${
-        istDunkel ? 'bg-[#0a0a0a] text-white' : 'bg-[#fafafa] text-[#171717]'
-      }`}>
+      <div className="min-h-screen transition-colors duration-500 relative overflow-hidden" style={{ background: 'var(--bg-1)', color: 'var(--text-1)' }}>
 
-        {/* Cyberpunk FX — dark mode only */}
-        {istDunkel && (
-          <>
-            <div className="fx-grid"></div>
-            <div className="fx-vignette"></div>
-            <div className="fx-cursor" id="cursor-glow"></div>
-            <div id="scroll-progress"></div>
-          </>
-        )}
+        {/* Cyberpunk FX — grid, cursor, progress in both modes; vignette dark-only */}
+        <div className="fx-grid"></div>
+        {istDunkel && <div className="fx-vignette"></div>}
+        <div className="fx-cursor" id="cursor-glow"></div>
+        <div id="scroll-progress"></div>
 
         <div className="relative z-10">
           <ScrollIndikator />
