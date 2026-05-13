@@ -317,6 +317,27 @@ In `cyberpunk.css` :
 
 ## 📝 Changelog
 
+### Version 2.2 (Session 3 — Hero & Layout Refinements)
+- ✅ Hero Buttons immer sichtbar (keine Animation)
+- ✅ Hero Badge unter Buttons mit Pulse-Animation
+- ✅ Navigation 3-Spalten Layout (Logo|Nav|Actions)
+- ✅ Container Breite: 1200px → 1400px (alle Sektionen)
+- ✅ Download CV Icon: Pfeil nach unten
+- ✅ Pokéball Icon minimalistsich (dünne Linien)
+- ✅ Testimonials Bild-Pfade korrigiert
+
+### Version 2.1 (Session 2 — Design Refinements)
+- ✅ Header Logo am linken Rand
+- ✅ Header Navbar Border immer sichtbar
+- ✅ Spotify-Button Cyan-Stil
+- ✅ Leaderboard Trophy Icon überarbeitet
+- ✅ Hero Foto Positionierung & Helligkeit
+- ✅ AINewsFeed Tab-Button horizontal
+- ✅ PokemonBuddy Float-Button Cyberpunk-Stil
+- ✅ About Video Glow-Rahmen verstärkt
+- ✅ Footer Bio & Kontakt-Buttons
+- ✅ cyberpunk.css Cursor Glow vergrößert
+
 ### Version 2.0 (Cyberpunk Edition)
 - ✅ Cyberpunk Theme implementiert
 - ✅ Neue Hero mit Typewriter
@@ -329,6 +350,41 @@ In `cyberpunk.css` :
 - ✅ Cursor Glow
 - ✅ PokemonBuddy behalten
 - ✅ AINewsFeed behalten
+
+#### Hero (`src/components/Hero.jsx`)
+- ✅ **Buttons immer sichtbar:** Keine Erscheinungsanimation, von Anfang an da
+- ✅ **Buttons Position:** `marginTop: 48px` (tiefer als vorher)
+- ✅ **Availability Badge:** Unter Buttons verschoben (war oben)
+- ✅ **Badge Timing:** Erscheint NACH Typewriter-Fertigstellung (`heroStage === 2`)
+- ✅ **Badge Animation:** Pulse-Animation (`badgePulse`, `badgeDotPulse`)
+- ✅ **Download CV Icon:** Pfeil nach unten (Download-Icon) statt aktuellem Icon
+- ✅ **Reihenfolge Hero:** Typewriter → Bild → Buttons (immer sichtbar) → Badge (pulsierend)
+
+#### Navigation (`src/components/Header.jsx`)
+- ✅ **3-Spalten Layout:** Logo links | Nav zentriert | Actions rechts
+- ✅ **Grid System:** `gridTemplateColumns: '1fr auto 1fr'`
+- ✅ **Logo:** `justifySelf: 'start'`
+- ✅ **Nav:** `justifySelf: 'center'`
+- ✅ **Actions:** `justifySelf: 'end'`
+- ✅ **Container Breite:** 1200px → 1400px
+
+#### Layout Container (Alle Sektionen)
+- ✅ **Container Breite:** 1200px → 1400px (Hero, About, Skills, Projects, Testimonials, Contact)
+- ✅ **Breiteres Layout:** Inhalte nutzen mehr Platz, wirken weniger gequetscht
+
+#### PokemonBuddy (`src/components/PokemonBuddy.jsx`)
+- ✅ **Pokéball Icon:** Minimalistischeres Design
+- ✅ **Dünne Linien:** Outline mit reduzierter Opacity
+- ✅ **Größe:** 22px → 20px
+- ✅ **Clean Look:** Harmonischer mit Cyberpunk-Theme
+
+#### Testimonials (`src/data/testimonials.js`)
+- ✅ **Bild-Pfade korrigiert:** `.png` → `.jpg`
+- ✅ **Elon Musk:** `/elon-musk.jpg`
+- ✅ **Gordon Ramsay:** `/gordon ramsey.jpg` (mit Leerzeichen)
+- ✅ **Pharrell Williams:** `/pharrell-williams.jpg`
+
+---
 
 ### Version 2.1 (Session 2 — Design Refinements)
 

@@ -110,7 +110,7 @@ function Testimonials() {
       background: istDunkel ? '#050505' : '#f5f5f5',
       position: 'relative', overflow: 'hidden',
     }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
         {/* Section head */}
         <div style={{ marginBottom: '56px' }}>
           <span style={{

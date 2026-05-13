@@ -97,7 +97,7 @@ function Contact() {
       id="contact"
       style={{ padding: '96px 0', background: istDunkel ? C.bg2 : '#ffffff', position: 'relative' }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
 
         {/* Section head */}
         <div className="reveal" style={{ textAlign: 'center', marginBottom: '56px' }}>

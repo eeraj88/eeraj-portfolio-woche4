@@ -103,14 +103,14 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
       transition: `background 0.3s, border-color 0.3s`,
     }}>
       <div style={{
-        maxWidth: '1200px', margin: '0 auto',
-        padding: '0 24px 0 8px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '24px',
+        maxWidth: '1400px', margin: '0 auto',
+        padding: '0 24px 0 24px',
+        display: 'grid', gridTemplateColumns: '1fr auto 1fr', alignItems: 'center', gap: '24px',
       }}>
-        {/* Brand */}
+        {/* Brand - LEFT */}
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, lineHeight: 1.1 }}
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, lineHeight: 1.1, justifySelf: 'start' }}
         >
           <div style={{ fontFamily: fontDisplay, fontWeight: 700, fontSize: '19px', letterSpacing: '-0.01em', display: 'flex', alignItems: 'baseline', gap: '4px' }}>
             <span style={{ color: C.cyan, textShadow: istDunkel ? `0 0 18px ${C.cyanGlow}` : 'none' }}>Eeraj</span>
@@ -122,15 +122,15 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
           </span>
         </button>
 
-        {/* Desktop nav */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }} className="hidden-mobile">
+        {/* Desktop nav - CENTERED */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '32px', justifySelf: 'center' }} className="hidden-mobile">
           {navItems.map(({ label, ref }) => (
             <NavLink key={label} label={label} onClick={() => handleNav(ref)} />
           ))}
         </nav>
 
-        {/* Actions */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        {/* Actions - RIGHT */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifySelf: 'end' }}>
           <Leaderboard isNav={true} iconOnly={true} />
 
           {/* Spotify */}

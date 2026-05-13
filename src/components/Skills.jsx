@@ -58,7 +58,7 @@ function Skills() {
 
   return (
     <section id="skills" style={{ padding: '96px 0', background: istDunkel ? '#0a0a0a' : '#fafafa', position: 'relative' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
 
         {/* Section head */}
         <div className="reveal" style={{ marginBottom: '56px' }}>

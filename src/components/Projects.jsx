@@ -176,7 +176,7 @@ function Projects() {
 
   return (
     <section id="projects" style={{ padding: '96px 0', background: istDunkel ? C.bg2 : '#ffffff', position: 'relative' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
         {/* Section head */}
         <div style={{ marginBottom: '56px' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.18em', textTransform: 'uppercase', color: C.cyan }}>

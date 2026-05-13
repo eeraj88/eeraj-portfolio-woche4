@@ -128,7 +128,7 @@ function About() {
 
       <style>{`
         .section-alt { background: var(--bg-0, #050505); }
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 3; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 3; }
         section { padding: var(--sp-24, 6rem) 0; position: relative; }
 
         .section-head { margin-bottom: 56px; }

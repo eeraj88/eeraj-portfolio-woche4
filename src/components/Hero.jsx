@@ -196,7 +196,7 @@ function Hero() {
       )}
 
       {/* Content */}
-      <div style={{ maxWidth: '1200px', width: '100%', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
+      <div style={{ maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
         <div style={{
           display: 'grid',
           gridTemplateColumns: 'minmax(0, 680px)',
@@ -204,22 +204,6 @@ function Hero() {
         }}>
           {/* Left */}
           <div>
-            {/* Eyebrow */}
-            <div style={{
-              display: 'inline-flex', alignItems: 'center', gap: '10px',
-              fontFamily: fontMono, fontSize: '13px', letterSpacing: '0.16em',
-              textTransform: 'uppercase', color: c.cyan, marginBottom: '24px',
-            }}>
-              <span style={{
-                width: '6px', height: '6px', borderRadius: '50%',
-                background: c.cyan,
-                boxShadow: `0 0 10px ${c.cyanGlow}`,
-                display: 'inline-block',
-                animation: 'heroPing 2s ease-in-out infinite',
-              }} />
-              Verfügbar für neue Projekte
-            </div>
-
             {/* Headline */}
             <h1 style={{
               fontFamily: fontDisplay,
@@ -254,8 +238,7 @@ function Hero() {
             </div>
 
             {/* CTA */}
-            {heroStage === 2 && (
-              <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center' }}>
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap', alignItems: 'center', marginTop: '48px' }}>
                 <a href="#projects" style={{
                   display: 'inline-flex', alignItems: 'center', gap: '10px',
                   padding: '14px 26px', fontFamily: fontMono, fontSize: '13px',
@@ -324,11 +307,31 @@ function Hero() {
                     e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'
                   }}
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 10v6m0 0l-3-3m3 3l3-3M5 19h14"/>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                    <polyline points="7,10 12,15 17,10"/>
+                    <line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
                   CV
                 </a>
+              </div>
+
+            {/* Availability Badge — appears after typewriter */}
+            {heroStage === 2 && (
+              <div style={{
+                display: 'inline-flex', alignItems: 'center', gap: '10px',
+                fontFamily: fontMono, fontSize: '13px', letterSpacing: '0.16em',
+                textTransform: 'uppercase', color: c.cyan, marginTop: '32px',
+                animation: 'badgePulse 2s ease-in-out infinite',
+              }}>
+                <span style={{
+                  width: '8px', height: '8px', borderRadius: '50%',
+                  background: c.cyan,
+                  boxShadow: `0 0 12px ${c.cyanGlow}, 0 0 20px ${c.cyanGlow}`,
+                  display: 'inline-block',
+                  animation: 'badgeDotPulse 2s ease-in-out infinite',
+                }} />
+                Verfügbar für neue Projekte
               </div>
             )}
           </div>
@@ -361,6 +364,20 @@ function Hero() {
         @keyframes scrollPulse {
           0%, 100% { transform: scaleY(1); opacity: 0.6; }
           50% { transform: scaleY(1.3); opacity: 1; }
+        }
+        @keyframes badgePulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        @keyframes badgeDotPulse {
+          0%, 100% {
+            transform: scale(1);
+            box-shadow: 0 0 12px rgba(34,211,238,0.45), 0 0 20px rgba(34,211,238,0.45);
+          }
+          50% {
+            transform: scale(1.3);
+            box-shadow: 0 0 16px rgba(34,211,238,0.65), 0 0 32px rgba(34,211,238,0.55);
+          }
         }
         .photo-bg.photo-in {
           opacity: 0.35 !important;

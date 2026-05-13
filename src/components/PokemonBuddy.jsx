@@ -1180,11 +1180,10 @@ export default function PokemonBuddy() {
               style={{ width: '40px', height: '40px', objectFit: 'contain' }}
             />
           ) : (
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9.5" stroke="#22d3ee" strokeWidth="1.5"/>
-              <line x1="2.5" y1="12" x2="21.5" y2="12" stroke="#22d3ee" strokeWidth="1.5"/>
-              <circle cx="12" cy="12" r="2.8" fill="none" stroke="#22d3ee" strokeWidth="1.5"/>
-              <path d="M9.2 12 A2.8 2.8 0 0 1 14.8 12" fill="rgba(34,211,238,0.12)"/>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="rgba(34,211,238,0.4)" strokeWidth="1"/>
+              <line x1="2" y1="12" x2="22" y2="12" stroke="rgba(34,211,238,0.5)" strokeWidth="1"/>
+              <circle cx="12" cy="12" r="3" fill="none" stroke="rgba(34,211,238,0.6)" strokeWidth="1"/>
             </svg>
           )}
         </button>
