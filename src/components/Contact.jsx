@@ -126,10 +126,10 @@ function Contact() {
             margin: '16px 0 12px',
             color: 'var(--text-0)',
           }}>
-            <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Kontakt</em>
+            <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>{t.contact.title}</em>
           </h2>
           <p style={{ color: 'var(--text-2)', fontSize: '16px', maxWidth: '480px', margin: '0 auto' }}>
-            Schreib mir eine Nachricht — ich freue mich von dir zu hören!
+            {t.contact.subtitle}
           </p>
         </div>
 

@@ -194,7 +194,7 @@ function Projects() {
             04 — Projekte
           </span>
           <h2 style={{ fontFamily: fontDisplay, fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, margin: '16px 0 12px', color: 'var(--text-0)' }}>
-            Meine <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Projekte</em>
+            {language === 'de' ? 'Meine ' : 'My '}<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>{t.projects.title}</em>
           </h2>
           <p style={{ color: 'var(--text-2)', fontSize: '16px' }}>Eine Auswahl meiner bisherigen Arbeiten</p>
         </div>
