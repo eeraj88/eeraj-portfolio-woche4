@@ -49,9 +49,9 @@ function Footer() {
   const quickLinks = [
     { name: 'About', href: '#about' },
     { name: 'Skills', href: '#skills' },
-    { name: 'Projekte', href: '#projects' },
+    { name: t.nav.projekte, href: '#projects' },
     { name: 'Testimonials', href: '#testimonials' },
-    { name: 'Kontakt', href: '#contact' },
+    { name: t.nav.kontakt, href: '#contact' },
   ]
 
   return (
@@ -91,8 +91,7 @@ function Footer() {
               maxWidth: '260px',
               marginBottom: '16px'
             }}>
-              Ich baue, berate & verkaufe — mit breiter Expertise,
-              die Ergebnisse liefert. Lass uns reden.
+              {t.footer.bio}
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <a
@@ -254,7 +253,7 @@ function Footer() {
               fontSize: '12px',
               color: 'var(--text-3)'
             }}>
-              Besucher: <VisitorCounter />
+              {t.footer.visitors}: <VisitorCounter />
             </p>
           </div>
         </div>
@@ -273,7 +272,7 @@ function Footer() {
             fontSize: '12px',
             color: 'var(--text-3)'
           }}>
-            © {aktuellesJahr} Eeraj Jan. Alle Rechte vorbehalten.
+            © {aktuellesJahr} Eeraj Jan. {t.footer.rights}
           </p>
           <p style={{
             fontFamily: 'JetBrains Mono, monospace',

@@ -129,7 +129,7 @@ function Testimonials() {
             textTransform: 'uppercase', color: C.cyan,
           }}>
             <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
-            05 — Referenzen
+            05 — {t.testimonials.title}
           </span>
           <h2 style={{
             fontFamily: fontDisplay,
@@ -138,10 +138,10 @@ function Testimonials() {
             margin: '16px 0 12px',
             color: 'var(--text-0)',
           }}>
-            Kunden<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>stimmen</em>
+            {language === 'de' ? 'Kunden' : 'Clients'}<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>{language === 'de' ? 'stimmen' : 'Reviews'}</em>
           </h2>
           <p style={{ color: 'var(--text-2)', fontSize: '16px' }}>
-            Was Kunden über meine Arbeit sagen.
+            {t.testimonials.subtitle}
           </p>
         </div>
       </div>

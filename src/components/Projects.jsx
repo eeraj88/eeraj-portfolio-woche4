@@ -41,7 +41,7 @@ function FilterBtn({ label, active, onClick }) {
   )
 }
 
-function ProjectCard({ projekt, idx, onClick }) {
+function ProjectCard({ projekt, idx, onClick, detailsLabel, categoryLabel }) {
   const [hov, setHov] = useState(false)
   return (
     <div
@@ -137,7 +137,7 @@ function ProjectCard({ projekt, idx, onClick }) {
         {/* Footer */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '16px', borderTop: '1px solid var(--cyan-border)' }}>
           <span style={{ fontFamily: fontMono, fontSize: '12px', color: C.cyan, letterSpacing: '0.04em', display: 'inline-flex', alignItems: 'center', gap: hov ? '10px' : '6px', transition: 'gap 0.2s' }}>
-            Details ansehen
+            {detailsLabel}
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </span>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -165,14 +165,15 @@ function Projects() {
   const { istDunkel } = useContext(ThemeContext)
   const { language } = useLanguage()
   const t = translations[language]
-  const [aktiverFilter, setAktiverFilter] = useState('Alle')
+  const [aktiverFilter, setAktiverFilter] = useState('__all__')
   const [aktivesProjekt, setAktivesProjekt] = useState(null)
   const [viewedProjects, setViewedProjects] = useState(new Set())
 
   const alleKategorien = projects.flatMap(p => Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie])
-  const kategorien = ['Alle', ...new Set(alleKategorien)]
+  const kategorienRaw = [...new Set(alleKategorien)]
+  const kategorien = [{ key: '__all__', label: t.projects.filters.all }, ...kategorienRaw.map(k => ({ key: k, label: k }))]
 
-  const gefiltert = aktiverFilter === 'Alle'
+  const gefiltert = aktiverFilter === '__all__'
     ? projects
     : projects.filter(p => (Array.isArray(p.kategorie) ? p.kategorie : [p.kategorie]).includes(aktiverFilter))
 
@@ -191,25 +192,25 @@ function Projects() {
         <div style={{ marginBottom: '56px' }}>
           <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', fontFamily: fontMono, fontSize: '12px', letterSpacing: '0.18em', textTransform: 'uppercase', color: C.cyan }}>
             <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
-            04 — Projekte
+            {t.projects.eyebrow}
           </span>
           <h2 style={{ fontFamily: fontDisplay, fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.05, margin: '16px 0 12px', color: 'var(--text-0)' }}>
-            {language === 'de' ? 'Meine ' : 'My '}<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>{t.projects.title}</em>
+            {t.projects.headingPre}<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>{t.projects.title}</em>
           </h2>
-          <p style={{ color: 'var(--text-2)', fontSize: '16px' }}>Eine Auswahl meiner bisherigen Arbeiten</p>
+          <p style={{ color: 'var(--text-2)', fontSize: '16px' }}>{t.projects.subtitle}</p>
         </div>
 
         {/* Filters */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '40px' }}>
-          {kategorien.map(kat => (
-            <FilterBtn key={kat} label={kat} active={aktiverFilter === kat} onClick={() => setAktiverFilter(kat)} />
+          {kategorien.map(({ key, label }) => (
+            <FilterBtn key={key} label={label} active={aktiverFilter === key} onClick={() => setAktiverFilter(key)} />
           ))}
         </div>
 
         {/* Grid */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }} className="projects-grid">
           {gefiltert.map((p, i) => (
-            <ProjectCard key={p.id} projekt={p} idx={i} onClick={openProject} />
+            <ProjectCard key={p.id} projekt={p} idx={i} onClick={openProject} detailsLabel={t.projects.detailsLink} categoryLabel={t.projects.categoryLabel} />
           ))}
         </div>
       </div>
@@ -245,7 +246,7 @@ function Projects() {
             </div>
 
             <p style={{ fontFamily: fontMono, fontSize: '12px', color: C.text3, marginBottom: '24px' }}>
-              Kategorie: {Array.isArray(aktivesProjekt.kategorie) ? aktivesProjekt.kategorie.join(', ') : aktivesProjekt.kategorie}
+              {t.projects.categoryLabel}: {Array.isArray(aktivesProjekt.kategorie) ? aktivesProjekt.kategorie.join(', ') : aktivesProjekt.kategorie}
             </p>
 
             <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '16px' }}>

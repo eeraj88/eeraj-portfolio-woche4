@@ -54,9 +54,9 @@ function Contact() {
 
   const validiere = () => {
     const f = {}
-    if (formData.name.trim().length < 3) f.name = 'Mindestens 3 Zeichen'
-    if (!formData.email.includes('@') || !formData.email.includes('.')) f.email = 'Gültige E-Mail eingeben'
-    if (formData.nachricht.trim().length < 10) f.nachricht = 'Mindestens 10 Zeichen'
+    if (formData.name.trim().length < 3) f.name = t.contact.form.validName
+    if (!formData.email.includes('@') || !formData.email.includes('.')) f.email = t.contact.form.validEmail
+    if (formData.nachricht.trim().length < 10) f.nachricht = t.contact.form.validMsg
     return f
   }
 
@@ -78,7 +78,7 @@ function Contact() {
       setFormData({ name: '', email: '', nachricht: '' })
     } catch (err) {
       console.error('EmailJS Error:', err)
-      setSendError('Konnte nicht gesendet werden. Bitte später erneut versuchen.')
+      setSendError(t.contact.form.sendError)
     } finally {
       setIsLoading(false)
     }
@@ -117,7 +117,7 @@ function Contact() {
             textTransform: 'uppercase', color: C.cyan,
           }}>
             <span style={{ width: '24px', height: '1px', background: C.cyan, boxShadow: `0 0 6px ${C.cyanGlow}`, display: 'inline-block' }} />
-            06 — Kontakt
+            {t.contact.eyebrow}
           </span>
           <h2 style={{
             fontFamily: fontDisplay,
@@ -167,7 +167,7 @@ function Contact() {
               fontSize: '13px',
               letterSpacing: '0.04em',
             }}>
-              ✓ Nachricht gesendet — ich melde mich bald.
+              {t.contact.form.successMsg}
             </div>
           )}
 
@@ -198,7 +198,7 @@ function Contact() {
                   color: C.text2, letterSpacing: '0.06em',
                 }}
               >
-                <span style={{ color: C.cyan }}>{'> '}</span>Name
+                <span style={{ color: C.cyan }}>{'> '}</span>{t.contact.form.nameLabel}
               </label>
               <input
                 type="text"
@@ -208,7 +208,7 @@ function Contact() {
                 onChange={handleChange}
                 onFocus={() => setFocusedField('name')}
                 onBlur={() => setFocusedField(null)}
-                placeholder="Dein Name"
+                placeholder={t.contact.form.name}
                 disabled={isLoading}
                 style={inputStyle('name')}
               />
@@ -227,7 +227,7 @@ function Contact() {
                   color: C.text2, letterSpacing: '0.06em',
                 }}
               >
-                <span style={{ color: C.cyan }}>{'> '}</span>E-Mail
+                <span style={{ color: C.cyan }}>{'> '}</span>{t.contact.form.emailLabel}
               </label>
               <input
                 type="email"
@@ -237,7 +237,7 @@ function Contact() {
                 onChange={handleChange}
                 onFocus={() => setFocusedField('email')}
                 onBlur={() => setFocusedField(null)}
-                placeholder="deine@email.de"
+                placeholder={t.contact.form.emailPlaceholder}
                 disabled={isLoading}
                 style={inputStyle('email')}
               />
@@ -256,7 +256,7 @@ function Contact() {
                   color: C.text2, letterSpacing: '0.06em',
                 }}
               >
-                <span style={{ color: C.cyan }}>{'> '}</span>Nachricht
+                <span style={{ color: C.cyan }}>{'> '}</span>{t.contact.form.messageLabel}
               </label>
               <textarea
                 id="cf-msg"
@@ -266,7 +266,7 @@ function Contact() {
                 onChange={handleChange}
                 onFocus={() => setFocusedField('nachricht')}
                 onBlur={() => setFocusedField(null)}
-                placeholder="Deine Nachricht..."
+                placeholder={`${t.contact.form.message}...`}
                 disabled={isLoading}
                 style={inputStyle('nachricht')}
               />
@@ -320,11 +320,11 @@ function Contact() {
                     <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" opacity="0.25"/>
                     <path d="M21 12a9 9 0 00-9-9"/>
                   </svg>
-                  Wird gesendet...
+                  {t.contact.form.sending}
                 </>
               ) : (
                 <>
-                  Nachricht senden
+                  {t.contact.form.send}
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M5 12h14M13 6l6 6-6 6"/>
                   </svg>

@@ -9,15 +9,15 @@ const translations = {
   en: translationsEn
 }
 
-// Content 1:1 from design reference — hardcoded as specified
-const SKILL_CARDS = [
+const getSkillCards = (t) => [
   {
     size: 'lg',
     num: '01',
     cat: 'AI & Workflow',
     title: 'Automation Stack',
-    tag: '// Schwerpunkt',
-    chips: ['n8n','Make','Zapier','Webhooks & API','API-Integration','LLM Orchestration','RAG','Multimodale KI-Workflows','Workflow-Engineering','Prompt Engineering (CoT)'],
+    tag: t.skills.focus,
+    chips: ['n8n','Make','Zapier','Webhooks & API','API-Integration','LLM Orchestration','RAG',
+      t.skills.chips.multimodalAI, t.skills.chips.workflowEng, 'Prompt Engineering (CoT)'],
   },
   {
     size: 'wide',
@@ -33,7 +33,7 @@ const SKILL_CARDS = [
     cat: 'Marketing',
     title: 'Growth',
     tag: null,
-    chips: ['Social Media','Performance MKT','Content Strategie','SEO','GA4','E-Commerce','Kampagnen','E-Mail Marketing'],
+    chips: ['Social Media','Performance MKT', t.skills.chips.contentStrategy,'SEO','GA4','E-Commerce', t.skills.chips.campaigns,'E-Mail Marketing'],
   },
   {
     size: 'med',
@@ -41,7 +41,7 @@ const SKILL_CARDS = [
     cat: 'Sales',
     title: 'Business & B2B',
     tag: null,
-    chips: ['B2B Vertrieb','Key Account Mgmt','Verhandlung','ERP Systeme','KPIs','Remote'],
+    chips: [t.skills.chips.b2bSales,'Key Account Mgmt', t.skills.chips.negotiation, t.skills.chips.erpSystems,'KPIs','Remote'],
   },
   {
     size: 'med',
@@ -65,6 +65,7 @@ function Skills() {
   const { istDunkel } = useContext(ThemeContext)
   const { language } = useLanguage()
   const t = translations[language]
+  const skillCards = getSkillCards(t)
 
   return (
     <section id="skills" style={{ padding: '96px 0', background: 'var(--bg-1)', position: 'relative' }}>
@@ -78,7 +79,7 @@ function Skills() {
             letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--cyan)',
           }}>
             <span style={{ width: '24px', height: '1px', background: 'var(--cyan)', boxShadow: '0 0 6px var(--cyan-glow)', display: 'inline-block' }} />
-            02 — Stack
+            {t.skills.eyebrow}
           </span>
           <h2 style={{
             fontFamily: 'Space Grotesk, system-ui, sans-serif',
@@ -87,19 +88,16 @@ function Skills() {
             margin: '16px 0 12px',
             color: 'var(--text-0)',
           }}>
-            {language === 'de' ? 'Meine ' : 'My '}
-            <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Skills</em>
+            {t.skills.headingPre}<em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>{t.skills.headingEm}</em>
           </h2>
           <p style={{ color: 'var(--text-2)', fontSize: '16px', maxWidth: '640px' }}>
-            {language === 'de'
-              ? 'Technologien und Tools aus meinem Werkzeugkasten — von Frontend über Automation bis Business.'
-              : 'Technologies and tools from my toolkit — from frontend to automation and business.'}
+            {t.skills.desc}
           </p>
         </div>
 
         {/* Bento grid */}
         <div className="skills-grid">
-          {SKILL_CARDS.map((card) => (
+          {skillCards.map((card) => (
             <div
               key={card.num}
               className={`skill-card skill-${card.size} reveal`}

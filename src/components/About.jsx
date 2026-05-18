@@ -18,17 +18,12 @@ function About() {
   const youtubeVideoId = "NGS0H2DRKo8"
 
   const stats = [
-    { value: '5+', label: 'Projekte' },
-    { value: '20+', label: 'Skills' },
-    { value: '9+', label: 'Jahre Sales' }
+    { value: '5+', label: t.about.statsLabels[0] },
+    { value: '20+', label: t.about.statsLabels[1] },
+    { value: '9+', label: t.about.statsLabels[2] }
   ]
 
-  const highlights = [
-    'AI & Automation',
-    'Frontend Development',
-    'Digital Marketing',
-    'B2B Strategie'
-  ]
+  const highlights = t.about.highlights
 
   return (
     <section id="about" className={`${istDunkel ? 'section-alt' : ''} py-20 px-4`}>
@@ -37,7 +32,7 @@ function About() {
         <div className="section-head reveal">
           <span className="eyebrow">01 — About</span>
           <h2 className="section-title">
-            Über <em>mich</em>
+            {t.about.titlePre}<em>{t.about.titleEm}</em>
           </h2>
         </div>
 
@@ -57,15 +52,11 @@ function About() {
 
           {/* Body - NEUES DESIGN Styling */}
           <div className="about-body reveal">
-            <h3>Sales trifft Tech.</h3>
+            <h3>{t.about.heading}</h3>
 
-            <p>
-              <strong>Jahrelang als Sales & Account Manager</strong> + <strong>Consultant</strong> in der Automotive-Branche. Weiterentwicklung zum Profi für digitale Lösungen. Ich spreche beide Sprachen: Business und Code.
-            </p>
+            <p>{t.about.body1}</p>
 
-            <p>
-              Fokus aktuell: <strong>Webentwicklung</strong>, <strong>UI & UX</strong>, <strong>Automation</strong> und <strong>Marketing</strong>. Mit Tools wie n8n, Make und Tally baue ich Workflows, die echte Business-Probleme loesen.
-            </p>
+            <p>{t.about.body2}</p>
 
             {/* Highlight Tags - NEUES DESIGN */}
             <div className="about-tags">
@@ -128,7 +119,7 @@ function About() {
                   <div style={{
                     fontSize: '12px', color: 'var(--text-3)',
                     marginTop: '6px', position: 'relative', zIndex: 1,
-                  }}>Erfahrung</div>
+                  }}>{t.about.statSub}</div>
                 </div>
               ))}
             </div>
