@@ -1,6 +1,8 @@
 import { useState, useContext } from 'react'
 import projects from '../data/projects'
 import { ThemeContext } from '../Context/ThemeContext'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 import { giveXP } from './PokemonBuddy'
 import LikeButton from './LikeButton'
 import Comments from './Comments'
@@ -155,6 +157,8 @@ function ProjectCard({ projekt, idx, onClick }) {
 
 function Projects() {
   const { istDunkel } = useContext(ThemeContext)
+  const { language } = useLanguage()
+  const t = language === 'de' ? translations : require('../translations/en').default
   const [aktiverFilter, setAktiverFilter] = useState('Alle')
   const [aktivesProjekt, setAktivesProjekt] = useState(null)
   const [viewedProjects, setViewedProjects] = useState(new Set())

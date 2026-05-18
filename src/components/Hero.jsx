@@ -1,8 +1,13 @@
 import { useContext, useEffect, useState, useRef } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 
 function Hero() {
   const { istDunkel } = useContext(ThemeContext)
+  const { language } = useLanguage()
+  const t = language === 'de' ? translations : require('../translations/en').default
+
   const [heroStage, setHeroStage] = useState(0) // 0=before, 1=typing, 2=done
   const [line1, setLine1] = useState('')
   const [line2, setLine2] = useState('')
@@ -12,8 +17,6 @@ function Hero() {
   const [roleTyping, setRoleTyping] = useState(false)
   const heroTimers = useRef([])
   const photoBgRef = useRef(null)
-
-  const roles = ['Digital Creative.', 'Frontend Developer.', 'Sales & Consultant.', 'AI Automation.', 'Marketing Strategist.', 'Problem Solver.']
 
   // Typewriter sequence — runs once on mount ([] deps avoids cleanup killing timers)
   useEffect(() => {
@@ -45,11 +48,11 @@ function Hero() {
     }
 
     add(() => {
-      typeText(setLine1, 'HI', 140, () => {
+      typeText(setLine1, t.hero.hi, 140, () => {
         add(() => {
-          typeText(setLine2, 'ICH BIN', 95, () => {
+          typeText(setLine2, t.hero.ichBin, 95, () => {
             if (photoBgRef.current) photoBgRef.current.classList.add('photo-in')
-            typeText(setLine3, 'EERAJ JAN', 95, () => {
+            typeText(setLine3, t.hero.name, 95, () => {
               setHeroStage(2)
             })
           })
@@ -58,7 +61,7 @@ function Hero() {
     }, 900)
 
     return clearAll
-  }, [])
+  }, [language])
 
   // Role typewriter after hero done
   useEffect(() => {
@@ -66,7 +69,7 @@ function Hero() {
     let cancelled = false
 
     const typeRole = (roleIdx) => {
-      const text = roles[roleIdx]
+      const text = t.hero.roles[roleIdx]
       let i = 0
       setRoleText('')
       setRoleTyping(true)
@@ -105,7 +108,7 @@ function Hero() {
 
     typeRole(currentRole)
     return () => { cancelled = true }
-  }, [heroStage])
+  }, [heroStage, language])
 
   const c = {
     cyan: 'var(--cyan)',
@@ -240,7 +243,7 @@ function Hero() {
               marginBottom: '28px',
               minHeight: '1.5em',
             }}>
-              <span style={{ color: c.text3 }}>&gt; role: </span>
+              <span style={{ color: c.text3 }}>{t.hero.roleLabel}</span>
               <span style={{ color: c.cyan }}>{heroStage === 2 ? roleText : ''}</span>
             </div>
 
@@ -269,7 +272,7 @@ function Hero() {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                     <path d="M5 12h14M13 6l6 6-6 6"/>
                   </svg>
-                  Meine Projekte
+                  {t.hero.cta.projects}
                 </a>
 
                 <a href="#contact" style={{
@@ -293,7 +296,7 @@ function Hero() {
                     e.currentTarget.style.transform = 'none'
                   }}
                 >
-                  Kontakt aufnehmen
+                  {t.hero.cta.contact}
                 </a>
 
                 <a href="/lebenslauf.pdf" download style={{

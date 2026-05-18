@@ -1,5 +1,7 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 
 // Content 1:1 from design reference — hardcoded as specified
 const SKILL_CARDS = [
@@ -55,6 +57,8 @@ const SKILL_CARDS = [
 
 function Skills() {
   const { istDunkel } = useContext(ThemeContext)
+  const { language } = useLanguage()
+  const t = language === 'de' ? translations : require('../translations/en').default
 
   return (
     <section id="skills" style={{ padding: '96px 0', background: 'var(--bg-1)', position: 'relative' }}>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import Leaderboard from './Leaderboard'
 import { AnimatedThemeToggler } from './ui/AnimatedThemeToggler'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 
 const SPOTIFY_PLAYLIST_ID = '55f8XIuabL2aM5SANjYT9B'
 
@@ -62,6 +64,7 @@ function NavLink({ label, onClick }) {
 }
 
 function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRef, projectsRef, testimonialsRef, contactsRef }) {
+  const { language, toggleLanguage } = useLanguage()
   const [menuOffen, setMenuOffen] = useState(false)
   const [spotifyOpen, setSpotifyOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -72,12 +75,14 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const t = language === 'de' ? translations : require('../translations/en').default
+
   const navItems = [
-    { label: 'About', ref: aboutRef },
-    { label: 'Skills', ref: skillsRef },
-    { label: 'Projekte', ref: projectsRef },
-    { label: 'Referenzen', ref: testimonialsRef },
-    { label: 'Kontakt', ref: contactsRef },
+    { label: t.nav.about, ref: aboutRef },
+    { label: t.nav.skills, ref: skillsRef },
+    { label: t.nav.projekte, ref: projectsRef },
+    { label: t.nav.referenzen, ref: testimonialsRef },
+    { label: t.nav.kontakt, ref: contactsRef },
   ]
 
   const handleNav = (ref) => {
@@ -180,6 +185,35 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
           </div>
 
           <AnimatedThemeToggler variant="circle" />
+
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            title={language === 'de' ? 'Switch to English' : 'Zu Deutsch wechseln'}
+            style={{
+              width: '38px', height: '38px', borderRadius: '10px',
+              background: C.bg2,
+              border: `1px solid ${C.cyanBorder}`,
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              color: C.cyan, cursor: 'pointer',
+              transition: `all 0.25s ${ease}`,
+              fontFamily: fontMono,
+              fontSize: '11px',
+              fontWeight: 600,
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = C.cyanBorderStrong
+              e.currentTarget.style.boxShadow = `0 0 18px ${C.cyanGlow}`
+              e.currentTarget.style.transform = 'translateY(-1px)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = C.cyanBorder
+              e.currentTarget.style.boxShadow = 'none'
+              e.currentTarget.style.transform = 'none'
+            }}
+          >
+            {language.toUpperCase()}
+          </button>
 
           {/* Hamburger (mobile) */}
           <button

@@ -1,9 +1,13 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 import VisitorCounter from './VisitorCounter'
 
 function Footer() {
   const { istDunkel } = useContext(ThemeContext)
+  const { language } = useLanguage()
+  const t = language === 'de' ? translations : require('../translations/en').default
   const aktuellesJahr = new Date().getFullYear()
 
   const socials = [

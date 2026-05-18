@@ -1,5 +1,7 @@
 import { useState, useContext, useRef } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 import emailjs from '@emailjs/browser'
 
 const EMAILJS_SERVICE_ID = 'service_tvlk6dj'
@@ -25,6 +27,8 @@ const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
 
 function Contact() {
   const { istDunkel } = useContext(ThemeContext)
+  const { language } = useLanguage()
+  const t = language === 'de' ? translations : require('../translations/en').default
   const formRef = useRef()
 
   const [formData, setFormData] = useState({ name: '', email: '', nachricht: '' })

@@ -12,6 +12,7 @@ import PokemonBuddy from './components/PokemonBuddy'
 import AINewsFeed from './components/AINewsFeed'
 import CursorGlow from './components/CursorGlow'
 import { ThemeProvider, useTheme } from './Context/ThemeContext'
+import { LanguageProvider } from './Context/LanguageContext'
 
 function AppContent() {
   const { istDunkel, toggleDarkMode } = useTheme()
@@ -108,9 +109,11 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <LanguageProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </LanguageProvider>
   )
 }
 

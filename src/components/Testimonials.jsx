@@ -1,6 +1,8 @@
 import { useContext } from 'react'
 import testimonials from '../data/testimonials'
 import { ThemeContext } from '../Context/ThemeContext'
+import { useLanguage } from '../Context/LanguageContext'
+import translations from '../translations/de'
 
 const C = { cyan: 'var(--cyan)', cyanGlow: 'var(--cyan-glow)', cyanBorder: 'var(--cyan-border)', cyanBorderStrong: 'var(--cyan-border-strong)', bg2: 'var(--bg-2)', text0: 'var(--text-0)', text1: 'var(--text-1)', text2: 'var(--text-2)', text3: 'var(--text-3)' }
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
@@ -98,6 +100,8 @@ function TestiCard({ t }) {
 
 function Testimonials() {
   const { istDunkel } = useContext(ThemeContext)
+  const { language } = useLanguage()
+  const t = language === 'de' ? translations : require('../translations/en').default
 
   // Duplicate array for seamless infinite scroll
   const doubled = [...testimonials, ...testimonials]
