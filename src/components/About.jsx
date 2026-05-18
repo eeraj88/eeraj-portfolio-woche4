@@ -1,12 +1,18 @@
 import { useContext } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
 import { useLanguage } from '../Context/LanguageContext'
-import translations from '../translations/de'
+import translationsDe from '../translations/de'
+import translationsEn from '../translations/en'
+
+const translations = {
+  de: translationsDe,
+  en: translationsEn
+}
 
 function About() {
   const { istDunkel } = useContext(ThemeContext)
   const { language } = useLanguage()
-  const t = language === 'de' ? translations : require('../translations/en').default
+  const t = translations[language]
 
   // YouTube Video ID
   const youtubeVideoId = "NGS0H2DRKo8"

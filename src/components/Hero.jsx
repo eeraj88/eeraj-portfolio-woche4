@@ -1,12 +1,18 @@
 import { useContext, useEffect, useState, useRef } from 'react'
 import { ThemeContext } from '../Context/ThemeContext'
 import { useLanguage } from '../Context/LanguageContext'
-import translations from '../translations/de'
+import translationsDe from '../translations/de'
+import translationsEn from '../translations/en'
+
+const translations = {
+  de: translationsDe,
+  en: translationsEn
+}
 
 function Hero() {
   const { istDunkel } = useContext(ThemeContext)
   const { language } = useLanguage()
-  const t = language === 'de' ? translations : require('../translations/en').default
+  const t = translations[language]
 
   const [heroStage, setHeroStage] = useState(0) // 0=before, 1=typing, 2=done
   const [line1, setLine1] = useState('')

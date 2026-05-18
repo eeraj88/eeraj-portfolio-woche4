@@ -2,7 +2,13 @@ import { useState, useEffect } from 'react'
 import Leaderboard from './Leaderboard'
 import { AnimatedThemeToggler } from './ui/AnimatedThemeToggler'
 import { useLanguage } from '../Context/LanguageContext'
-import translations from '../translations/de'
+import translationsDe from '../translations/de'
+import translationsEn from '../translations/en'
+
+const translations = {
+  de: translationsDe,
+  en: translationsEn
+}
 
 const SPOTIFY_PLAYLIST_ID = '55f8XIuabL2aM5SANjYT9B'
 
@@ -75,7 +81,7 @@ function Header({ istDunkel, toggleDarkMode, scrollToSection, aboutRef, skillsRe
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const t = language === 'de' ? translations : require('../translations/en').default
+  const t = translations[language]
 
   const navItems = [
     { label: t.nav.about, ref: aboutRef },

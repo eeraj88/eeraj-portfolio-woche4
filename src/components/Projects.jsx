@@ -2,10 +2,16 @@ import { useState, useContext } from 'react'
 import projects from '../data/projects'
 import { ThemeContext } from '../Context/ThemeContext'
 import { useLanguage } from '../Context/LanguageContext'
-import translations from '../translations/de'
+import translationsDe from '../translations/de'
+import translationsEn from '../translations/en'
 import { giveXP } from './PokemonBuddy'
 import LikeButton from './LikeButton'
 import Comments from './Comments'
+
+const translations = {
+  de: translationsDe,
+  en: translationsEn
+}
 
 const C = { cyan: 'var(--cyan)', cyanGlow: 'var(--cyan-glow)', cyanBorder: 'var(--cyan-border)', cyanBorderStrong: 'var(--cyan-border-strong)', cyanBg: 'var(--cyan-bg-soft)', bg2: 'var(--bg-2)', bg3: 'var(--bg-3)', text0: 'var(--text-0)', text1: 'var(--text-1)', text2: 'var(--text-2)', text3: 'var(--text-3)' }
 const fontDisplay = "'Space Grotesk', system-ui, sans-serif"
@@ -158,7 +164,7 @@ function ProjectCard({ projekt, idx, onClick }) {
 function Projects() {
   const { istDunkel } = useContext(ThemeContext)
   const { language } = useLanguage()
-  const t = language === 'de' ? translations : require('../translations/en').default
+  const t = translations[language]
   const [aktiverFilter, setAktiverFilter] = useState('Alle')
   const [aktivesProjekt, setAktivesProjekt] = useState(null)
   const [viewedProjects, setViewedProjects] = useState(new Set())
