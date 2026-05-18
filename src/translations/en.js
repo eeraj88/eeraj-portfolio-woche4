@@ -26,15 +26,28 @@ export default {
   },
   about: {
     title: 'About Me',
-    subtitle: 'Digital Creative & Frontend Developer'
+    subtitle: 'Digital Creative & Frontend Developer',
+    intro: 'Passionate developer focused on modern web technologies and AI-driven automation.'
   },
   skills: {
     title: 'Skills',
-    subtitle: 'My Tech Stack'
+    subtitle: 'My Tech Stack',
+    categories: {
+      ai: 'AI & Workflow',
+      frontend: 'Frontend',
+      backend: 'Backend',
+      tools: 'Tools'
+    }
   },
   projects: {
     title: 'Projects',
-    subtitle: 'Selected Work'
+    subtitle: 'Selected Work',
+    filters: {
+      all: 'All',
+      web: 'Web',
+      app: 'App',
+      ai: 'AI'
+    }
   },
   testimonials: {
     title: 'References',
@@ -42,6 +55,20 @@ export default {
   },
   contact: {
     title: 'Contact',
-    subtitle: 'Let\'s Talk'
+    subtitle: 'Let\'s Talk',
+    form: {
+      name: 'Your Name',
+      email: 'Your Email',
+      message: 'Your Message',
+      send: 'Send',
+      sending: 'Sending...',
+      sent: 'Sent!',
+      error: 'Error sending.'
+    }
+  },
+  footer: {
+    rights: 'All rights reserved.',
+    imprint: 'Imprint',
+    privacy: 'Privacy Policy'
   }
 }

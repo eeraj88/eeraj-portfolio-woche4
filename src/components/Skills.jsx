@@ -87,11 +87,13 @@ function Skills() {
             margin: '16px 0 12px',
             color: 'var(--text-0)',
           }}>
-            Meine{' '}
+            {language === 'de' ? 'Meine ' : 'My '}
             <em style={{ fontStyle: 'normal', color: 'var(--cyan)', textShadow: '0 0 24px var(--cyan-glow)' }}>Skills</em>
           </h2>
           <p style={{ color: 'var(--text-2)', fontSize: '16px', maxWidth: '640px' }}>
-            Technologien und Tools aus meinem Werkzeugkasten — von Frontend über Automation bis Business.
+            {language === 'de'
+              ? 'Technologien und Tools aus meinem Werkzeugkasten — von Frontend über Automation bis Business.'
+              : 'Technologies and tools from my toolkit — from frontend to automation and business.'}
           </p>
         </div>
 

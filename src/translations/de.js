@@ -26,15 +26,28 @@ export default {
   },
   about: {
     title: 'Über Mich',
-    subtitle: 'Digital Creative & Frontend Developer'
+    subtitle: 'Digital Creative & Frontend Developer',
+    intro: 'Ich bin leidenschaftlicher Entwickler mit Fokus auf moderne Web-Technologien und KI-gesteuerte Automatisierung.'
   },
   skills: {
     title: 'Skills',
-    subtitle: 'Meine Tech-Stack'
+    subtitle: 'Meine Tech-Stack',
+    categories: {
+      ai: 'KI & Workflow',
+      frontend: 'Frontend',
+      backend: 'Backend',
+      tools: 'Tools'
+    }
   },
   projects: {
     title: 'Projekte',
-    subtitle: 'Ausgewählte Arbeiten'
+    subtitle: 'Ausgewählte Arbeiten',
+    filters: {
+      all: 'Alle',
+      web: 'Web',
+      app: 'App',
+      ai: 'KI'
+    }
   },
   testimonials: {
     title: 'Referenzen',
@@ -42,6 +55,20 @@ export default {
   },
   contact: {
     title: 'Kontakt',
-    subtitle: 'Lass uns sprechen'
+    subtitle: 'Lass uns sprechen',
+    form: {
+      name: 'Dein Name',
+      email: 'Deine E-Mail',
+      message: 'Deine Nachricht',
+      send: 'Senden',
+      sending: 'Wird gesendet...',
+      sent: 'Gesendet!',
+      error: 'Fehler beim Senden.'
+    }
+  },
+  footer: {
+    rights: 'Alle Rechte vorbehalten.',
+    imprint: 'Impressum',
+    privacy: 'Datenschutz'
   }
 }
