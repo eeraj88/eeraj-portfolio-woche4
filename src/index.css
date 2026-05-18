@@ -154,17 +154,6 @@
   --glow-sm: 0 0 20px rgba(8, 145, 178, 0.1);
 }
 
-  /* Accent Colors - Premium Red */
-  --accent-cyan: #06b6d4;
-  --accent-cyan-dim: #06b6d480;
-  --accent-teal: #b91c1c;
-  --accent-orange: #dc2626;
-  --accent-orange-dim: #dc262680;
-  --accent-red-primary: #b91c1c;
-  --accent-red-hover: #991b1b;
-  --accent-red-light: #dc2626;
-}
-
 html {
   scroll-behavior: smooth;
 }
