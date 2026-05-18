@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useRef, useEffect } from 'react'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -10,32 +10,20 @@ import Footer from './components/Footer'
 import ScrollIndikator from './components/ScrollIndikator'
 import PokemonBuddy from './components/PokemonBuddy'
 import AINewsFeed from './components/AINewsFeed'
-import { ThemeContext } from './Context/ThemeContext'
+import CursorGlow from './components/CursorGlow'
+import { ThemeProvider, useTheme } from './Context/ThemeContext'
 
-function App() {
+function AppContent() {
+  const { istDunkel, toggleDarkMode } = useTheme()
   const aboutRef = useRef(null)
   const skillsRef = useRef(null)
   const projectsRef = useRef(null)
   const testimonialsRef = useRef(null)
   const contactsRef = useRef(null)
 
-  const [istDunkel, setIstDunkel] = useState(() => {
-    const saved = localStorage.getItem('darkMode')
-    return saved === null ? true : saved === 'true'
-  })
-
-  const toggleDarkMode = () => setIstDunkel(prev => !prev)
-
   const scrollToSection = (ref) => {
     ref.current?.scrollIntoView({ behavior: 'smooth' })
   }
-
-  // Persist dark mode + data-theme for future light mode CSS vars
-  useEffect(() => {
-    localStorage.setItem('darkMode', istDunkel)
-    document.documentElement.setAttribute('data-theme', istDunkel ? 'dark' : 'light')
-    document.documentElement.classList.toggle('dark', istDunkel)
-  }, [istDunkel])
 
   // Scroll progress bar
   useEffect(() => {
@@ -64,72 +52,65 @@ function App() {
     return () => io.disconnect()
   }, [])
 
-  // Cursor glow
-  useEffect(() => {
-    const onMove = (e) => {
-      const cursor = document.getElementById('cursor-glow')
-      if (cursor) {
-        cursor.style.left = e.clientX + 'px'
-        cursor.style.top = e.clientY + 'px'
-      }
-    }
-    window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
-  }, [])
-
   return (
-    <ThemeContext.Provider value={{ istDunkel, toggleDarkMode }}>
-      <div className="min-h-screen transition-colors duration-500 relative overflow-hidden" style={{ background: 'var(--bg-1)', color: 'var(--text-1)' }}>
+    <div className="min-h-screen transition-colors duration-500 relative overflow-hidden" style={{ background: 'var(--bg-1)', color: 'var(--text-1)' }} data-theme={istDunkel ? 'dark' : 'light'}>
 
-        {/* Cyberpunk FX — grid, cursor, progress in both modes; vignette dark-only */}
-        <div className="fx-grid"></div>
-        {istDunkel && <div className="fx-vignette"></div>}
-        <div className="fx-cursor" id="cursor-glow"></div>
-        <div id="scroll-progress"></div>
+      {/* Cyberpunk FX — grid, cursor, progress in both modes; vignette dark-only */}
+      <div className="fx-grid"></div>
+      {istDunkel && <div className="fx-vignette"></div>}
+      <CursorGlow />
+      <div id="scroll-progress"></div>
 
-        <div className="relative z-10">
-          <ScrollIndikator />
+      <div className="relative z-10">
+        <ScrollIndikator />
 
-          <Header
-            istDunkel={istDunkel}
-            toggleDarkMode={toggleDarkMode}
-            aboutRef={aboutRef}
-            skillsRef={skillsRef}
-            projectsRef={projectsRef}
-            testimonialsRef={testimonialsRef}
-            contactsRef={contactsRef}
-            scrollToSection={scrollToSection}
-          />
+        <Header
+          istDunkel={istDunkel}
+          toggleDarkMode={toggleDarkMode}
+          aboutRef={aboutRef}
+          skillsRef={skillsRef}
+          projectsRef={projectsRef}
+          testimonialsRef={testimonialsRef}
+          contactsRef={contactsRef}
+          scrollToSection={scrollToSection}
+        />
 
-          <Hero />
+        <Hero />
 
-          <div ref={aboutRef}>
-            <About />
-          </div>
-
-          <div ref={skillsRef}>
-            <Skills />
-          </div>
-
-          <div ref={projectsRef}>
-            <Projects />
-          </div>
-
-          <div ref={testimonialsRef}>
-            <Testimonials />
-          </div>
-
-          <div ref={contactsRef}>
-            <Contact />
-          </div>
-
-          <Footer />
+        <div ref={aboutRef}>
+          <About />
         </div>
 
-        <AINewsFeed />
-        <PokemonBuddy />
+        <div ref={skillsRef}>
+          <Skills />
+        </div>
+
+        <div ref={projectsRef}>
+          <Projects />
+        </div>
+
+        <div ref={testimonialsRef}>
+          <Testimonials />
+        </div>
+
+        <div ref={contactsRef}>
+          <Contact />
+        </div>
+
+        <Footer />
       </div>
-    </ThemeContext.Provider>
+
+      <AINewsFeed />
+      <PokemonBuddy />
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
   )
 }
 

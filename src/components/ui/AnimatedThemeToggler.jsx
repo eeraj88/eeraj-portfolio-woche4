@@ -1,12 +1,20 @@
-import { useContext, flushSync } from "react";
+import { useContext } from "react";
 import { ThemeContext } from "../../Context/ThemeContext";
 
 const ease = 'cubic-bezier(0.22, 0.61, 0.36, 1)'
 
 export function AnimatedThemeToggler({ duration = 500, className }) {
-  const { istDunkel, toggleDarkMode } = useContext(ThemeContext);
+  const context = useContext(ThemeContext);
+
+  if (!context) {
+    console.error('AnimatedThemeToggler: ThemeContext is null!')
+    return null;
+  }
+
+  const { istDunkel, toggleDarkMode } = context;
 
   const handleToggle = async (event) => {
+    console.log('Toggle clicked, istDunkel:', istDunkel)
     if (!document.startViewTransition) {
       toggleDarkMode();
       return;
@@ -15,7 +23,7 @@ export function AnimatedThemeToggler({ duration = 500, className }) {
     const y = event.clientY;
     const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
     const transition = document.startViewTransition(async () => {
-      flushSync(() => toggleDarkMode());
+      toggleDarkMode();
     });
     await transition.ready;
     document.documentElement.animate(

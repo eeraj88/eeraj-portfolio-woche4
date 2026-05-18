@@ -167,33 +167,37 @@ function Hero() {
       )}
 
       {/* Faded hero photo bg — uses same foto.jpg, large + masked */}
-      {istDunkel && (
-        <div
-          ref={photoBgRef}
+      <div
+        ref={photoBgRef}
+        style={{
+          position: 'absolute', top: '-120px', right: '0%', bottom: 0,
+          width: '58%', maxWidth: '900px', zIndex: 1,
+          pointerEvents: 'none',
+          opacity: istDunkel ? 0 : 0.5,
+          transform: 'translateX(40px) scale(1.04)',
+          transition: 'opacity 1.4s ease, transform 2s ease',
+        }}
+        className="photo-bg"
+      >
+        <img
+          src="/foto.jpg"
+          alt=""
+          aria-hidden="true"
           style={{
-            position: 'absolute', top: '-120px', right: '0%', bottom: 0,
-            width: '58%', maxWidth: '900px', zIndex: 1,
-            pointerEvents: 'none',
-            opacity: 0,
-            transform: 'translateX(40px) scale(1.04)',
-            transition: 'opacity 1.4s ease, transform 2s ease',
+            width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'top center',
+            filter: istDunkel
+              ? 'grayscale(15%) contrast(1.05) brightness(0.88)'
+              : 'grayscale(5%) contrast(1.02) brightness(0.95)',
+            WebkitMaskImage: istDunkel
+              ? 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)'
+              : 'linear-gradient(90deg, transparent 0%, transparent 30%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0.7) 80%, white 100%)',
+            maskImage: istDunkel
+              ? 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)'
+              : 'linear-gradient(90deg, transparent 0%, transparent 30%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0.7) 80%, white 100%)',
           }}
-          className="photo-bg"
-        >
-          <img
-            src="/foto.jpg"
-            alt=""
-            aria-hidden="true"
-            style={{
-              width: '100%', height: '100%',
-              objectFit: 'cover', objectPosition: 'top center',
-              filter: 'grayscale(15%) contrast(1.05) brightness(0.88)',
-              WebkitMaskImage: 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)',
-              maskImage: 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)',
-            }}
-          />
-        </div>
-      )}
+        />
+      </div>
 
       {/* Content */}
       <div style={{ maxWidth: '1400px', width: '100%', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
@@ -210,10 +214,13 @@ function Hero() {
               fontSize: 'clamp(2.5rem, 6.4vw, 5.5rem)',
               fontWeight: 600,
               letterSpacing: '-0.04em',
-              lineHeight: 1,
+              lineHeight: 1.1,
               margin: '0 0 24px',
               color: 'var(--text-0)',
-              minHeight: '180px',
+              minHeight: '320px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
             }}>
               <div>{line1 || (heroStage === 0 ? '_' : '')}</div>
               <div>{line2}</div>
