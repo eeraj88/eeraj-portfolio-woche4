@@ -26,7 +26,7 @@ function About() {
   const highlights = t.about.highlights
 
   return (
-    <section id="about" className={`${istDunkel ? 'section-alt' : ''} py-20 px-4`}>
+    <section id="about" className="section-alt py-20 px-4">
       <div className="container">
         {/* Section Head */}
         <div className="section-head reveal">

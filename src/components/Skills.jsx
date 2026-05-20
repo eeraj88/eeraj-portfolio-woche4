@@ -68,7 +68,7 @@ function Skills() {
   const skillCards = getSkillCards(t)
 
   return (
-    <section id="skills" style={{ padding: '96px 0', background: 'var(--bg-1)', position: 'relative' }}>
+    <section id="skills" style={{ padding: '96px 0', background: 'transparent', position: 'relative' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
 
         {/* Section head */}

@@ -186,7 +186,7 @@ function Projects() {
   }
 
   return (
-    <section id="projects" style={{ padding: '96px 0', background: 'var(--bg-2)', position: 'relative' }}>
+    <section id="projects" style={{ padding: '96px 0', background: 'var(--bg-0)', position: 'relative' }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
         {/* Section head */}
         <div style={{ marginBottom: '56px' }}>

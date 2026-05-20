@@ -58,6 +58,7 @@ function Hero() {
         add(() => {
           typeText(setLine2, t.hero.ichBin, 95, () => {
             if (photoBgRef.current) photoBgRef.current.classList.add('photo-in')
+            add(() => { if (photoBgRef.current) photoBgRef.current.classList.add('photo-glitch') }, 2100)
             typeText(setLine3, t.hero.name, 95, () => {
               setHeroStage(2)
             })
@@ -143,7 +144,7 @@ function Hero() {
       alignItems: 'center',
       justifyContent: 'center',
       overflow: 'hidden',
-      background: 'var(--bg-1)',
+      background: 'transparent',
     }}>
       {/* Grid Background */}
       {istDunkel && (
@@ -175,35 +176,35 @@ function Hero() {
         </>
       )}
 
-      {/* Faded hero photo bg — uses same foto.jpg, large + masked */}
+      {/* Hero photo — Layer 1: main */}
       <div
         ref={photoBgRef}
         style={{
-          position: 'absolute', top: '-120px', right: '0%', bottom: 0,
-          width: '58%', maxWidth: '900px', zIndex: 1,
+          position: 'absolute', top: '0px', right: '0%', bottom: 0,
+          width: '58%', maxWidth: '900px', zIndex: 3,
           pointerEvents: 'none',
           opacity: istDunkel ? 0 : 0.5,
-          transform: 'translateX(40px) scale(1.04)',
+          transform: 'translateX(40px)',
           transition: 'opacity 1.4s ease, transform 2s ease',
         }}
         className="photo-bg"
       >
         <img
-          src="/foto.jpg"
+          src="/Neues Header Bild.jpg"
           alt=""
           aria-hidden="true"
           style={{
-            width: '100%', height: '100%',
+            width: '115%', height: '115%',
             objectFit: 'cover', objectPosition: 'top center',
             filter: istDunkel
               ? 'grayscale(15%) contrast(1.05) brightness(0.88)'
               : 'grayscale(5%) contrast(1.02) brightness(0.95)',
             WebkitMaskImage: istDunkel
-              ? 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)'
-              : 'linear-gradient(90deg, transparent 0%, transparent 30%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0.7) 80%, white 100%)',
+              ? 'linear-gradient(90deg, transparent 0%, transparent 10%, black 60%)'
+              : 'linear-gradient(90deg, transparent 0%, transparent 10%, white 60%)',
             maskImage: istDunkel
-              ? 'linear-gradient(90deg, transparent 0%, transparent 20%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.65) 65%, black 82%)'
-              : 'linear-gradient(90deg, transparent 0%, transparent 30%, rgba(255,255,255,0.3) 60%, rgba(255,255,255,0.7) 80%, white 100%)',
+              ? 'linear-gradient(90deg, transparent 0%, transparent 10%, black 60%)'
+              : 'linear-gradient(90deg, transparent 0%, transparent 10%, white 60%)',
           }}
         />
       </div>
@@ -397,7 +398,21 @@ function Hero() {
         }
         .photo-bg.photo-in {
           opacity: 0.35 !important;
-          transform: translateX(0) scale(1) !important;
+          transform: translateX(0) !important;
+        }
+        .photo-bg.photo-glitch img {
+          animation: photoGlitch 0.5s steps(1) forwards;
+        }
+        @keyframes photoGlitch {
+          0%   { transform: translateX(0)    skewX(0deg);   filter: brightness(1)   saturate(1);   opacity: 1; }
+          8%   { transform: translateX(-9px) skewX(-3deg);  filter: brightness(1.6) saturate(0)    hue-rotate(180deg); opacity: 0.85; }
+          16%  { transform: translateX(7px)  skewX(2deg);   filter: brightness(0.7) saturate(2)    hue-rotate(-90deg); opacity: 1; }
+          24%  { transform: translateX(-5px) skewX(0deg);   filter: brightness(1.3) saturate(0.5); opacity: 0.9; }
+          32%  { transform: translateX(4px)  skewX(1deg);   filter: brightness(1)   saturate(1);   opacity: 1; }
+          40%  { transform: translateX(-2px) skewX(-1deg);  filter: brightness(1.1) hue-rotate(30deg); opacity: 0.95; }
+          50%  { transform: translateX(3px)  skewX(0deg);   filter: brightness(0.9) saturate(1.5); opacity: 1; }
+          60%  { transform: translateX(-1px) skewX(0.5deg); filter: brightness(1)   saturate(1);   opacity: 0.98; }
+          100% { transform: translateX(0)    skewX(0deg);   filter: brightness(1)   saturate(1);   opacity: 1; }
         }
         @media (max-width: 900px) {
           .hero-grid { grid-template-columns: 1fr !important; }

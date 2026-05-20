@@ -117,7 +117,7 @@ function Testimonials() {
   return (
     <section id="testimonials" style={{
       padding: '96px 0',
-      background: 'var(--bg-0)',
+      background: 'transparent',
       position: 'relative', overflow: 'hidden',
     }}>
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 3 }}>
