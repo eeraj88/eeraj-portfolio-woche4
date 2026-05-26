@@ -21,6 +21,7 @@ function Hero() {
   const [currentRole, setCurrentRole] = useState(0)
   const [roleText, setRoleText] = useState('')
   const [roleTyping, setRoleTyping] = useState(false)
+  const [showResumeModal, setShowResumeModal] = useState(false)
   const heroTimers = useRef([])
   const photoBgRef = useRef(null)
 
@@ -306,13 +307,13 @@ function Hero() {
                   {t.hero.cta.contact}
                 </a>
 
-                <a href="/lebenslauf.pdf" download style={{
+                <button onClick={() => setShowResumeModal(true)} style={{
                   display: 'inline-flex', alignItems: 'center', gap: '10px',
                   padding: '14px 26px', fontFamily: fontMono, fontSize: '13px',
                   letterSpacing: '0.04em', textTransform: 'uppercase',
                   borderRadius: '10px', border: `1px solid var(--cyan-border)`,
                   background: 'var(--bg-2)', color: 'var(--text-2)',
-                  textDecoration: 'none', transition: `all 0.3s ${ease}`,
+                  cursor: 'pointer', transition: `all 0.3s ${ease}`,
                 }}
                   onMouseEnter={e => {
                     e.currentTarget.style.color = c.cyan
@@ -330,7 +331,7 @@ function Hero() {
                     <line x1="12" y1="15" x2="12" y2="3"/>
                   </svg>
                   CV
-                </a>
+                </button>
               </div>
 
             {/* Availability Badge — appears after typewriter */}
@@ -418,6 +419,211 @@ function Hero() {
           .hero-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
+
+      {/* Resume Language Selection Modal - Cyberpunk Style */}
+      {showResumeModal && (
+        <div onClick={() => setShowResumeModal(false)} style={{
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
+          background: 'rgba(0,0,0,0.9)', zIndex: 9999,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          backdropFilter: 'blur(12px)',
+          animation: 'modalFadeIn 0.3s ease-out'
+        }}>
+          <style>{`
+            @keyframes modalFadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            @keyframes modalSlideIn {
+              from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9) translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1) translateY(0);
+              }
+            }
+            @keyframes glitchPulse {
+              0%, 100% { box-shadow: 0 0 20px rgba(34,211,238,0.3), 0 0 40px rgba(34,211,238,0.1); }
+              50% { box-shadow: 0 0 30px rgba(34,211,238,0.5), 0 0 60px rgba(34,211,238,0.2); }
+            }
+            @keyframes scanline {
+              0% { transform: translateY(-100%); }
+              100% { transform: translateY(100%); }
+            }
+            .cv-modal-content {
+              animation: modalSlideIn 0.4s cubic-bezier(0.22, 0.61, 0.36, 1);
+            }
+            .cv-button:hover {
+              animation: glitchPulse 0.6s ease-in-out infinite;
+            }
+            .cv-grid-bg {
+              background-image:
+                linear-gradient(rgba(34,211,238,0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(34,211,238,0.1) 1px, transparent 1px);
+              background-size: 32px 32px;
+            }
+          `}</style>
+
+          <div onClick={e => e.stopPropagation()} className="cv-modal-content" style={{
+            position: 'absolute', left: '50%', top: '50%',
+            transform: 'translate(-50%, -50%)',
+            background: 'rgba(10,10,20,0.95)',
+            borderRadius: '16px', padding: '48px',
+            maxWidth: '540px', width: '90%',
+            border: '2px solid var(--cyan)',
+            boxShadow: '0 0 60px rgba(34,211,238,0.4), inset 0 0 60px rgba(34,211,238,0.05)',
+            textAlign: 'center',
+            overflow: 'hidden',
+            backdropFilter: 'blur(20px)'
+          }}>
+            {/* Scanline Effect */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(180deg, transparent 0%, rgba(34,211,238,0.03) 50%, transparent 100%)',
+              animation: 'scanline 3s linear infinite',
+              pointerEvents: 'none', zIndex: 0
+            }} />
+
+            {/* Grid Background */}
+            <div className="cv-grid-bg" style={{
+              position: 'absolute', inset: 0, opacity: 0.3,
+              pointerEvents: 'none', zIndex: 0
+            }} />
+
+            {/* Content */}
+            <div style={{ position: 'relative', zIndex: 1 }}>
+              {/* Header */}
+              <div style={{
+                display: 'inline-block', marginBottom: '8px',
+                padding: '6px 16px',
+                background: 'rgba(34,211,238,0.1)',
+                border: '1px solid var(--cyan)',
+                borderRadius: '20px',
+                fontFamily: fontMono, fontSize: '11px',
+                letterSpacing: '0.1em',
+                color: 'var(--cyan)',
+                textTransform: 'uppercase'
+              }}>
+                {language === 'de' ? 'SYSTEM_AUSGABE' : 'SYSTEM_OUTPUT'}
+              </div>
+
+              <h2 style={{
+                color: 'var(--text-2)', marginBottom: '12px',
+                fontFamily: fontDisplay, fontSize: '28px',
+                fontWeight: '700',
+                textShadow: '0 0 30px rgba(34,211,238,0.5)'
+              }}>
+                {language === 'de' ? 'LEBENSLAUF' : 'RESUME'}
+              </h2>
+
+              <p style={{
+                color: 'var(--text-3)', marginBottom: '36px',
+                fontSize: '14px',
+                fontFamily: fontMono,
+                letterSpacing: '0.05em'
+              }}>
+                {language === 'de' ? 'SPRACHE_AUSSUCHEN //' : 'LANGUAGE_SELECT //'}
+              </p>
+
+              {/* Buttons */}
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
+                <a href="/lebenslauf-de.pdf" download className="cv-button"
+                  style={{
+                    flex: 1, padding: '20px 28px',
+                    background: 'linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)',
+                    color: 'var(--cyan)',
+                    textDecoration: 'none', borderRadius: '12px',
+                    fontWeight: '700', fontFamily: fontDisplay,
+                    fontSize: '16px', letterSpacing: '0.05em',
+                    transition: 'all 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)',
+                    border: '2px solid var(--cyan)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', gap: '10px'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)'
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(34,211,238,0.4)'
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34,211,238,0.25) 0%, rgba(34,211,238,0.1) 100%)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)'
+                  }}
+                >
+                  <span style={{ fontSize: '24px' }}>🇩🇪</span>
+                  <div>
+                    <div style={{ fontSize: '12px', opacity: 0.7, fontWeight: '400' }}>DOWNLOAD</div>
+                    <div>DEUTSCH</div>
+                  </div>
+                </a>
+
+                <a href="/resume-en.pdf" download className="cv-button"
+                  style={{
+                    flex: 1, padding: '20px 28px',
+                    background: 'linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)',
+                    color: 'var(--cyan)',
+                    textDecoration: 'none', borderRadius: '12px',
+                    fontWeight: '700', fontFamily: fontDisplay,
+                    fontSize: '16px', letterSpacing: '0.05em',
+                    transition: 'all 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)',
+                    border: '2px solid var(--cyan)',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    display: 'flex', alignItems: 'center',
+                    justifyContent: 'center', gap: '10px'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-4px) scale(1.02)'
+                    e.currentTarget.style.boxShadow = '0 8px 32px rgba(34,211,238,0.4)'
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34,211,238,0.25) 0%, rgba(34,211,238,0.1) 100%)'
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                    e.currentTarget.style.boxShadow = 'none'
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(34,211,238,0.15) 0%, rgba(34,211,238,0.05) 100%)'
+                  }}
+                >
+                  <span style={{ fontSize: '24px' }}>🇬🇧</span>
+                  <div>
+                    <div style={{ fontSize: '12px', opacity: 0.7, fontWeight: '400' }}>DOWNLOAD</div>
+                    <div>ENGLISH</div>
+                  </div>
+                </a>
+              </div>
+
+              {/* Close Button */}
+              <button onClick={() => setShowResumeModal(false)} style={{
+                marginTop: '28px', padding: '10px 24px',
+                background: 'transparent', color: 'var(--text-3)',
+                border: '1px solid var(--cyan-border)',
+                borderRadius: '8px', cursor: 'pointer',
+                fontFamily: fontMono, fontSize: '11px',
+                letterSpacing: '0.1em',
+                transition: 'all 0.3s',
+                opacity: 0.6
+              }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.opacity = '1'
+                  e.currentTarget.style.borderColor = 'var(--cyan)'
+                  e.currentTarget.style.color = 'var(--cyan)'
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.opacity = '0.6'
+                  e.currentTarget.style.borderColor = 'var(--cyan-border)'
+                  e.currentTarget.style.color = 'var(--text-3)'
+                }}
+              >
+                [ESC]
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   )
 }
