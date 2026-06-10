@@ -313,6 +313,7 @@ function GameTeaser() {
           font-weight: 800;
           line-height: 1;
           letter-spacing: 0.08em;
+          border-radius: 6px;
           box-shadow:
             4px 4px 0 rgba(0, 0, 0, 0.55),
             0 0 18px var(--cyan-glow);
@@ -361,7 +362,7 @@ function GameTeaser() {
           position: relative;
           margin-top: 22px;
           border: 1px solid var(--cyan-border-strong);
-          border-radius: 0;
+          border-radius: 6px;
           padding: 15px 24px;
           background: var(--cyan);
           color: var(--bg-0);
