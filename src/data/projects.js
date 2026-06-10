@@ -4,7 +4,7 @@ const projects = [
     titel: "RAYLEAD Engine",
     beschreibung: "Autonome KI-Lead-Pipeline für B2B-Vertrieb in der Baubranche. Findet Bauprojekte in frühen Planungsphasen über 12 kuratierte Quellen, bewertet und klassifiziert Leads (HOT/WARM/COLD) mit KI-Scoring, reichert HOT-Leads per Deep Research an. Features: Echtzeit-Pipeline-Stream (SSE), Bookmark-System, 24h Tavily-Cache (Credit-Ersparnis ~90%), Procurement-Integration (TED/Open Data), vollständiges Sales-Cockpit.",
     technologien: ["Next.js 15", "TypeScript", "Supabase", "Tavily API", "OpenRouter", "Tailwind CSS v4", "Framer Motion", "Vercel"],
-    link: "https://lead-engine-three-pied.vercel.app",
+    link: "https://lead-engine-beta-roan.vercel.app",
     github: "https://github.com/eeraj88/lead-engine",
     kategorie: ["AI & Automation", "Full-Stack"],
     bild: "/Raylead.png"
