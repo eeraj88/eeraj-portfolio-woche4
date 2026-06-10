@@ -7,6 +7,15 @@ const projects = [
     link: "https://lead-engine-three-pied.vercel.app",
     github: "https://github.com/eeraj88/lead-engine",
     kategorie: ["AI & Automation", "Full-Stack"],
+    bild: "/Raylead.png"
+  },
+  {
+    id: 9,
+    titel: "Eeraj World – Interaktives Portfolio-Spiel",
+    beschreibung: "Vollständiges Pixel-Art Top-Down RPG im Pokemon-Stil als interaktives Portfolio. Spieler steuert Eeraj Jan durch 8 Räume: Kino (Video-Player auf Leinwand), Cockpit (Projekt-Planeten-Overlay), Funkraum (Kontakt-Links & CV-Download), Music Room (spielbares Klavier via Tone.js), Bibliothek (Artwork-Galerie, Anime/Games-Overlays, TikTok-Videos direkt auf in-Game TV), Hall of Fame, News-Kiosk. Features: Custom Pixel-Art Sprites, Smartphone-Overlay für Teleport, multi-scene Transitions, Kollisionssystem, Typewriter-Dialoge.",
+    technologien: ["Phaser.js 3", "JavaScript", "Vite", "Tone.js", "Supabase", "Tiled Map Editor", "Howler.js"],
+    github: "https://github.com/eeraj88/eeraj-world",
+    kategorie: ["Game Dev", "Frontend"],
     bild: "/portfolio game.png"
   },
   {
