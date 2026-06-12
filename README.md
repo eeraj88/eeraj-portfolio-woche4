@@ -72,8 +72,8 @@ Das Spring-Boot-Backend enthält Endpunkte für Besucherzahlen, Likes und Kommen
 Voraussetzungen: Node.js und npm.
 
 ```bash
-git clone https://github.com/eeraj88/eeraj-portfolio-woche4.git
-cd eeraj-portfolio-woche4
+git clone https://github.com/eeraj88/eeraj-portfolio.git
+cd eeraj-portfolio
 npm install
 npm run dev
 ```
